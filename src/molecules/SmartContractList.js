@@ -4,9 +4,7 @@ import {Div} from 'glamorous'
 import { Route, Link } from "react-router-dom";
 import { SmartContract } from './SmartContract'
 
-const SmartContractItem = ({name}) => <Div>
-    Select a smart contract
-    </Div>
+
 
 export const SmartContractList = ({match}) => {
     return (
@@ -24,13 +22,13 @@ export const SmartContractList = ({match}) => {
       > 
         {
             SmartContracts.map(contract => {
-                console.log("MAtch", match)
-            return <Div key={contract.name}>
-                   <Link to={`${match.url}/${contract.name}`}>{contract.name}</Link>
+                console.log("CONTRACT", contract)
+            return (
+            <Div key={contract.name}>
+                   <Link to={`/${contract.name}`} params={{...contract}}>{contract.name}</Link>
             </Div>
-            })
+            )})
         }
-        <Route path={`${match.url}/:contractName`} component={SmartContract} />
 
       </Div>
     )

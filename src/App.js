@@ -4,10 +4,13 @@ import { Div, H1 } from 'glamorous'
 import { Seperator } from './atoms/Seperator'
 import { TransactionReceipt } from './molecules/TransactionReceipt'
 import { SmartContractList } from './molecules/SmartContractList'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link} from "react-router-dom";
+import { createBrowserHistory } from 'history'
+import { SmartContractItem } from './molecules/SmartContractItem'
+import { MethodItem } from './molecules/MethodItem'
 
 import './App.css';
-
+import { create } from 'domain';
 class App extends Component {
 
   componentWillMount() {
@@ -26,20 +29,22 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <Router createHistory={createBrowserHistory}>
       <div className="App">
-       <Route exact path="/" component={Home} />
+       <Route path="/" component={Home} />
       </div>
       </Router>
     )
   } 
 } 
-const Home = ({match}) => (
+const Home = ({match}) => {
+  console.log("HOME", match)
+  return (
   <Div>
 <header className="App-header">
           <H1>ABI Explorer - Explore your ABIs</H1>
         </header>
-          
+          <Link to="/" component={Home}>Home</Link>
         <hr />
         <h3> Select Contract </h3>
         <Div css = {{ 
@@ -50,17 +55,15 @@ const Home = ({match}) => (
         }}
         >
         Smart Contracts Loaded:
-          <Route exact path="/" component={SmartContractList} />
+          <Route path="/" component={SmartContractList} />
 
           <Seperator />
-          <Route path={`${match.url}/:contractName`} component={SmartContractItem} />
+          <Route path={`/:contract`} component={SmartContractItem} />
+          <Route path={`/:contract/:method`} component={MethodItem} />
 
           <TransactionReceipt {...this.state} />
         </Div>
   </Div>
-)
+)}
 
-const SmartContractItem = ({name}) => <Div>
-    Select a smart contract
-    </Div>
 export default App;

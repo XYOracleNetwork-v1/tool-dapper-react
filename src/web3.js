@@ -8,6 +8,14 @@ export const getWeb3 = () => {
   return new Web3('http://localhost:8545')
 }
 
+export const contractNamed = (name) => {
+  let contractObj = SmartContracts.find(contract => contract.name === name)
+  if (contractObj) {
+    return contractObj.contract
+  }
+  return undefined
+}
+
 export let SmartContracts = []
 export let web3
 export let DataVault
