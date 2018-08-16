@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { injectWeb3} from './web3'
+import { injectWeb3, validContract } from './web3'
 import { Div, H1 } from 'glamorous'
 import { Seperator } from './atoms/Seperator'
-import { TransactionReceipt } from './molecules/TransactionReceipt'
 import { SmartContractList } from './molecules/SmartContractList'
 import { BrowserRouter as Router, Route, Link} from "react-router-dom";
 import { createBrowserHistory } from 'history'
@@ -15,36 +14,45 @@ class App extends Component {
 
   componentWillMount() {
     injectWeb3()
+    validContract("DataVault").then(validNetwork => this.setState({validNetwork}))
     console.log("Mounted")
   }
-
-  state = {
-    ethAddress: '',
-    blockNumber: '',
-    transactionHash: '',
-    gasUsed: '',
-    txReceipt: '',
-    gasPrice: 0,
-  };
 
   render() {
     return (
       <Router createHistory={createBrowserHistory}>
       <div className="App">
-       <Route path="/" component={Home} />
+       <Route path="/" component={HomeComponent} />
       </div>
       </Router>
     )
   } 
 } 
-const Home = ({match}) => {
-  console.log("HOME", match)
-  return (
-  <Div>
-<header className="App-header">
+const ChangeNetworkDiv = ({validNetwork}) => {
+  if (validNetwork) {
+    return null
+  }
+  return <Div css={{backgroundColor: "red"}}>Invalid Network, Change To Network with contracts deployed</Div>
+}
+
+class HomeComponent extends Component {
+  componentWillMount() {
+    validContract("DataVault").then(validNetwork => this.setState({validNetwork}))
+    console.log("Mounted")
+  }
+
+  state = {
+    validNetwork: true,
+  };
+  render() {
+      console.log("HOME", this.state)
+      return (
+      <Div>
+        <header className="App-header">
           <H1>ABI Explorer - Explore your ABIs</H1>
         </header>
-          <Link to="/" component={Home}>Home</Link>
+        <Link to="/">Home</Link>
+        <ChangeNetworkDiv validNetwork={this.state.validNetwork} />
         <hr />
         <h3> Select Contract </h3>
         <Div css = {{ 
@@ -61,9 +69,9 @@ const Home = ({match}) => {
           <Route path={`/:contract`} component={SmartContractItem} />
           <Route path={`/:contract/:method`} component={MethodItem} />
 
-          <TransactionReceipt {...this.state} />
         </Div>
-  </Div>
-)}
+      </Div>
+    )}
+  }
 
 export default App;

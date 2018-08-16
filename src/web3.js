@@ -1,3 +1,8 @@
+/* 
+  This is an auto-generated web3 interface to the smart contracts deployed via Dapploy
+  Do not make changes to this file, they get overwritten each Dapploy :)
+*/
+
 import Web3 from 'web3'
 
 
@@ -7,30 +12,36 @@ export const getWeb3 = () => {
   }
   return new Web3('http://localhost:8545')
 }
+const contractObject = (name) => SmartContracts.find(contract => contract.name === name)
 
 export const contractNamed = (name) => {
-  let contractObj = SmartContracts.find(contract => contract.name === name)
-  if (contractObj) {
-    return contractObj.contract
-  }
-  return undefined
+  const contractObj = contractObject(name)
+  return contractObj ? contractObj.contract : undefined
 }
+
+export const contractAddress = (name) => {
+  const contractObj = contractObject(name)
+  return contractObj ? contractObj.address : undefined
+}
+
+export const validContract = async (name) => {
+  const address = contractAddress(name)
+  return web3.eth.getCode(address).then(code => {
+    return code === "0x" ? Promise.resolve(false) : Promise.resolve(true)
+  })
+} 
 
 export let SmartContracts = []
 export let web3
 export let DataVault
-export const addressDataVault = '0xf45d62b4da78a55c98ff10b0fc22ca6c742381a5'
-
-
+export const addressDataVault = '0x268f3dea9bba2e0adf37f8e32b0ec0b92910d108'
 
 export function injectWeb3() {
   web3 = getWeb3()
   
 	DataVault = new web3.eth.Contract(
-		require('/Users/kevin/Documents/GitHub/tool-abiexplorer-react/src/ABI/DataVault.json').abi,
+		require('./ABI/DataVault.json').abi,
 		addressDataVault)
-    SmartContracts.push({name: 'DataVault',
-                        contract: DataVault})
-
+    SmartContracts.push({name: 'DataVault', contract: DataVault, address: addressDataVault})
 }
 

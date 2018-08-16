@@ -3,29 +3,30 @@ import { contractNamed } from '../web3'
 import { Div, Input, Button} from 'glamorous'
 import {Seperator} from '../atoms/Seperator'
 import {BigNumber} from 'bignumber.js';
+import { TransactionResult } from './TransactionResult'
+import { TransactionError } from './TransactionError'
+import { TransactionReceipt } from './TransactionReceipt'
 
-const TransactionResult = ({result}) => {
-    if (result === undefined) return null
-    return (
-        <Div>
-            <Seperator />
-            Execution Result: {result.toString()}
-        </Div>
-    )
-}
 
  export class MethodItem extends Component  {
     state = {
         method : {inputs: [], outputs: [], name:'loading...'},
         executeResult : undefined,
         transactionResult : undefined,
-        transactionError: undefined
+        transactionError: undefined,
+        ethAddress: '',
+        blockNumber: '',
+        transactionHash: '',
+        gasUsed: '',
+        txReceipt: '',
+        gasPrice: 0,
     }
     contract = {}
 
     componentDidMount() {
         this.updateInputs()
     }
+    
     componentDidUpdate() {
         this.updateInputs()
     }
@@ -129,6 +130,8 @@ const TransactionResult = ({result}) => {
                 Execute
             </Button>
             <TransactionResult result={this.state.transactionResult}/>
+            <TransactionError error={this.state.transactionError} />
+            <TransactionReceipt {...this.state} />
           </Div>
     }
 
