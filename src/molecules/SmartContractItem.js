@@ -1,28 +1,15 @@
 import React from 'react'
 import { contractNamed } from '../web3'
 import { Div } from 'glamorous'
-import { Link} from "react-router-dom";
+import { Link, Route } from "react-router-dom";
+import { MethodItem } from './MethodItem'
 
-export const MethodItem = ({match, method}) => {
+export const MethodLink = ({match, method}) => {
   return (
     <Div key={method.signature}>
-    <Link to={`${match.url}/${method.signature}`}> { method.name } </Link>
+      <Link to={`${match.url}/${method.signature}`}> { method.name } </Link>
     </Div>
   )
-}
-export const MethodList = ({match, sortedMethods}) => {
-  console.log("B:AJ", match, sortedMethods)
-  if (!sortedMethods.length > 0) {
-    return null
-  }
-  let elements = []
-  sortedMethods.forEach(method => {
-    if (method) {
-      elements.push(<MethodItem match={match} method ={method} />)
-    }
-  })
-  console.log("ELEMENTS", elements)
-  return (<Div>{elements} </Div>)
 }
 
 export const SmartContractItem = (props) => {
@@ -32,16 +19,12 @@ export const SmartContractItem = (props) => {
     let sortedMethods = contract._jsonInterface
                     .sort((a, b) => a.name && b.name ? a.name.localeCompare(b.name) : 0)
                     .map(method => {
-                      console.log(method.name)
                       if (method.name && method.type==='function') {
-                        return <MethodItem match={match} method ={method} />
+                        return <MethodLink key={method.signature} match={match} method ={method} />
                       }
                       return undefined
                     })
                     
-    console.log("SORTED", sortedMethods)
-
-    console.log("SMART CONTRACT", contract,  props)
     return <Div css = {{ 
       display: 'flex',
       justifyContent: 'left',
@@ -49,12 +32,27 @@ export const SmartContractItem = (props) => {
       flexDirection: 'column',
       textAlign: 'left',
     }}>
-      You Selected {contractName}:
-      <Div>
-        Functions
-      </Div>
-      <ul>
-      {sortedMethods}
-      </ul>
+      <h3>{contractName}:</h3>
+
+        <Div css={{
+          display:'flex',
+          flexDirection:'row',
+          alignContent: 'left',
+          textAlign: 'left',
+        }}>
+          <Div css={{
+            width: 300
+          }}>
+            Functions
+            <ul>
+              { sortedMethods }
+            </ul>
+          </Div>
+          <Div css={{
+            width: 400
+          }}>
+          <Route path={`/:contract/:method`} component={MethodItem} />
+          </Div>
+        </Div>
       </Div>
   }

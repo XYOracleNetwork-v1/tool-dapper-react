@@ -12,6 +12,7 @@ export const getWeb3 = () => {
   }
   return new Web3('http://localhost:8545')
 }
+
 const contractObject = (name) => SmartContracts.find(contract => contract.name === name)
 
 export const contractNamed = (name) => {
@@ -31,17 +32,35 @@ export const validContract = async (name) => {
   })
 } 
 
+const refreshCurrentUser = async () => {
+  const accounts = await web3.eth.getAccounts()
+  if (accounts.length > 0) {
+    return accounts[0]
+  }
+  return undefined
+}
+
 export let SmartContracts = []
 export let web3
+export let currentUser
+
 export let DataVault
-export const addressDataVault = '0x268f3dea9bba2e0adf37f8e32b0ec0b92910d108'
+export const addressDataVault = '0xeb897440bfddd1d2dbbbb87dc7ba58e61e2de2e2'
+
+
 
 export function injectWeb3() {
   web3 = getWeb3()
   
+  let refreshUser = () => refreshCurrentUser().then(account => currentUser=account)
+  // Will refresh local store when new user is chosen:
+  web3.currentProvider.publicConfigStore.on('update', refreshUser);
+
+  
 	DataVault = new web3.eth.Contract(
 		require('./ABI/DataVault.json').abi,
 		addressDataVault)
-    SmartContracts.push({name: 'DataVault', contract: DataVault, address: addressDataVault})
+		SmartContracts.push({name: 'DataVault', contract: DataVault, address: addressDataVault})
+
 }
 

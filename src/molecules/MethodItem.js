@@ -1,16 +1,15 @@
 import React, {Component} from 'react'
-import { contractNamed } from '../web3'
+import { contractNamed, currentUser } from '../web3'
 import { Div, Input, Button} from 'glamorous'
-import {Seperator} from '../atoms/Seperator'
 import {BigNumber} from 'bignumber.js';
-import { TransactionResult } from './TransactionResult'
-import { TransactionError } from './TransactionError'
-import { TransactionReceipt } from './TransactionReceipt'
+import { TransactionResult } from '../atoms/TransactionResult'
+import { TransactionError } from '../atoms/TransactionError'
+import { TransactionReceipt } from '../atoms/TransactionReceipt'
 
 
- export class MethodItem extends Component  {
+export class MethodItem extends Component  {
     state = {
-        method : {inputs: [], outputs: [], name:'loading...'},
+        method : {inputs: [], outputs: [], name:'loading...', type:''},
         executeResult : undefined,
         transactionResult : undefined,
         transactionError: undefined,
@@ -26,7 +25,7 @@ import { TransactionReceipt } from './TransactionReceipt'
     componentDidMount() {
         this.updateInputs()
     }
-    
+
     componentDidUpdate() {
         this.updateInputs()
     }
@@ -40,7 +39,7 @@ import { TransactionReceipt } from './TransactionReceipt'
             this.contract = contractNamed(contractName)
             let method = this.methodObject(this.contract._jsonInterface, methodSig)
             if (method) {
-                this.setState({method, transactionResult: undefined, transactionError: undefined})
+                this.setState({method, transactionResult: undefined, transactionError: undefined, TransactionReceipt: undefined})
             }
         }
     }
@@ -66,32 +65,47 @@ import { TransactionReceipt } from './TransactionReceipt'
     }
 
     handleExecute = async e => {
-        let methodName = this.state.method.name
-        let {inputs} = this.state.method
+        this.setState({transactionResult: undefined, transactionError: undefined, TransactionReceipt: undefined})
 
+        let methodName = this.state.method.name
+        let {inputs, stateMutability} = this.state.method
         let inputParams = inputs.map(i=>{
-            console.log("Parsing Param", i)
             if (['uint256', 'uint128', 'uint64'].includes(i.type)) {
-                return new BigNumber(i.value)
+                if (!isNaN(i.value)) {
+                    return new BigNumber(i.value)
+                }
             }
             return i.value
         })
-        console.log("Executing Passing inputParams", inputs, inputParams)
+        console.log("Executing method", currentUser, this.state.method)
 
         try {
+            if (!currentUser) {
+                throw new Error("No Current User, Refresh Page, or Login Metamask")
+            }
+            if (inputParams.length === 0 || stateMutability === 'view' || stateMutability === 'pure') {
+                let result = await this.contract.methods[methodName](...inputParams).call()
+                this.setState({transactionResult: result})
+                console.log("RESULT", result)
+            } else {
+                this.contract.methods[methodName](...inputParams).send({from: currentUser})
+                .then( receipt => {
+                    let { transactionHash, blockNumber, gasUsed } = receipt
+                    console.log(" Got Receipt!", receipt);
+                    this.setState({ transactionHash,
+                        txReceipt: receipt,
+                        blockNumber: blockNumber,
+                        gasUsed: gasUsed,
+                    });
+                })
+            }
 
-             let result = await this.contract.methods[methodName](...inputParams).call()
-             console.log("RESULT", result)
-
-             this.setState({transactionResult: result})
         } catch(e) {
-            console.log("Error:", e)
             this.setState({transactionError: e})
         }
     }
 
     render() {
-        console.log("Method Render", this.state)
         return <Div css = {{ 
           display: 'flex',
           justifyContent: 'left',
@@ -99,14 +113,17 @@ import { TransactionReceipt } from './TransactionReceipt'
           flexDirection: 'column',
           textAlign: 'left',
         }}>
-          <Div>
-            {this.state.method.name}({ this.state.method.inputs.map(input=>{ 
-                return `${input.type} ${input.name}`
-                
-                }).join(", ") }
-            ) </Div>
+            <h3>{this.state.method.name}</h3>
+
             <Div>
-            {this.state.method.stateMutability}
+                {this.state.method.name}({ this.state.method.inputs.map(input=>{ 
+                    return `${input.type} ${input.name}`
+                    
+                    }).join(", ") }
+                ) 
+            </Div>
+            <Div>
+                {this.state.method.stateMutability}
             </Div>
             <Div>
             { this.state.method.outputs.map(output=>{ 
@@ -134,5 +151,4 @@ import { TransactionReceipt } from './TransactionReceipt'
             <TransactionReceipt {...this.state} />
           </Div>
     }
-
-  }
+}

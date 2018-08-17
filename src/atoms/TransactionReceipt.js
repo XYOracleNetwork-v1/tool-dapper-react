@@ -1,9 +1,10 @@
 import React from 'react';
 import { Table  } from 'react-bootstrap';
+import { Div } from 'glamorous'
 
 export const TransactionReceipt = ({transactionHash, ethAddress, blockNumber, gasUsed, gasPrice}) => {
     if (!transactionHash) { return null }
-    
+     
     return <Table bordered responsive css={{textAlign: 'left'}}>
       <thead>
           <tr>
