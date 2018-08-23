@@ -1,4 +1,6 @@
-#ABI Explorer
+# Dapper
+
+View your smart contracts in an auto-generated 
 
 * When in doubt, `yarn` it out:
 Run `yarn`
