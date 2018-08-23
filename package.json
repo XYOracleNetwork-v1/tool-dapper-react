@@ -1,7 +1,23 @@
 {
-  "name": "react-client",
+  "name": "tool-dapper-react",
   "version": "0.1.0",
+  "description": "An automated smart contract web viewer. Easily configurable with Dapploy.",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XYOracleNetwork/tool-dapper-react.git"
+  },
+  "keywords": [
+    "xyo",
+    "dapploy",
+    "xyo-nodejs"
+  ],
+  "author": "Kevin Weiler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XYOracleNetwork/tool-dapper-react/issues"
+  },
+  "homepage": "https://github.com/XYOracleNetwork/tool-dapper-react#readme",
   "dependencies": {
     "big-integer": "^1.6.34",
     "bignumber": "^1.1.0",

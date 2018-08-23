@@ -45,7 +45,7 @@ export let web3
 export let currentUser
 
 export let DataVault
-export const addressDataVault = '0xeb897440bfddd1d2dbbbb87dc7ba58e61e2de2e2'
+export const addressDataVault = '0x7d34245b7dd6193afdd5e8add63a5b792fd31945'
 
 
 

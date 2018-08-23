@@ -12,13 +12,9 @@ export class MethodItem extends Component  {
         method : {inputs: [], outputs: [], name:'loading...', type:''},
         executeResult : undefined,
         transactionResult : undefined,
+        // transactionReceipt : {transactionHash: '0x111', events: {DataStored:{event:"DataStored", returnValues:{"0":"0x0000000000000000000000000000000000000000","1":"0x3D01dDdB4eBD0b521f0E4022DCbeF3cb9bc20FF2","2":"31937949962695524","_from":"0x0000000000000000000000000000000000000000","_to":"0x3D01dDdB4eBD0b521f0E4022DCbeF3cb9bc20FF2","_tokenId":"31937949962695524"}}}},
+        transactionReceipt : undefined,
         transactionError: undefined,
-        ethAddress: '',
-        blockNumber: '',
-        transactionHash: '',
-        gasUsed: '',
-        txReceipt: '',
-        gasPrice: 0,
     }
     contract = {}
 
@@ -39,7 +35,7 @@ export class MethodItem extends Component  {
             this.contract = contractNamed(contractName)
             let method = this.methodObject(this.contract._jsonInterface, methodSig)
             if (method) {
-                this.setState({method, transactionResult: undefined, transactionError: undefined, TransactionReceipt: undefined})
+                this.setState({method, transactionResult: undefined, transactionError: undefined, transactionReceipt: undefined})
             }
         }
     }
@@ -65,7 +61,7 @@ export class MethodItem extends Component  {
     }
 
     handleExecute = async e => {
-        this.setState({transactionResult: undefined, transactionError: undefined, TransactionReceipt: undefined})
+        this.setState({transactionResult: undefined, transactionError: undefined, transactionReceipt: undefined})
 
         let methodName = this.state.method.name
         let {inputs, stateMutability} = this.state.method
@@ -89,15 +85,10 @@ export class MethodItem extends Component  {
                 console.log("RESULT", result)
             } else {
                 this.contract.methods[methodName](...inputParams).send({from: currentUser})
-                .then( receipt => {
-                    let { transactionHash, blockNumber, gasUsed } = receipt
-                    console.log(" Got Receipt!", receipt);
-                    this.setState({ transactionHash,
-                        txReceipt: receipt,
-                        blockNumber: blockNumber,
-                        gasUsed: gasUsed,
-                    });
-                })
+                .then( transactionReceipt => {
+                    console.log(" Got Receipt!", transactionReceipt);
+                    this.setState({ transactionReceipt })
+               })
             }
 
         } catch(e) {
@@ -148,7 +139,7 @@ export class MethodItem extends Component  {
             </Button>
             <TransactionResult result={this.state.transactionResult}/>
             <TransactionError error={this.state.transactionError} />
-            <TransactionReceipt {...this.state} />
+            <TransactionReceipt {...this.state.transactionReceipt} />
           </Div>
     }
 }
