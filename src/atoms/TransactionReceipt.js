@@ -35,16 +35,8 @@ export const Row = ({name, value}) => {
 }
 export const EventValues = (props) => {
   const {returnValues} = props
-  console.log("HMMMMM", JSON.stringify(returnValues))
-
-  // if (!returnValues || !returnValues.length > 0) {
-  //   return null
-  // }
-  // return <Row name={`Event Data`} value={JSON.stringify(returnValues)} />
-  //TODO Parse Event data
   let divs = []
   for (const [ index, value ] of Object.entries(returnValues)) {
-    console.log("WAT", index, value)
     divs.push(
       <Div key={index}>
         <Row name={index} value={value} />
@@ -70,7 +62,6 @@ export const Events = (props) => {
   return <Div>{eventDivs}</Div>
 }
 export const TransactionReceipt = (props) => {
-  console.log("SHowing tx receipt", props)
   const {transactionHash, ethAddress, blockNumber, gasUsed, gasPrice, events} = props
     if (!transactionHash) { return null }
      
