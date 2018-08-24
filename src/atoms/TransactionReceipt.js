@@ -1,5 +1,4 @@
 import React from 'react';
-import { Table  } from 'react-bootstrap';
 import glam, { Div } from 'glamorous'
 
 const ReceiptRow = glam.div({
@@ -67,6 +66,7 @@ export const Events = (props) => {
     </Div>
     )
   }    
+  
   return <Div>{eventDivs}</Div>
 }
 export const TransactionReceipt = (props) => {
