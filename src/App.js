@@ -9,12 +9,6 @@ import { SmartContractItem } from './molecules/SmartContractItem'
 
 import './App.css';
 class App extends Component {
-
-  componentWillMount() {
-    injectWeb3()
-    validContract("DataVault").then(validNetwork => this.setState({validNetwork}))
-  }
-
   render() {
     return (
       <Router createHistory={createBrowserHistory}>
@@ -25,21 +19,23 @@ class App extends Component {
     )
   } 
 } 
+
 const ChangeNetworkDiv = ({validNetwork}) => {
-  if (validNetwork) {
+  if (validNetwork === true) {
     return null
   }
   return <Div css={{backgroundColor: "red"}}>Invalid Network, Change To Network with contracts deployed</Div>
 }
 
 class HomeComponent extends Component {
-  componentWillMount() {
-    validContract("DataVault").then(validNetwork => this.setState({validNetwork}))
-  }
-
   state = {
     validNetwork: true,
   };
+
+  componentWillMount() {
+    injectWeb3().then(() => validContract("DataVault").then(validNetwork => this.setState({validNetwork})))
+  }
+
   render() {
       return (
       <Div>

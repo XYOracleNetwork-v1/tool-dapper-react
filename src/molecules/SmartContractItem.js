@@ -16,6 +16,9 @@ export const SmartContractItem = (props) => {
     let { match } = props
     let contractName = match.params.contract
     let contract = contractNamed(contractName)
+    if (!contract) {
+      return null
+    }
     let sortedMethods = contract._jsonInterface
                     .sort((a, b) => a.name && b.name ? a.name.localeCompare(b.name) : 0)
                     .map(method => {

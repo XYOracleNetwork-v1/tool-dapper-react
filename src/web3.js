@@ -27,17 +27,18 @@ export const contractAddress = (name) => {
 
 export const validContract = async (name) => {
   const address = contractAddress(name)
-  return web3.eth.getCode(address).then(code => {
-    return code === "0x" ? Promise.resolve(false) : Promise.resolve(true)
-  })
+  if (address) {
+    return web3.eth.getCode(address).then(code => {
+      return code === "0x" ? Promise.resolve(false) : Promise.resolve(true)
+    })
+  }
+  return Promise.resolve(false)
 } 
 
-const refreshCurrentUser = async () => {
-  const accounts = await web3.eth.getAccounts()
-  if (accounts.length > 0) {
+const getCurrentUser = async () => {
+  return web3.eth.getAccounts().then(accounts => {
     return accounts[0]
-  }
-  return undefined
+  }) 
 }
 
 export let SmartContracts = []
@@ -45,22 +46,33 @@ export let web3
 export let currentUser
 
 export let DataVault
-export const addressDataVault = '0x7d34245b7dd6193afdd5e8add63a5b792fd31945'
 
 
+const refreshContracts = async (web3) => {
+  return web3.eth.net.getId().then(netId => {
+    SmartContracts = []
+    
+	const jsonDataVault = require('./ABI/DataVault.json')
+		if (jsonDataVault && jsonDataVault.networks[netId]) {
+			const addressDataVault = jsonDataVault.networks[netId].address
+			DataVault = new web3.eth.Contract(
+			jsonDataVault.abi,
+			addressDataVault)
+			SmartContracts.push({name: 'DataVault', contract: DataVault, address: addressDataVault})
+		}
+
+    return Promise.resolve(SmartContracts)
+  })
+}
 
 export function injectWeb3() {
   web3 = getWeb3()
   
-  let refreshUser = () => refreshCurrentUser().then(account => currentUser=account)
+  let refreshUser = () => getCurrentUser().then(account => currentUser=account)
+  let refreshDapp = async () => Promise.all([refreshUser(), refreshContracts(web3)])
+
   // Will refresh local store when new user is chosen:
-  web3.currentProvider.publicConfigStore.on('update', refreshUser);
+  web3.currentProvider.publicConfigStore.on('update', refreshDapp);
 
-  
-	DataVault = new web3.eth.Contract(
-		require('./ABI/DataVault.json').abi,
-		addressDataVault)
-		SmartContracts.push({name: 'DataVault', contract: DataVault, address: addressDataVault})
-
+  return refreshContracts(web3).then(refreshUser)
 }
-
