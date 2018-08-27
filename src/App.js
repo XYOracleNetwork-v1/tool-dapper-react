@@ -24,7 +24,7 @@ const ChangeNetworkDiv = ({validNetwork}) => {
   if (validNetwork === true) {
     return null
   }
-  return <Div css={{backgroundColor: "red"}}>Invalid Network, Change To Network with contracts deployed</Div>
+  return <Div css={{backgroundColor: "red"}}>Invalid network, move to network where contracts are deployed</Div>
 }
 
 class HomeComponent extends Component {

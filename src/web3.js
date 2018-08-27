@@ -29,7 +29,7 @@ export const validContract = async (name) => {
   const address = contractAddress(name)
   if (address) {
     return web3.eth.getCode(address).then(code => {
-      return code === "0x" ? Promise.resolve(false) : Promise.resolve(true)
+      return code === '0x0' || code === '0x' ? Promise.resolve(false) : Promise.resolve(true)
     })
   }
   return Promise.resolve(false)

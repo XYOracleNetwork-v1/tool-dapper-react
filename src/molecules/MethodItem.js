@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { contractNamed, currentUser } from '../web3'
 import { Div, Input, Button} from 'glamorous'
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import { TransactionResult } from '../atoms/TransactionResult'
 import { TransactionError } from '../atoms/TransactionError'
 import { TransactionReceipt } from '../atoms/TransactionReceipt'
@@ -73,7 +73,6 @@ export class MethodItem extends Component  {
             }
             return i.value
         })
-        console.log("Executing method", currentUser, this.state.method)
 
         try {
             if (!currentUser) {
@@ -82,11 +81,9 @@ export class MethodItem extends Component  {
             if (inputParams.length === 0 || stateMutability === 'view' || stateMutability === 'pure') {
                 let result = await this.contract.methods[methodName](...inputParams).call()
                 this.setState({transactionResult: result})
-                console.log("RESULT", result)
             } else {
                 this.contract.methods[methodName](...inputParams).send({from: currentUser})
                 .then( transactionReceipt => {
-                    console.log(" Got Receipt!", transactionReceipt);
                     this.setState({ transactionReceipt })
                })
             }
