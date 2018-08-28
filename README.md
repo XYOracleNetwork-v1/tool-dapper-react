@@ -1,19 +1,22 @@
 # Dapper
 
-View your smart contracts in an auto-generated 
+View your smart contracts in an auto-generated
 
-* When in doubt, `yarn` it out:
-Run `yarn`
+- When in doubt, `yarn` it out:
+  Run `yarn`
 
-* Use [Dapp Deployer](https://github.com/XYOracleNetwork/tool-dappdeployer-node) to deploy smart contracts and deploy the ABI to the chain and to this project.  
+- Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) to deploy smart contracts and deploy the ABI to the chain and to this project.
 
-You'll can simply modify Dapp Deployer's `deployer.conf` to point to this project's directory:
+You'll can simply modify Dapploy's `deployer.conf` to point to this project's directory:
+
 ```
-contractOutput={ABI-Explorer-Project-dir}/src/ABI
+contractOutput={dapper-project-dir}/src/ABI
 ...
-web3ModuleOutput={ABI-Explorer-Project-dir}/src/web3.js
+web3ModuleOutput={dapper-project-dir}/src/web3.js
 ```
 
-* Run `yarn start` to start the client
+- This project expects Dapploy's generated web3.js interface to load and expose the contracts. You can recreate this, but it's best to use this tool with Dapploy.
 
-* Go to `localhost:3000` in a chrome browser if you are running your client locally with metamask.
+- Run `yarn start` to start the client
+
+- Go to `localhost:3000` in a chrome browser if you are running your client locally with metamask.

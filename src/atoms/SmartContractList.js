@@ -1,28 +1,26 @@
 import React from 'react';
-import {SmartContracts} from '../web3'
-import {Div} from 'glamorous'
-import { Link } from "react-router-dom";
+import { Div } from 'glamorous';
+import { Link } from 'react-router-dom';
+import { SmartContracts } from '../web3';
 
-export const SmartContractList = ({match}) => {
-    return (
-      <Div
-        css={{
-            margin: 10,
-            height: 20,
-            display: 'flex',
-            flexDirection: 'column',
-            textAlign: 'left',
-        }}
-      > 
-        {
-            SmartContracts.map(contract => {
-            return (
-              <Div key={contract.name}>
-                <Link to={`/${contract.name}`} params={{...contract}}>{contract.name}</Link>
-              </Div>
-            )})
-        }
-
+const SmartContractList = () => (
+  <Div
+    css={{
+      margin: 10,
+      height: 20,
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'left',
+    }}
+  >
+    {SmartContracts.map(contract => (
+      <Div key={contract.name}>
+        <Link to={`/${contract.name}`} params={{ ...contract }}>
+          {contract.name}
+        </Link>
       </Div>
-    )
-  }
+    ))}
+  </Div>
+);
+
+export default SmartContractList;
