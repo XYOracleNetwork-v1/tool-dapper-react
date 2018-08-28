@@ -1,6 +1,6 @@
 {
   "name": "tool-dapper-react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An automated smart contract web viewer. Run with dapploy, or as standalone.",
   "repository": {
     "type": "git",
