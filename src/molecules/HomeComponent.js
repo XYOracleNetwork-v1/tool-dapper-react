@@ -1,50 +1,50 @@
-import React, { Component } from 'react';
-import { Div, H1 } from 'glamorous';
-import { Route, Link } from 'react-router-dom';
-import { injectWeb3, validContract } from '../web3';
-import Seperator from '../atoms/Seperator';
-import SmartContractList from '../atoms/SmartContractList';
-import { SmartContractItem } from './SmartContractItem';
+import React, { Component } from 'react'
+import { Div, H1 } from 'glamorous'
+import { Route, Link } from 'react-router-dom'
+import { injectWeb3, validateContracts } from '../web3'
+import Seperator from '../atoms/Seperator'
+import SmartContractList from '../atoms/SmartContractList'
+import { SmartContractItem } from './SmartContractItem'
 
 const ChangeNetworkDiv = ({ validNetwork }) => {
   if (validNetwork === true) {
-    return null;
+    return null
   }
   return (
     <Div css={{ backgroundColor: 'red' }}>
       Invalid network, move to network where contracts are deployed
     </Div>
-  );
-};
+  )
+}
 
 class HomeComponent extends Component {
   state = {
     validNetwork: true,
-  };
+  }
 
   componentWillMount() {
-    injectWeb3().then(() => validContract('DataVault').then(validNetwork => this.setState({ validNetwork })));
+    injectWeb3()
+      .then(() =>
+        validateContracts().then(validNetwork =>
+          this.setState({ validNetwork }),
+        ),
+      )
+      .catch(err => {
+        console.log('Caught error while injecting', err)
+      })
   }
 
   render() {
-    const { validNetwork } = this.state;
+    const { validNetwork } = this.state
     return (
       <Div>
         <header className="App-header">
-          <H1>
-Dapper - Play with your dApps
-          </H1>
+          <H1>Dapper - Play with your dApps</H1>
         </header>
-        <Link to="/">
-Home
-        </Link>
+        <Link to="/">Home</Link>
         <ChangeNetworkDiv validNetwork={validNetwork} />
         <hr />
-        <h3>
-          {' '}
-Select Contract
-          {' '}
-        </h3>
+        <h3> Select Contract </h3>
         <Div
           css={{
             display: 'flex',
@@ -59,7 +59,7 @@ Select Contract
           <Route path="/:contract" component={SmartContractItem} />
         </Div>
       </Div>
-    );
+    )
   }
 }
-export default HomeComponent;
+export default HomeComponent
