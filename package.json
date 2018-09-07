@@ -41,8 +41,8 @@
     "eslint-plugin-react": "^7.11.1"
   },
   "scripts": {
-    "start": "bash -c 'concurrently --kill-others-on-fail \"yarn server ../${0}\" \"yarn dev\"'",
-    "server": "cd server && node server.js",
+    "start": "bash -c 'concurrently --kill-others-on-fail \"yarn server ${0}\" \"yarn dev\"'",
+    "server": "node server/server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

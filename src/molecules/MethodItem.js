@@ -102,6 +102,7 @@ class MethodItem extends Component {
         const result = await this.contract.methods[methodName](...inputParams).call();
         this.setState({ transactionResult: result });
       } else {
+
         this.contract.methods[methodName](...inputParams)
           .send({ from: currentUser })
           .then((transactionReceipt) => {

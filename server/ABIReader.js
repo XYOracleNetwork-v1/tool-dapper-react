@@ -15,9 +15,11 @@ const ABI = dir =>
         )
       }
       const contractDatas = files.map(file => {
+        // TODO use IPFS and be done with yucky relative paths
+        // Starting server from parent directory so add the ".."
         return {
           contractName: file.contractName,
-          data: require(file),
+          data: require(`../${file}`),
         }
       })
       // get the full paths of the file

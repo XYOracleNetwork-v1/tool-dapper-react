@@ -63,7 +63,6 @@ const refreshContracts = async web3 => {
     })
     .then(data => {
       contracts = data.abi
-      console.log(contracts)
       return web3.eth.net.getId()
     })
     .then(netId => {
@@ -81,7 +80,6 @@ const refreshContracts = async web3 => {
           })
         }
       })
-      console.log('Done Adding', SmartContracts)
       return SmartContracts
     })
     .catch(err => {
