@@ -15,11 +15,11 @@ body,
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 95px;
+  padding-left: 62px;
   color: white;
   font-family: 'Prospectus Std';
-  font-size: 57px;
-  width: 200px;
+  font-size: 50px;
+  width: 260px;
   font-weight: bold;
 }
 

@@ -1,14 +1,14 @@
-import React from 'react';
-import { Div } from 'glamorous';
+import React from 'react'
+import { Div } from 'glamorous'
 
 const Seperator = () => (
   <Div
     css={{
-      margin: 10,
+      marginBottom: 10,
       height: 1,
-      backgroundColor: '#b7c2bf',
+      backgroundColor: '#DDDDDD',
     }}
   />
-);
+)
 
-export default Seperator;
+export default Seperator

@@ -1,93 +1,97 @@
-import React from 'react';
-import glam, { Div } from 'glamorous';
-
+import React from 'react'
+import glam, { Div } from 'glamorous'
+import ResultTable from '../atoms/ResultTable'
 const ReceiptRow = glam.div({
   display: 'flex',
   flexDirection: 'row',
   textAlign: 'right',
   width: 600,
-});
+})
 const LeftColumn = glam.div({
   flex: 3,
   paddingRight: 10,
   textAlign: 'left',
-});
+})
 const RightColumn = glam.div({
   textAlign: 'right',
   flex: 1,
   lineBreak: 'loose',
   wordWrap: 'break-word',
-});
+})
 const HeaderRow = glam.div({
   fontWeight: 800,
   paddingTop: 10,
-});
+})
+const nvc = (name, value, color = undefined) => {
+  return { name: name, value: value, color: color }
+}
 export const Row = ({ name, value }) => (
   <ReceiptRow>
-    <LeftColumn>
-      {name}
-    </LeftColumn>
-    <RightColumn>
-      {value}
-    </RightColumn>
+    <LeftColumn>{name}</LeftColumn>
+    <RightColumn>{value}</RightColumn>
   </ReceiptRow>
-);
-export const EventValues = (props) => {
-  const { returnValues } = props;
-  const divs = [];
+)
+export const eventDatas = event => {
+  const { returnValues } = event
+  const datas = []
   Object.entries(returnValues).forEach(([index, value]) => {
-    divs.push(
-      <Div key={index}>
-        <Row name={index} value={value} />
-      </Div>,
-    );
-  });
-  return (
-    <Div>
-      {divs}
-    </Div>
-  );
-};
-export const Events = (props) => {
-  const { events } = props;
-  const eventDivs = [];
-  Object.entries(events).forEach(([name, event]) => {
-    eventDivs.push(
-      <Div key={name}>
-        <HeaderRow>
-          <Row name="Event Name" value={name} />
-        </HeaderRow>
-        <EventValues {...event} />
-      </Div>,
-    );
-  });
-
-  return (
-    <Div>
-      {eventDivs}
-    </Div>
-  );
-};
-export const TransactionReceipt = (props) => {
+    datas.push(nvc(index, value))
+  })
+  return datas
+}
+export const EventTables = props => {
+  const colors = ['#3071D1', '#6025AE', '#D19830']
+  const { events } = props
+  const eventTables = []
+  let index = 0
+  Object.entries(events).forEach(([name, event], v1, v2) => {
+    console.log('SDF', v1, v2)
+    let header = nvc('Event', name, colors[index % colors.length])
+    let rows = eventDatas(event)
+    eventTables.push(<ResultTable key={name} header={header} rows={rows} />)
+    index++
+  })
+  return <Div>{eventTables}</Div>
+}
+export const TransactionReceipt = props => {
   const {
-    transactionHash, ethAddress, blockNumber, gasUsed, gasPrice, events,
-  } = props;
+    transactionHash,
+    ethAddress,
+    blockNumber,
+    gasUsed,
+    gasPrice,
+    events,
+  } = props
   if (!transactionHash) {
-    return null;
+    return null
   }
 
+  let header = nvc('Transaction Information', 'Values', '#D19830')
+  let rows = [
+    nvc('Transaction Hash', transactionHash),
+    nvc('Block #', blockNumber),
+    nvc('Gas Used', gasUsed),
+    nvc('Gas Price', gasPrice),
+  ]
   return (
-    <Div bordered responsive css={{ textAlign: 'left' }}>
-      <HeaderRow>
-        <Row name="Transaction Information" value="Values" />
-      </HeaderRow>
-      <Row name="Contract Address" value={ethAddress} />
-      <Row name="TX #" value={transactionHash} />
-      <Row name="Block #" value={blockNumber} />
-      <Row name="Gas Used" value={gasUsed} />
-      <Row name="Gas Price" value={gasPrice} />
-
-      <Events events={events} />
+    <Div
+      css={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+      }}
+    >
+      <Div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          width: '90%',
+        }}
+      >
+        <ResultTable header={header} rows={rows} />
+        <EventTables events={events} />
+      </Div>
     </Div>
-  );
-};
+  )
+}
