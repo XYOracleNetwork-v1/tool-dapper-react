@@ -55,7 +55,7 @@ export let SmartContracts = []
 export let web3
 export let currentUser
 
-const refreshContracts = async web3 => {
+export const refreshContracts = async web3 => {
   let contracts = []
   return fetch('http://localhost:5000/abi')
     .then(contractDatas => {

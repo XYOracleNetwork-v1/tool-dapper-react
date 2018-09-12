@@ -1,10 +1,50 @@
 import React, { Component } from 'react'
-import { Div, H1 } from 'glamorous'
-import { Route, Link } from 'react-router-dom'
+import glam, { Div } from 'glamorous'
+import { Route } from 'react-router-dom'
 import { injectWeb3, validateContracts } from '../web3'
-import Seperator from '../atoms/Seperator'
-import SmartContractList from '../atoms/SmartContractList'
-import { SmartContractItem } from './SmartContractItem'
+import SmartContractSelector from '../atoms/SmartContractSelector'
+import { FunctionsList } from './FunctionsList'
+import FunctionDetails from './FunctionDetails'
+
+import './css/HomeComponent.css'
+
+const Sidebar = glam.div({
+  display: 'flex',
+  flexDirection: 'column',
+  width: 413,
+  borderRight: '1px solid #979797',
+})
+
+const SelectContractLayout = glam.div({
+  display: 'flex',
+  flexDirection: 'column',
+  // justifyContent: 'space-around',
+  width: '100%',
+  height: '251px',
+  backgroundColor: '#5B5C6D',
+})
+
+const SelectContractContainer = glam.div({
+  paddingLeft: 37,
+  paddingRight: 37,
+  paddingTop: 30,
+})
+
+const HeaderDiv = glam.div({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  backgroundColor: '#3c3e51',
+  paddingRight: 54,
+  height: 113,
+})
+
+const MainLayoutDiv = glam.div({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  height: '100%',
+})
 
 const ChangeNetworkDiv = ({ validNetwork }) => {
   if (validNetwork === true) {
@@ -37,27 +77,24 @@ class HomeComponent extends Component {
   render() {
     const { validNetwork } = this.state
     return (
-      <Div>
-        <header className="App-header">
-          <H1>Dapper - Play with your dApps</H1>
-        </header>
-        <Link to="/">Home</Link>
-        <ChangeNetworkDiv validNetwork={validNetwork} />
-        <hr />
-        <h3> Select Contract </h3>
-        <Div
-          css={{
-            display: 'flex',
-            justifyContent: 'left',
-            alignContent: 'left',
-            flexDirection: 'column',
-          }}
-        >
-          Smart Contracts Loaded:
-          <Route path="/" component={SmartContractList} />
-          <Seperator />
-          <Route path="/:contract" component={SmartContractItem} />
-        </Div>
+      <Div css={{ height: '100%' }}>
+        <HeaderDiv>
+          <header className="App-header">dApper</header>
+          <header className="header-right">Play with your dApps</header>
+        </HeaderDiv>
+        <MainLayoutDiv>
+          <ChangeNetworkDiv validNetwork={validNetwork} />
+          <Sidebar>
+            <SelectContractLayout>
+              <header className="select-contract"> Select Contract </header>
+              <SelectContractContainer>
+                <SmartContractSelector />
+              </SelectContractContainer>
+            </SelectContractLayout>
+            <Route path="/:contract" component={FunctionsList} />
+          </Sidebar>
+          <Route path="/:contract/:method" component={FunctionDetails} />
+        </MainLayoutDiv>
       </Div>
     )
   }

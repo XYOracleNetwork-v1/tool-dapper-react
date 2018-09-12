@@ -19,7 +19,7 @@ const ABI = dir =>
         // Starting server from parent directory so add the ".."
         return {
           contractName: file.contractName,
-          data: require(`../${file}`),
+          data: require(`${file}`),
         }
       })
       // get the full paths of the file

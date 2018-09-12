@@ -1,0 +1,24 @@
+.header-functions {
+  padding-left: 7px;
+  width: 105px;
+  color: #9d9d9d;
+  font-family: 'PT Sans';
+  font-size: 25px;
+}
+
+#method-link {
+  color: #9d9d9d;
+  line-height: 40px;
+}
+
+.active-method-link {
+  color: purple;
+  border-bottom: 0.1rem solid #9d9d9d;
+  cursor: not-allowed;
+}
+.active-method-link:before {
+  position: absolute;
+  left: 39px;
+  padding-top: 2px;
+  content: url(http://placehold.it/24x24);
+}

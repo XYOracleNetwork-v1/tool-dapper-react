@@ -1632,6 +1632,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@^2.2.3:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+
 clean-css@4.2.x:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.2.1.tgz#2d411ef76b8569b6d0c84068dabe85b0aa5e5c17"
@@ -6457,6 +6461,12 @@ react-dom@^16.4.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-dropdown@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/react-dropdown/-/react-dropdown-1.6.2.tgz#13ace229f1749f942cd0ec7eb221cb1a22788db7"
+  dependencies:
+    classnames "^2.2.3"
 
 react-error-overlay@^4.0.1:
   version "4.0.1"
