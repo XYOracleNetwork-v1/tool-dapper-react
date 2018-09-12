@@ -1,6 +1,14 @@
 import React from 'react'
-import { Div } from 'glamorous'
-import Seperator from './Seperator'
+import glam from 'glamorous'
+
+const ResultDiv = glam.div({
+  height: 78,
+  paddingLeft: 35,
+  paddingTop: 12,
+  fontSize: '25px',
+  fontFamily: 'PT Sans',
+  color: '#4D4D5C',
+})
 
 const TransactionResult = ({ result }) => {
   if (result === undefined) {
@@ -8,10 +16,9 @@ const TransactionResult = ({ result }) => {
   }
 
   return (
-    <Div>
-      <Seperator />
-      RESULT {result.toString() ? result.toString() : 'null'}
-    </Div>
+    <ResultDiv>
+      Result: {result.toString() ? result.toString() : 'null'}
+    </ResultDiv>
   )
 }
 export default TransactionResult

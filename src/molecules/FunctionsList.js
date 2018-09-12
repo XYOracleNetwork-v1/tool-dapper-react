@@ -21,9 +21,7 @@ const FunctionsListDiv = glam.div({
   flexDirection: 'column',
   paddingTop: 33,
   lineHeight: '37px',
-  paddingLeft: 77,
-  backgroundColor: '#F8F8F8',
-  height: '100%',
+  paddingLeft: 70,
 })
 
 export const MethodLink = ({ match, method }) => (
@@ -31,15 +29,6 @@ export const MethodLink = ({ match, method }) => (
     <Link
       className="method-link"
       activeClassName="active-method-link"
-      style={{
-        lineHeight: '35px',
-        color: '#9d9d9d',
-        textDecoration: 'none',
-        fontSize: 18,
-      }}
-      activeStyle={{
-        color: 'purple',
-      }}
       to={`${match.url}/${method.signature}`}
     >
       {' '}

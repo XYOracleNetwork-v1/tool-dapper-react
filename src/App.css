@@ -11,15 +11,15 @@ body,
   margin: 0;
 }
 
-.App-header {
+.image-header-logo {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 159px;
+  padding-left: 95px;
   color: white;
   font-family: 'Prospectus Std';
   font-size: 57px;
-  width: 182px;
+  width: 200px;
   font-weight: bold;
 }
 

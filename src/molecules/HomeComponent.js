@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import glam, { Div } from 'glamorous'
+import glam, { Div, Img } from 'glamorous'
 import { Route } from 'react-router-dom'
 import { injectWeb3, validateContracts } from '../web3'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import FunctionDetails from './FunctionDetails'
-
+import logo from '../assets/dapper-logo.svg'
 import './css/HomeComponent.css'
 
 const Sidebar = glam.div({
@@ -13,6 +13,7 @@ const Sidebar = glam.div({
   flexDirection: 'column',
   width: 413,
   borderRight: '1px solid #979797',
+  backgroundColor: '#F8F8F8',
 })
 
 const SelectContractLayout = glam.div({
@@ -79,7 +80,7 @@ class HomeComponent extends Component {
     return (
       <Div css={{ height: '100%' }}>
         <HeaderDiv>
-          <header className="App-header">dApper</header>
+          <Img className="image-header-logo" src={logo} />
           <header className="header-right">Play with your dApps</header>
         </HeaderDiv>
         <MainLayoutDiv>
