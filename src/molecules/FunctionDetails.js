@@ -199,11 +199,12 @@ class FunctionDetails extends Component {
                 <Input
                   css={{
                     marginTop: 8,
+                    marginRight: 8,
                     paddingLeft: 8,
                     border: '1px solid #E0E0E0',
                     borderRadius: '6px',
                     backgroundColor: '#F6F6F6',
-                    width: 232,
+                    width: 290,
                     height: 40,
                   }}
                   name={input.name}
@@ -221,10 +222,11 @@ class FunctionDetails extends Component {
               color: 'white',
               backgroundColor: '#5B5C6D',
               height: 40,
-              width: '125px',
-              // marginLeft: 20,
-              marginLeft: 44,
-              marginTop: 14,
+              width: '200px',
+              marginLeft: 'auto',
+              marginRight: 44,
+              marginTop: 'auto',
+              marginBottom: 0,
               borderRadius: 9,
               fontSize: 14,
             }}

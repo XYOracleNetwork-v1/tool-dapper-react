@@ -1,30 +1,36 @@
 const express = require('express')
-const ABI = require('./ABIReader').ABI
-const validatePath = require('./ABIReader').validatePath
+const readLocalABI = require('./ABIReader').readLocalABI
+const ConfigParser = require('./ConfigParser').ABIConfigParser
 const app = express()
 var cors = require('cors')
 const port = process.env.PORT || 5000
 app.use(cors())
-let abiPathArg = process.argv[2]
 
 app.get('/abi', (req, res, next) => {
-  console.log('Using ABI path', abiPathArg)
+  let config = new ConfigParser()
+  const source = config.currentSource()
+  const path = config.sourceValue(source)
 
-  ABI(abiPathArg)
-    .then(files => {
-      res.send({ abi: files })
-    })
-    .catch(err => {
-      console.log(err)
-      next(err)
-    })
+  switch (source) {
+    case 'local': {
+      readLocalABI(path)
+        .then(files => {
+          res.send({ abi: files })
+        })
+        .catch(err => {
+          console.log(err)
+          next(err)
+        })
+    }
+  }
+
+  console.log('Using ABI path', path)
 })
 
-validatePath(abiPathArg)
-  .then(_ => {
-    app.listen(port, () => console.log(`Listening on port ${port}`))
-  })
-  .catch(err => {
-    console.log(err)
-    process.exit(1)
-  })
+app.post('/abi/update', (req, res) => {
+  let config = new ConfigParser()
+  console.log(req)
+  // config.update()
+})
+
+app.listen(port, () => console.log(`Listening on port ${port}`))

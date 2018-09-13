@@ -6,6 +6,7 @@ import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import FunctionDetails from './FunctionDetails'
 import logo from '../assets/dapper-logo.svg'
+import cog from '../assets/cog.svg'
 import './css/HomeComponent.css'
 
 const Sidebar = glam.div({
@@ -81,13 +82,25 @@ class HomeComponent extends Component {
       <Div css={{ height: '100%' }}>
         <HeaderDiv>
           <Img className="image-header-logo" src={logo} />
-          <header className="header-right">Play with your dApps</header>
+          <Div className="vertical-center">
+            <header className="header-right">Play with your dApps</header>
+            <a
+              href="https://github.com/XYOracleNetwork/tool-dapper-react"
+              className="link-right"
+              target="_blank"
+            >
+              View on Github
+            </a>
+          </Div>
         </HeaderDiv>
         <MainLayoutDiv>
           <ChangeNetworkDiv validNetwork={validNetwork} />
           <Sidebar>
             <SelectContractLayout>
-              <header className="select-contract"> Select Contract </header>
+              <Div className="select-contract-layout">
+                <header className="select-contract"> Select Contract </header>{' '}
+                <Img src={cog} />
+              </Div>
               <SelectContractContainer>
                 <SmartContractSelector />
               </SelectContractContainer>

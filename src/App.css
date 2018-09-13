@@ -22,6 +22,12 @@ body,
   width: 260px;
   font-weight: bold;
 }
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 
 .header-right {
   display: flex;
@@ -32,4 +38,11 @@ body,
   font-family: 'PT Sans';
   font-size: 25px;
   line-height: 32px;
+}
+
+.link-right {
+  font-family: PTSans-Regular;
+  font-size: 20px;
+  color: #ffffff;
+  letter-spacing: 0;
 }

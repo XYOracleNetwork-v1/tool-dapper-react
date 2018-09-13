@@ -23,7 +23,7 @@
   content: url('http://i.stack.imgur.com/Icd9n.png');
 }
 .active-method-link {
-  color: #6705fb;
+  color: #6d00ff;
 }
 .active-method-link:before {
   position: relative;

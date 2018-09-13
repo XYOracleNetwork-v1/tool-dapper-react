@@ -56,7 +56,7 @@ class SmartContractSelector extends Component {
           options={this.state.contracts}
           onChange={this._onSelect}
           value={this.state.selected}
-          placeholder="Select an option"
+          placeholder="Nothing Selected"
         />
       </Div>
     )

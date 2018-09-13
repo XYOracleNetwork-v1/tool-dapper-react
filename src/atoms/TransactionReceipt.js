@@ -18,10 +18,6 @@ const RightColumn = glam.div({
   lineBreak: 'loose',
   wordWrap: 'break-word',
 })
-const HeaderRow = glam.div({
-  fontWeight: 800,
-  paddingTop: 10,
-})
 const nvc = (name, value, color = undefined) => {
   return { name: name, value: value, color: color }
 }
@@ -56,7 +52,7 @@ export const EventTables = props => {
 export const TransactionReceipt = props => {
   const {
     transactionHash,
-    ethAddress,
+    // ethAddress,
     blockNumber,
     gasUsed,
     gasPrice,
