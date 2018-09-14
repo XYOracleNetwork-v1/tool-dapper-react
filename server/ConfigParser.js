@@ -12,7 +12,7 @@ const initConfig = (config, configFile) => {
   // Adding sections and adding keys
   config.addSection(`ABISource`)
   config.set(`ABISource`, `local`, `./ABI`)
-  config.set(`ABISource`, `activeSource`, `local`)
+  config.set(`ABISource`, `currentSource`, `local`)
 
   config.write(configFile)
 }
@@ -26,8 +26,17 @@ class ABIConfigParser {
     this.parseConfig()
   }
   update(section, prop, value) {
+    console.log('Updating', section, prop, value)
     this.config.set(section, prop, value)
-    this.config.write(configFile)
+    this.config.write(this.configFile)
+  }
+  updateSettings(settings) {
+    let settingsArray = Object.entries(settings)
+    console.log('Settings Array', settingsArray)
+    settingsArray.forEach(([index, value]) => {
+      console.log('Here', index, value)
+      this.update('ABISource', index, value)
+    })
   }
   parseConfig() {
     console.log(` $ Parsing config`, this.configFile)
@@ -40,10 +49,18 @@ class ABIConfigParser {
     }
   }
   currentSource() {
-    return this.config.get(`ABISource`, `activeSource`)
+    return this.config.get(`ABISource`, `currentSource`)
   }
   sourceValue(source) {
     return untildify(this.config.get(`ABISource`, source))
+  }
+  settings() {
+    return {
+      currentSource: this.config.get(`ABISource`, `currentSource`),
+      local: this.config.get(`ABISource`, `local`),
+      ipfs: this.config.get(`ABISource`, `ipfs`),
+      remote: this.config.get(`ABISource`, `remote`),
+    }
   }
 }
 

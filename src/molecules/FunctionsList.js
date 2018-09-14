@@ -1,7 +1,6 @@
 import React from 'react'
 import glam, { Div } from 'glamorous'
 import { NavLink as Link } from 'react-router-dom'
-import { contractNamed } from '../web3'
 import './css/FunctionsList.css'
 
 const FunctionsDiv = glam.div({
@@ -39,9 +38,9 @@ export const MethodLink = ({ match, method }) => (
 )
 
 export const FunctionsList = props => {
-  const { match } = props
+  const { match, service } = props
   const contractName = match.params.contract
-  const contract = contractNamed(contractName)
+  const contract = service.contractNamed(contractName)
   if (!contract) {
     return null
   }

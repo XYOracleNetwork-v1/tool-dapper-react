@@ -1,36 +1,17 @@
 import React, { Component } from 'react'
 import { Div } from 'glamorous'
 import { withRouter } from 'react-router-dom'
-import { SmartContracts, refreshContracts, web3 } from '../web3'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 import './css/SmartContractSelector.css'
 
 class SmartContractSelector extends Component {
   state = {
-    contracts: undefined,
-    selected: undefined,
+    contracts: this.props.contracts,
+    selected: null,
+    contractsChanged: undefined,
   }
-  componentDidMount() {
-    refreshContracts(web3).then(() => {
-      const contracts = SmartContracts.map(contract => {
-        let contractOption = {
-          value: contract.name,
-          label: contract.name,
-        }
-        if (
-          this.props.history.location.pathname &&
-          this.props.history.location.pathname
-            .slice(1)
-            .startsWith(contract.name)
-        ) {
-          this.setState({ selected: contractOption })
-        }
-        return contractOption
-      })
-      this.setState({ contracts })
-    })
-  }
+
   _onSelect = contract => {
     if (!this.state.selected || this.state.selected.label !== contract.label) {
       this.setState({ selected: contract })
@@ -39,6 +20,21 @@ class SmartContractSelector extends Component {
   }
 
   render() {
+    let selected = undefined
+    let options = this.props.contracts.map(contract => {
+      let contractOption = {
+        value: contract.name,
+        label: contract.name,
+      }
+      if (
+        this.props.history.location.pathname &&
+        this.props.history.location.pathname.slice(1).startsWith(contract.name)
+      ) {
+        selected = contractOption
+      }
+      return contractOption
+    })
+
     return (
       <Div
         css={{
@@ -53,9 +49,9 @@ class SmartContractSelector extends Component {
           css={{
             height: 60,
           }}
-          options={this.state.contracts}
+          options={options}
           onChange={this._onSelect}
-          value={this.state.selected}
+          value={selected}
           placeholder="Nothing Selected"
         />
       </Div>

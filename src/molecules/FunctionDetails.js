@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
-import glam, { Div, Input, Button } from 'glamorous'
+import glam, { Div, Input, Button, Details } from 'glamorous'
 import { BigNumber } from 'bignumber.js'
-import { contractNamed, currentUser } from '../web3'
 import TransactionResult from '../atoms/TransactionResult'
 import TransactionError from '../atoms/TransactionError'
 import { TransactionReceipt } from '../atoms/TransactionReceipt'
-
-const FunctionHeaderDiv = glam.div({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  height: 78,
-  paddingLeft: 24,
-  fontSize: '25px',
-})
+import { DetailsHeader } from '../atoms/DetailsHeader'
+import { DetailsButton } from '../atoms/DetailsButton'
 
 const FunctionPropertiesDiv = glam.div({
   display: 'flex',
@@ -46,6 +38,7 @@ class FunctionDetails extends Component {
       name: 'loading...',
       type: '',
     },
+    service: this.props.service,
     transactionResult: undefined,
     transactionReceipt: undefined,
     transactionError: undefined,
@@ -70,7 +63,7 @@ class FunctionDetails extends Component {
 
     if (signature !== methodSig) {
       const contractName = match.params.contract
-      this.contract = contractNamed(contractName)
+      this.contract = this.state.service.contractNamed(contractName)
       if (this.contract) {
         const { _jsonInterface } = this.contract
         const newMethod = this.methodObject(_jsonInterface, methodSig)
@@ -129,7 +122,7 @@ class FunctionDetails extends Component {
     })
 
     try {
-      if (!currentUser) {
+      if (!this.state.service.currentUser) {
         throw new Error('No Current User, Refresh Page, or Login Metamask')
       }
       if (
@@ -143,7 +136,7 @@ class FunctionDetails extends Component {
         this.setState({ transactionResult: result })
       } else {
         this.contract.methods[methodName](...inputParams)
-          .send({ from: currentUser })
+          .send({ from: this.state.service.currentUser })
           .then(transactionReceipt => {
             this.setState({ transactionReceipt })
           })
@@ -169,10 +162,10 @@ class FunctionDetails extends Component {
           overflow: 'auto',
         }}
       >
-        <FunctionHeaderDiv>
+        <DetailsHeader>
           {method.name}
           ()
-        </FunctionHeaderDiv>
+        </DetailsHeader>
         <FunctionParamLayout>
           <FunctionPropertiesDiv>
             {method.name}(
@@ -215,25 +208,7 @@ class FunctionDetails extends Component {
             ))}
           </FunctionParamList>
 
-          <Button
-            css={{
-              justifyContent: 'space-around',
-              alignContent: 'center',
-              color: 'white',
-              backgroundColor: '#5B5C6D',
-              height: 40,
-              width: '200px',
-              marginLeft: 'auto',
-              marginRight: 44,
-              marginTop: 'auto',
-              marginBottom: 0,
-              borderRadius: 9,
-              fontSize: 14,
-            }}
-            onClick={this.handleExecute}
-          >
-            EXECUTE
-          </Button>
+          <DetailsButton onClick={this.handleExecute}>EXECUTE</DetailsButton>
         </FunctionParamLayout>
 
         <TransactionResult result={transactionResult} />

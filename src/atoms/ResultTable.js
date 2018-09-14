@@ -21,7 +21,6 @@ const RightColumn = glam.div({
 
 const HeaderRow = ({ header }) => {
   const { name, value, color } = header
-  console.log('HI', value, name, color)
   return (
     <ReceiptRow
       css={{

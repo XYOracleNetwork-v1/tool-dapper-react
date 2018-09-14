@@ -1,4 +1,6 @@
 [ABISource]
-local=~/GitHub/tool-dapploy-nodejs/samples/sample-datavault-solidity/build/contracts
-activeSource=local
+local=/Users/kevin/GitHub/tool-dapploy-nodejs/samples/sample-datavault-solidity/build/contracts
+currentSource=local
+ipfs=
+remote=
 
