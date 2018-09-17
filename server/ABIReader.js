@@ -3,9 +3,8 @@ const fs = require('fs')
 
 const globFromFiles = dir => {
   return new Promise((resolve, reject) => {
-    console.log(__dirname)
-
     const jsonPath = dir + '/*.json'
+    console.log('Requiring files at ', jsonPath, __dirname)
 
     glob(jsonPath, function(er, files) {
       if (!files || files.length === 0) {
@@ -40,7 +39,9 @@ const validatePath = dir => {
     }
     fs.readdir(dir, (err, files) => {
       if (!files || files.length === 0) {
-        console.log(`ABI folder '${dir}' is empty or does not exist.`)
+        console.log(
+          `ABI folder '${dir}' is empty or does not exist. cwd: ${__dirname}`,
+        )
         return reject(err)
       }
       return resolve(true)

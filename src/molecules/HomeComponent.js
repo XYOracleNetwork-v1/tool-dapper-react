@@ -85,7 +85,7 @@ class HomeComponent extends Component {
     this.service
       .reloadWeb3()
       .then(() => this.service.validateContracts())
-      .then(validNetwork => this.setState({ validNetwork }))
+      .then(validNetwork => this.setState({ validNetwork: true }))
       .catch(err => {
         this.setState({ validNetwork: false })
         this.serviceError = err

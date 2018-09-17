@@ -4,6 +4,14 @@ import { DetailsHeader } from '../atoms/DetailsHeader'
 import { DetailsButton } from '../atoms/DetailsButton'
 import { withRouter } from 'react-router-dom'
 
+const SettingsInput = glam.input({
+  paddingLeft: 12,
+  border: '1px solid #E0E0E0',
+  borderRadius: '6px',
+  backgroundColor: '#F6F6F6',
+  width: 500,
+  height: 40,
+})
 const RowLayout = glam.div({
   display: 'flex',
   flexDirection: 'row',
@@ -101,19 +109,11 @@ class Settings extends Component {
               Local Path
             </LeftColumn>
             <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
-              <Input
+              <SettingsInput
                 type="text"
-                css={{
-                  paddingLeft: 12,
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '6px',
-                  backgroundColor: '#F6F6F6',
-                  width: 500,
-                  height: 40,
-                }}
                 value={this.state.local}
                 name="local"
-                placeholder="/path/to/abi/folder"
+                placeholder="ie. /path/to/abi/folder"
                 onChange={this.handleChange}
               />
             </CenterColumn>
@@ -128,6 +128,15 @@ class Settings extends Component {
               />
               IPFS Address
             </LeftColumn>
+            <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
+              <SettingsInput
+                type="text"
+                value={this.state.ipfs}
+                name="ipfs"
+                placeholder="ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ"
+                onChange={this.handleChange}
+              />
+            </CenterColumn>
           </RowLayout>
           <RowLayout>
             <LeftColumn>
@@ -139,6 +148,15 @@ class Settings extends Component {
               />
               AWS Bucket
             </LeftColumn>
+            <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
+              <SettingsInput
+                type="text"
+                value={this.state.remote}
+                name="remote"
+                placeholder="ie. layerone.smart-contracts/ABI"
+                onChange={this.handleChange}
+              />
+            </CenterColumn>
           </RowLayout>
 
           <DetailsButton css={{ display: 'flex', marginTop: 50 }} type="submit">

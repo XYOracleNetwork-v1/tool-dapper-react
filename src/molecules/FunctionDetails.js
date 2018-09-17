@@ -30,6 +30,17 @@ const FunctionParamList = glam.div({
   paddingLeft: 50,
 })
 
+const InputBar = glam.input({
+  marginTop: 8,
+  marginRight: 8,
+  paddingLeft: 8,
+  border: '1px solid #E0E0E0',
+  borderRadius: '6px',
+  backgroundColor: '#F6F6F6',
+  width: 290,
+  height: 40,
+})
+
 class FunctionDetails extends Component {
   state = {
     method: {
@@ -189,17 +200,7 @@ class FunctionDetails extends Component {
                 key={input.name}
               >
                 {input.name}{' '}
-                <Input
-                  css={{
-                    marginTop: 8,
-                    marginRight: 8,
-                    paddingLeft: 8,
-                    border: '1px solid #E0E0E0',
-                    borderRadius: '6px',
-                    backgroundColor: '#F6F6F6',
-                    width: 290,
-                    height: 40,
-                  }}
+                <InputBar
                   name={input.name}
                   placeholder={input.type}
                   onChange={this.handleChange}
