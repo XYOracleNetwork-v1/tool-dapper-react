@@ -1,5 +1,6 @@
 /* eslint-disable */
 import Web3 from 'web3'
+import { PortisProvider } from 'portis'
 
 class SmartContractService {
   getAllSmartContracts = () => {
@@ -16,7 +17,11 @@ class SmartContractService {
     if (typeof window.web3 !== 'undefined') {
       return new Web3(window.web3.currentProvider)
     }
-    return new Web3('http://localhost:8545')
+    return new Web3(
+      new PortisProvider({
+        providerNodeUrl: 'http://localhost:8545',
+      }),
+    )
   }
   contractObject = name =>
     this.smartContracts.find(contract => contract.name === name)
@@ -62,6 +67,7 @@ class SmartContractService {
     this.web3.eth.getAccounts().then(accounts => accounts[0])
 
   refreshContracts = async _ => {
+    console.log('Refreshing contracts')
     let contracts = []
     return fetch('http://localhost:5000/abi')
       .then(contractDatas => {
@@ -72,6 +78,7 @@ class SmartContractService {
         return this.web3.eth.net.getId()
       })
       .then(netId => {
+        console.log('Checking contracts on network', netId)
         let sc = []
         contracts.forEach(contract => {
           let json = contract.data
@@ -85,6 +92,12 @@ class SmartContractService {
               contract: contract,
               address: address,
             })
+          } else if (Object.entries(json.networks).length > 0) {
+            console.log(
+              'You are on the wrong network',
+              Object.entries(json.networks)[0],
+            )
+            throw new Error('Wrong Network Detected')
           }
         })
         this.smartContracts = sc
@@ -106,7 +119,9 @@ class SmartContractService {
       Promise.all([refreshUser(), this.refreshContracts()])
 
     // Will refresh local store when new user is chosen:
-    this.web3.currentProvider.publicConfigStore.on('update', refreshDapp)
+    if (this.web3.currentProvider.publicConfigStore) {
+      this.web3.currentProvider.publicConfigStore.on('update', refreshDapp)
+    }
 
     return this.refreshContracts().then(refreshUser)
   }

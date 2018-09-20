@@ -1,22 +1,45 @@
-# Dapper
+<h1 align="center">
+  <img alt="Dapploy" src="https://github.com/XYOracleNetwork/tool-dapper-react/blob/master/src/assets/dapper-logo.svg" width="300">
+</h1>
 
-View your smart contracts in an auto-generated
+<p align="center">
+  <a href="https://circleci.com/gh/XYOracleNetwork/tool-dappdeployer-nodejs">
+    <img alt="Circle Status" src="https://circleci.com/gh/XYOracleNetwork/tool-dapper-react.svg?style=shield&circle-token=17875bb2726cc569f5426d27748d6386f2401f5b">
+  </a>
+  <a href="https://gitter.im/XYOracleNetwork/Dev">
+    <img alt="Gitter Chat" src="https://img.shields.io/gitter/room/XYOracleNetwork/Stardust.svg">
+  </a>
+  <a href="http://commitizen.github.io/cz-cli/">
+    <img alt="Commitizen friendly" src="https://img.shields.io/badge/web3-friendly-brightgreen.svg">
+    </a>
+    <a href="https://david-dm.org/xyoraclenetwork/tool-dapper-react" title="dependencies status"><img src="https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg"/></a>
+  <a href="https://david-dm.org/xyoraclenetwork/tool-dapper-react?type=dev" title="devDependencies status"><img src="https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg"/></a>
+</p>
 
-- When in doubt, `yarn` it out:
+<h3 align="center">
+  "View your Smart Contracts"
+</h3>
+<p align="center">
+  Made with ❤️
+  <br/>by [XYO](https://xyo.network)
+</p>
+
+# Pt. I. - Let's Get Dapper
+
+1. When in doubt, `yarn` it out:
   Run `yarn`
 
-- Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) to deploy smart contracts and deploy the ABI to the chain and to this project.
+2. Run `yarn start` to start the client.  This should open up `localhost:3000` in a chrome browser.
 
-You'll can simply modify Dapploy's `deployer.conf` to point to this project's directory:
+You should see the Dapper UI with no smart contracts loaded.
 
-```
-contractOutput={dapper-project-dir}/src/ABI
-...
-web3ModuleOutput={dapper-project-dir}/src/web3.js
-```
+# Pt. II. - Elsa...do you want to build a smart contract?
 
-- This project expects Dapploy's generated web3.js interface to load and expose the contracts. You can recreate this, but it's best to use this tool with Dapploy.
+We need some smart contracts
 
-- Run `yarn start` to start the client
+1. Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) and run `dapploy init` to create your first standalone smart contact app with scaffolding for a web3 javascript interface.
 
-- Go to `localhost:3000` in a chrome browser if you are running your client locally with metamask.
+**or** Use [Truffle](https://truffleframework.com) to deploy your smart contracts to any Ethereum blockchain
+
+2. 
+

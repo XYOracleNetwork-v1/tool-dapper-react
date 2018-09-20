@@ -29,7 +29,7 @@
     "ipfs-api": "^24.0.1",
     "json-loader": "^0.5.7",
     "nodemon": "^1.18.4",
-    "portis": "^1.2.5",
+    "portis": "^1.2.12",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-dropdown": "^1.6.2",

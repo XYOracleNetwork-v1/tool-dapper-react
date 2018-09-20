@@ -7491,9 +7491,9 @@ portfinder@^1.0.9:
     debug "^2.2.0"
     mkdirp "0.5.x"
 
-portis@^1.2.5:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/portis/-/portis-1.2.6.tgz#09449d0257b70288291e7e91dc6e9d2d30950aa5"
+portis@^1.2.12:
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/portis/-/portis-1.2.12.tgz#e9b20263541f1f650bcb0d98b11389484f08cfde"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"

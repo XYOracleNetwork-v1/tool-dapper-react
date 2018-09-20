@@ -1,6 +1,6 @@
 [ABISource]
-local=/Users/kevin/GitHub/tool-dapploy-nodejs/samples/sample-datavault-solidity/build/contracts/test/dapp/build/contracts
+local=/path/to/local/ABI
 currentSource=local
-ipfs=QmeiUrFQ7hsxLEHkRvDRfMBe96hiyPnnakGcifLg4PsbYC
-remote=layerone.smart-contracts
+ipfs=
+remote=
 
