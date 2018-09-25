@@ -1,9 +1,9 @@
 <h1 align="center">
-  <img alt="Dapploy" src="https://github.com/XYOracleNetwork/tool-dapper-react/blob/master/src/assets/dapper-logo.svg" width="300">
+  <img alt="Dapploy" src="https://github.com/XYOracleNetwork/tool-dapper-react/blob/master/src/assets/dapper-logo.svg" width="300" backgroundColor="black">
 </h1>
 
 <p align="center">
-  <a href="https://circleci.com/gh/XYOracleNetwork/tool-dappdeployer-nodejs">
+  <a href="https://circleci.com/gh/XYOracleNetwork/tool-dapper-nodejs">
     <img alt="Circle Status" src="https://circleci.com/gh/XYOracleNetwork/tool-dapper-react.svg?style=shield&circle-token=17875bb2726cc569f5426d27748d6386f2401f5b">
   </a>
   <a href="https://gitter.im/XYOracleNetwork/Dev">
@@ -27,19 +27,20 @@
 # Pt. I. - Let's Get Dapper
 
 1. When in doubt, `yarn` it out:
-  Run `yarn`
+   Run `yarn`
 
-2. Run `yarn start` to start the client.  This should open up `localhost:3000` in a chrome browser.
+2. Run `yarn start` to start the client. This should open up `localhost:3000` in a chrome browser.
 
 You should see the Dapper UI with no smart contracts loaded.
 
-# Pt. II. - Elsa...do you want to build a smart contract?
+# Pt. II. - Play with your Smart Contracts
 
-We need some smart contracts
+We need to deploy some smart contracts
 
 1. Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) and run `dapploy init` to create your first standalone smart contact app with scaffolding for a web3 javascript interface.
 
 **or** Use [Truffle](https://truffleframework.com) to deploy your smart contracts to any Ethereum blockchain
 
-2. 
+2. Once you have deployed the contracts, in Dapper, go to the settings cog and copy the directory of the deployed ABI located in `build/contracts` of the truffle project
 
+3. You can view and pass transactions to your smart contracts!
