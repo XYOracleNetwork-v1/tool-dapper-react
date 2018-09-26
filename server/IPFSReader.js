@@ -2,19 +2,10 @@ const ipfsAPI = require('ipfs-api')
 
 const ipfs = new ipfsAPI({
   host: 'ipfs.xyo.network',
-  port: 443,
+  port: 5002,
   protocol: 'https',
 })
-// const ipfs = new ipfsAPI({
-//   host: 'localhost',
-//   port: 5001,
-//   protocol: 'http',
-// })
-// const ipfs = new ipfsAPI({
-//   host: 'ipfs.xyo.network',
-//   port: 5001,
-//   protocol: 'https',
-// })
+
 const remotePath = '/tmp/ABI/ipfs'
 
 const downloadFiles = ipfsHash => {

@@ -48,6 +48,7 @@ export const FunctionsList = props => {
   const sortedMethods = contract._jsonInterface
     .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 0))
     .map(method => {
+      console.log('Method', method.name)
       if (method.name && method.type === 'function') {
         return (
           <MethodLink key={method.signature} match={match} method={method} />
