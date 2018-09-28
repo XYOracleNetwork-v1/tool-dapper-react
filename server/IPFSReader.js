@@ -25,4 +25,4 @@ const downloadFiles = ipfsHash => {
   })
 }
 
-module.exports = { downloadFiles, remotePath }
+module.exports = { downloadFiles }
