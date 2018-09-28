@@ -49,15 +49,7 @@ app.get('/abi', (req, res, next) => {
     }
     case 'ipfs': {
       return IPFSReader.downloadFiles(path)
-        .then(files => {
-          console.log(
-            'Finished downloading, checking remote path',
-            IPFSReader.remotePath,
-            __dirname,
-          )
-
-          return res.send({ abi: files })
-        })
+        .then(files => res.send({ abi: files }))
         .catch(err => {
           console.log(err)
           res.send({ abi: [] })
