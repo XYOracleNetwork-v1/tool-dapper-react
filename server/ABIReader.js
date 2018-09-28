@@ -4,7 +4,6 @@ const fs = require('fs')
 const globFromFiles = dir => {
   return new Promise((resolve, reject) => {
     const jsonPath = dir + '/*.json'
-    console.log('Requiring files at ', jsonPath, __dirname)
 
     glob(jsonPath, function(er, files) {
       if (!files || files.length === 0) {
@@ -13,11 +12,10 @@ const globFromFiles = dir => {
         )
       }
       const contractDatas = files.map(file => {
-        // TODO use IPFS and be done with yucky relative paths
-        // Starting server from parent directory so add the ".."
+        console.log('Reading file', file)
         return {
           contractName: file.contractName,
-          data: require(`${file}`),
+          data: JSON.parse(fs.readFileSync(file).toString()),
         }
       })
       // get the full paths of the file

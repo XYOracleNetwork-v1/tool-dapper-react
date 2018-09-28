@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 const loadLocalABI = (res, path) => {
-  console.log('LOADING PATH', path, __dirname)
+  // console.log('LOADING PATH', path, __dirname)
   return readLocalABI(path)
     .then(files => {
       res.send({ abi: files })

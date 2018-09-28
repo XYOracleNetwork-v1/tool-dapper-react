@@ -53,7 +53,7 @@
     "eslint-plugin-react": "^7.11.1"
   },
   "scripts": {
-    "start": "concurrently --kill-others-on-fail \"yarn server ${0}\" \"yarn dev\"",
+    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn dev\"",
     "server": "nodemon server/server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",

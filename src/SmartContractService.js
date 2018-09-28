@@ -110,6 +110,7 @@ class SmartContractService {
   }
 
   reloadWeb3() {
+    console.log('Reload Web 3')
     const refreshUser = () =>
       this.getCurrentUser().then(account => {
         this.currentUser = account
