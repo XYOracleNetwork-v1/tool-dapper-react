@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/XYOracleNetwork/tool-dapper-react.git"
   },
+  "homepage": "https://s3-us-west-1.amazonaws.com/dapper.layerone.co/",
   "keywords": [
     "xyo",
     "dapploy",
@@ -16,7 +17,6 @@
   "bugs": {
     "url": "https://github.com/XYOracleNetwork/tool-dapper-react/issues"
   },
-  "homepage": "https://github.com/XYOracleNetwork/tool-dapper-react#readme",
   "dependencies": {
     "bignumber.js": "^7.2.1",
     "concurrently": "^4.0.1",

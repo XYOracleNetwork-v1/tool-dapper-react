@@ -1,11 +1,9 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
+import { isLocalhost } from './registerServiceWorker'
 
 class SmartContractService {
-  getAllSmartContracts = () => {
-    return this.smartContracts
-  }
   constructor() {
     this.smartContracts = []
     this.web3 = this.getWeb3()
@@ -13,16 +11,26 @@ class SmartContractService {
     this.refreshContracts.bind(this)
   }
 
+  getAllSmartContracts = () => {
+    return this.smartContracts
+  }
+
   getWeb3 = () => {
     if (typeof window.web3 !== 'undefined') {
       return new Web3(window.web3.currentProvider)
     }
+    if (isLocalhost) {
+      return new PortisProvider({
+        providerNodeUrl: 'http://localhost:8545',
+      })
+    }
     return new Web3(
       new PortisProvider({
-        providerNodeUrl: 'http://localhost:8545',
+        apiKey: '3b1ca5fed7f439bf72771e64e9442d74',
       }),
     )
   }
+
   contractObject = name =>
     this.smartContracts.find(contract => contract.name === name)
 
@@ -70,15 +78,12 @@ class SmartContractService {
     console.log('Refreshing contracts')
     let contracts = []
     return fetch('http://localhost:5000/abi')
-      .then(contractDatas => {
-        return contractDatas.json()
-      })
+      .then(contractDatas => contractDatas.json())
       .then(data => {
         contracts = data.abi
         return this.web3.eth.net.getId()
       })
       .then(netId => {
-        console.log('Checking contracts on network', netId)
         let sc = []
         contracts.forEach(contract => {
           let json = contract.data
@@ -124,7 +129,7 @@ class SmartContractService {
       this.web3.currentProvider.publicConfigStore.on('update', refreshDapp)
     }
 
-    return this.refreshContracts().then(refreshUser)
+    return refreshDapp()
   }
 }
 

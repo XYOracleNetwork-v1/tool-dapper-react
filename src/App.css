@@ -1,12 +1,6 @@
-.App {
-  text-align: left;
-  height: 100%;
-}
-
 html,
 body,
-#root,
-#app {
+#root {
   height: 100%;
   margin: 0;
 }
@@ -27,7 +21,6 @@ body,
   flex-direction: column;
   justify-content: center;
 }
-
 
 .header-right {
   display: flex;
