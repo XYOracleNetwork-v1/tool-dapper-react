@@ -5,8 +5,8 @@ import { isLocalhost } from './registerServiceWorker'
 
 class SmartContractService {
   constructor() {
+    console.log('Init SmartContractService')
     this.smartContracts = []
-    this.web3 = this.getWeb3()
     this.currentUser = undefined
     this.refreshContracts.bind(this)
   }
@@ -15,20 +15,39 @@ class SmartContractService {
     return this.smartContracts
   }
 
-  getWeb3 = () => {
-    if (typeof window.web3 !== 'undefined') {
-      return new Web3(window.web3.currentProvider)
+  getNetworkString = netId => {
+    switch (netId) {
+      case 1:
+        return 'mainnet'
+      case 42:
+        return 'kovan'
+      case 5777:
+        return 'development'
     }
-    if (isLocalhost) {
-      return new PortisProvider({
-        providerNodeUrl: 'http://localhost:8545',
+  }
+
+  loadPortis = async () => {
+    return fetch('http://localhost:5000/settings')
+      .then(result => {
+        return result.json()
       })
-    }
-    return new Web3(
-      new PortisProvider({
-        apiKey: '3b1ca5fed7f439bf72771e64e9442d74',
-      }),
-    )
+      .then(result => {
+        let network = result.settings.network
+        if (network && network !== 'development') {
+          this.web3 = new Web3(
+            new PortisProvider({
+              apiKey: '3b1ca5fed7f439bf72771e64e9442d74',
+              network: network,
+            }),
+          )
+        } else {
+          this.web3 = new Web3(
+            new PortisProvider({
+              providerNodeUrl: 'http://localhost:8545',
+            }),
+          )
+        }
+      })
   }
 
   contractObject = name =>
@@ -74,6 +93,8 @@ class SmartContractService {
   getCurrentUser = async () =>
     this.web3.eth.getAccounts().then(accounts => accounts[0])
 
+  currentUser = () => this.currentUser
+
   refreshContracts = async _ => {
     console.log('Refreshing contracts')
     let contracts = []
@@ -89,7 +110,11 @@ class SmartContractService {
           let json = contract.data
 
           if (json && json.networks[netId]) {
-            console.log('Adding Contract', json.contractName)
+            console.log(
+              'Adding Contract',
+              json.contractName,
+              json.networks[netId],
+            )
             const address = json.networks[netId].address
             const contract = new this.web3.eth.Contract(json.abi, address)
             sc.push({
@@ -100,6 +125,7 @@ class SmartContractService {
           } else if (Object.entries(json.networks).length > 0) {
             console.log(
               'You are on the wrong network',
+              this.web3.currentProvider.network,
               Object.entries(json.networks)[0],
             )
             throw new Error('Wrong Network Detected')
@@ -114,8 +140,13 @@ class SmartContractService {
       })
   }
 
-  reloadWeb3() {
-    console.log('Reload Web 3')
+  async reloadWeb3() {
+    if (typeof window.web3 !== 'undefined') {
+      this.web3 = new Web3(window.web3.currentProvider)
+    } else {
+      await this.loadPortis()
+    }
+
     const refreshUser = () =>
       this.getCurrentUser().then(account => {
         this.currentUser = account
@@ -125,7 +156,10 @@ class SmartContractService {
       Promise.all([refreshUser(), this.refreshContracts()])
 
     // Will refresh local store when new user is chosen:
-    if (this.web3.currentProvider.publicConfigStore) {
+    if (
+      this.web3.currentProvider &&
+      this.web3.currentProvider.publicConfigStore
+    ) {
       this.web3.currentProvider.publicConfigStore.on('update', refreshDapp)
     }
 

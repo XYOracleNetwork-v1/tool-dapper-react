@@ -1,6 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/my-first-coin/build/contracts
-currentSource=ipfs
-ipfs=QmbbWjKLBbUvdcQZdhciaB2kvaM2LyWQ1uvAyr6sUQepKD
+local=/Users/kevin/GitHub/learning/erc20/build/contracts
+currentSource=local
+ipfs=
 remote=
+network=development
 

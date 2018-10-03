@@ -4,10 +4,10 @@
   font-family: 'PT Sans';
   font-size: 25px;
   padding-left: 56px;
+  margin-bottom: 10px;
 }
 .select-contract-layout {
-  margin-top: 60px;
-
+  margin-top: 50px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

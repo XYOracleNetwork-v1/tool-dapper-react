@@ -11,8 +11,9 @@ const FunctionsHeaderDiv = glam.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  height: 78,
+  height: 110,
   paddingLeft: 37,
+  paddingTop: 10,
   borderBottom: '1px solid #979797',
 })
 const FunctionsListDiv = glam.div({
@@ -41,6 +42,7 @@ export const FunctionsList = props => {
   const { match, service } = props
   const contractName = match.params.contract
   const contract = service.contractNamed(contractName)
+  console.log('CONTRACT', contract)
   if (!contract) {
     return null
   }
