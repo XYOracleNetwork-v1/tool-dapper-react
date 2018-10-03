@@ -1,7 +1,7 @@
 [ABISource]
 local=/Users/kevin/GitHub/learning/refund/build/contracts
-currentSource=local
-ipfs=
+currentSource=ipfs
+ipfs=QmNi2xxw2DxtXngwJC494N2ejXcgKtt4b7WRrB4QEmyvE9
 remote=
 network=kovan
 

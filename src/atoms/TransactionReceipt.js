@@ -57,7 +57,6 @@ export const TransactionReceipt = props => {
     // ethAddress,
     blockNumber,
     gasUsed,
-    gasPrice,
     events,
   } = props
   if (!transactionHash) {

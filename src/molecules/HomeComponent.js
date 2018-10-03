@@ -101,12 +101,11 @@ class HomeComponent extends Component {
   }
 
   componentWillMount() {
-    console.log('Creating Smart Contract Service')
-    this.reloadWeb3()
     // Will refresh local store when new user is chosen:
     if (this.state.service.getCurrentConfigStore()) {
       this.state.service.getCurrentConfigStore().on('update', this.reloadWeb3)
     }
+    this.reloadWeb3()
   }
 
   reloadWeb3 = () => {
