@@ -11,7 +11,7 @@ const FunctionsHeaderDiv = glam.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  height: 110,
+  height: 80,
   paddingLeft: 37,
   paddingTop: 10,
   borderBottom: '1px solid #979797',

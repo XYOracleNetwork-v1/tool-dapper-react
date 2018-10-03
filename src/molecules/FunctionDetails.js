@@ -133,7 +133,8 @@ class FunctionDetails extends Component {
     })
 
     try {
-      if (!this.state.service.currentUser) {
+      let user = this.state.service.getCurrentUser()
+      if (!user) {
         throw new Error('No Current User, Refresh Page, or Login Metamask')
       }
       if (
@@ -147,7 +148,7 @@ class FunctionDetails extends Component {
         this.setState({ transactionResult: result })
       } else {
         this.contract.methods[methodName](...inputParams)
-          .send({ from: this.state.service.currentUser })
+          .send({ from: user })
           .then(transactionReceipt => {
             this.setState({ transactionReceipt })
           })
