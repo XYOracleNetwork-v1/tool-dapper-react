@@ -23,20 +23,11 @@ body,
   text-align: right;
 }
 
-.header-right {
-  color: #ffffff;
-  font-family: 'PT Sans';
-  font-size: 25px;
-  line-height: 32px;
-  text-align: right;
-}
-
 .link-right {
   font-family: PTSans-Regular;
   font-size: 20px;
   color: #ffffff;
   letter-spacing: 0;
-  text-align: right;
 }
 .account-right {
   font-family: PTSans-Regular;
@@ -44,5 +35,10 @@ body,
   color: #ffffff;
   letter-spacing: 0;
   padding-top: 10px;
-  text-align: right;
+}
+.network-right {
+  font-family: PTSans-Regular;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0;
 }

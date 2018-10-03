@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import glam, { Div, Input, Button, Details } from 'glamorous'
+import glam, { Div } from 'glamorous'
 import { BigNumber } from 'bignumber.js'
 import TransactionResult from '../atoms/TransactionResult'
 import TransactionError from '../atoms/TransactionError'
@@ -41,11 +41,19 @@ const InputBar = glam.input({
   height: 40,
 })
 
+const ParamInputDiv = glam.div({
+  marginTop: 8,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+})
+
 class FunctionDetails extends Component {
   state = {
     method: {
       inputs: [],
       outputs: [],
+      value: 0,
       name: 'loading...',
       type: '',
     },
@@ -105,6 +113,11 @@ class FunctionDetails extends Component {
       if (input.name === e.target.name) {
         return { ...input, value: e.target.value }
       }
+      console.log('INPUTS', e.target.name)
+      if (e.target.name === 'Value') {
+        console.log('Adding Value To Method', e.target.value)
+        this.setState({ value: e.target.value })
+      }
       return input
     })
     const newMethod = method
@@ -133,7 +146,8 @@ class FunctionDetails extends Component {
     })
 
     try {
-      if (!this.state.service.currentUser) {
+      let user = this.state.service.getCurrentUser()
+      if (!user) {
         throw new Error('No Current User, Refresh Page, or Login Metamask')
       }
       if (
@@ -147,14 +161,41 @@ class FunctionDetails extends Component {
         this.setState({ transactionResult: result })
       } else {
         this.contract.methods[methodName](...inputParams)
-          .send({ from: this.state.service.currentUser })
+          .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
             this.setState({ transactionReceipt })
           })
+          .catch(e => this.setState({ transactionError: e }))
       }
     } catch (e) {
       this.setState({ transactionError: e })
     }
+  }
+
+  getInputs = method => {
+    let results = method.inputs.map(input => (
+      <ParamInputDiv key={input.name}>
+        {input.name}{' '}
+        <InputBar
+          name={input.name}
+          placeholder={input.type}
+          onChange={this.handleChange}
+        />
+      </ParamInputDiv>
+    ))
+    if (method.stateMutability === 'payable') {
+      results.push(
+        <ParamInputDiv key="Value">
+          Value To Transfer{' '}
+          <InputBar
+            name="Value"
+            placeholder="ETH (wei)"
+            onChange={this.handleChange}
+          />
+        </ParamInputDiv>,
+      )
+    }
+    return results
   }
 
   render() {
@@ -164,6 +205,7 @@ class FunctionDetails extends Component {
       transactionReceipt,
       transactionError,
     } = this.state
+
     return (
       <Div
         css={{
@@ -188,26 +230,7 @@ class FunctionDetails extends Component {
               output => `returns (${output.type} ${output.name})`,
             )}
           </FunctionPropertiesDiv>
-          <FunctionParamList>
-            {method.inputs.map(input => (
-              <Div
-                css={{
-                  marginTop: 8,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                }}
-                key={input.name}
-              >
-                {input.name}{' '}
-                <InputBar
-                  name={input.name}
-                  placeholder={input.type}
-                  onChange={this.handleChange}
-                />
-              </Div>
-            ))}
-          </FunctionParamList>
+          <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
 
           <DetailsButton onClick={this.handleExecute}>EXECUTE</DetailsButton>
         </FunctionParamLayout>

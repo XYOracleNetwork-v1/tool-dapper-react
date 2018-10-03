@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/learning/erc20/build/contracts
-currentSource=local
-ipfs=
+local=/Users/kevin/GitHub/learning/refund/build/contracts
+currentSource=ipfs
+ipfs=QmNi2xxw2DxtXngwJC494N2ejXcgKtt4b7WRrB4QEmyvE9
 remote=
-network=development
+network=kovan
 

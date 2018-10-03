@@ -11,7 +11,7 @@ const FunctionsHeaderDiv = glam.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  height: 110,
+  height: 80,
   paddingLeft: 37,
   paddingTop: 10,
   borderBottom: '1px solid #979797',
@@ -42,7 +42,6 @@ export const FunctionsList = props => {
   const { match, service } = props
   const contractName = match.params.contract
   const contract = service.contractNamed(contractName)
-  console.log('CONTRACT', contract)
   if (!contract) {
     return null
   }
@@ -50,7 +49,6 @@ export const FunctionsList = props => {
   const sortedMethods = contract._jsonInterface
     .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 0))
     .map(method => {
-      console.log('Method', method.name)
       if (method.name && method.type === 'function') {
         return (
           <MethodLink key={method.signature} match={match} method={method} />

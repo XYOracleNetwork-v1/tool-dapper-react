@@ -52,11 +52,23 @@ const MainLayoutDiv = glam.div({
   height: '100%',
 })
 
-const AccountDiv = ({ account }) => {
-  if (!account) {
-    return null
+const CurNetwork = ({ account, network }) => {
+  let returnDivs = []
+  if (account) {
+    returnDivs.push(
+      <Div key="account" className="account-right">
+        Wallet: {account}
+      </Div>,
+    )
   }
-  return <Div className="account-right">Account: {account}</Div>
+  if (network) {
+    returnDivs.push(
+      <Div key="network" className="network-right">
+        Network: {network}
+      </Div>,
+    )
+  }
+  return <Div>{returnDivs}</Div>
 }
 
 const ChangeNetworkDiv = ({ validNetwork }) => {
@@ -84,24 +96,32 @@ const ChangeNetworkDiv = ({ validNetwork }) => {
 class HomeComponent extends Component {
   state = {
     validNetwork: true,
-    service: undefined,
+    service: new SmartContractService(),
     serviceError: undefined,
   }
 
   componentWillMount() {
-    console.log('Creating Smart Contract Service')
-    this.service = new SmartContractService()
+    // Will refresh local store when new user is chosen:
+    if (this.state.service.getCurrentConfigStore()) {
+      this.state.service.getCurrentConfigStore().on('update', this.reloadWeb3)
+    }
     this.reloadWeb3()
   }
 
   reloadWeb3 = () => {
-    this.service
+    this.state.service
       .reloadWeb3()
-      .then(() => this.service.validateContracts())
-      .then(validNetwork => this.setState({ validNetwork: true }))
+      .then(() => this.state.service.validateContracts())
+      .then(validNetwork => {
+        this.setState({
+          validNetwork: validNetwork,
+        })
+      })
       .catch(err => {
         this.setState({ validNetwork: false })
-        this.serviceError = err
+        if (err) {
+          this.setState({ serviceError: err })
+        }
         console.log('Caught error while injecting', err)
       })
   }
@@ -115,15 +135,18 @@ class HomeComponent extends Component {
         <HeaderDiv>
           <Img className="image-header-logo" src={logo} />
           <Div className="vertical-center">
-            <header className="header-right">Play with your dApps</header>
             <a
               href="https://github.com/XYOracleNetwork/tool-dapper-react"
               className="link-right"
               target="_blank"
+              rel="noopener noreferrer"
             >
               View on Github
             </a>
-            <AccountDiv account={this.service.currentUser} />
+            <CurNetwork
+              account={this.state.service.getCurrentUser()}
+              network={this.state.service.getCurrentNetwork()}
+            />
           </Div>
         </HeaderDiv>
         <MainLayoutDiv>
@@ -137,7 +160,7 @@ class HomeComponent extends Component {
               </Div>
               <SelectContractContainer>
                 <SmartContractSelector
-                  contracts={this.service.getAllSmartContracts()}
+                  contracts={this.state.service.getSmartContracts()}
                 />
               </SelectContractContainer>
               <Route
@@ -148,25 +171,50 @@ class HomeComponent extends Component {
                     return <Div />
                   }
                   const contractName = match.params.contract
-                  const contract = this.service.contractNamed(contractName)
+                  const contract = this.state.service.contractObject(
+                    contractName,
+                  )
                   if (!contract) {
                     return <Div />
                   }
                   return (
-                    <Div
-                      css={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        textAlign: 'center',
-                        justifyContent: 'space-around',
-                        padding: 14,
-                        color: '#C8C8C8',
-                        fontFamily: 'PT Sans',
-                        fontSize: 14,
-                      }}
-                    >
-                      <Div>Address:</Div>
-                      {contract._address}
+                    <Div>
+                      <Div
+                        css={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          textAlign: 'center',
+                          justifyContent: 'space-between',
+                          paddingTop: 14,
+                          paddingLeft: 14,
+                          paddingRight: 14,
+                          color: '#C8C8C8',
+                          fontFamily: 'PT Sans',
+                          fontSize: 14,
+                        }}
+                      >
+                        <Div>On Networks:</Div>
+                        {this.state.service.getNetworksString(
+                          contract.networks,
+                        )}
+                      </Div>
+                      <Div
+                        css={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          textAlign: 'center',
+                          justifyContent: 'space-between',
+                          paddingBottom: 14,
+                          paddingLeft: 14,
+                          paddingRight: 14,
+                          color: '#C8C8C8',
+                          fontFamily: 'PT Sans',
+                          fontSize: 14,
+                        }}
+                      >
+                        <Div>Address:</Div>
+                        {contract.address}
+                      </Div>
                     </Div>
                   )
                 }}
@@ -175,7 +223,7 @@ class HomeComponent extends Component {
             <Route
               path="/:contract"
               render={props => (
-                <FunctionsList {...props} service={this.service} />
+                <FunctionsList {...props} service={this.state.service} />
               )}
             />
           </Sidebar>
@@ -192,7 +240,7 @@ class HomeComponent extends Component {
               render={props => (
                 <Settings
                   {...props}
-                  service={this.service}
+                  service={this.state.service}
                   onSave={this.reloadWeb3}
                 />
               )}
@@ -201,7 +249,7 @@ class HomeComponent extends Component {
             <Route
               path="/:contract/:method"
               render={props => (
-                <FunctionDetails {...props} service={this.service} />
+                <FunctionDetails {...props} service={this.state.service} />
               )}
               service={this.state.service}
             />

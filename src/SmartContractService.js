@@ -9,21 +9,45 @@ class SmartContractService {
     this.smartContracts = []
     this.currentUser = undefined
     this.refreshContracts.bind(this)
+    this.reloadWeb3.bind(this)
   }
 
-  getAllSmartContracts = () => {
-    return this.smartContracts
+  getCurrentNetwork = () => this.currentNetwork
+
+  getSmartContracts = () => this.smartContracts
+
+  getCurrentConfigStore = () =>
+    this.web3
+      ? this.web3.currentProvider
+        ? this.web3.currentProvider.publicConfigStore
+        : undefined
+      : undefined
+
+  getNetworksString = networks => {
+    let networkString = ''
+    let iterator = 0
+    Object.entries(networks).forEach(net => {
+      networkString += this.getNetworkString(iterator, net[0])
+      iterator++
+    })
+    return networkString
   }
 
-  getNetworkString = netId => {
+  getNetworkString = (iterator, netId) => {
+    let addComma = (iterator, word) => (iterator > 0 ? `, ${word}` : word)
+    let word = ''
     switch (netId) {
-      case 1:
-        return 'mainnet'
-      case 42:
-        return 'kovan'
-      case 5777:
-        return 'development'
+      case '1':
+        word = 'mainnet'
+        break
+      case '42':
+        word = 'kovan'
+        break
+      case '5777':
+        word = 'localhost'
+        break
     }
+    return addComma(iterator, word)
   }
 
   loadPortis = async () => {
@@ -67,7 +91,6 @@ class SmartContractService {
     return Promise.all(
       this.smartContracts.map(contract => this.validContract(contract.name)),
     ).then(results => {
-      console.log('valid results', results)
       if (results.length == 0) {
         throw new Error('No contracts found on this network')
       } else {
@@ -77,7 +100,6 @@ class SmartContractService {
   }
 
   validContract = async name => {
-    console.log('Validating Contract', name)
     const address = this.contractAddress(name)
     return new Promise((resolve, reject) => {
       this.web3.eth
@@ -90,10 +112,7 @@ class SmartContractService {
     })
   }
 
-  getCurrentUser = async () =>
-    this.web3.eth.getAccounts().then(accounts => accounts[0])
-
-  currentUser = () => this.currentUser
+  getCurrentUser = () => this.currentUser
 
   refreshContracts = async _ => {
     console.log('Refreshing contracts')
@@ -105,6 +124,9 @@ class SmartContractService {
         return this.web3.eth.net.getId()
       })
       .then(netId => {
+        this.currentNetwork = this.getNetworkString(0, String(netId))
+        console.log('Updating current network', netId, this.currentNetwork)
+
         let sc = []
         contracts.forEach(contract => {
           let json = contract.data
@@ -121,6 +143,7 @@ class SmartContractService {
               name: json.contractName,
               contract: contract,
               address: address,
+              networks: json.networks,
             })
           } else if (Object.entries(json.networks).length > 0) {
             console.log(
@@ -147,21 +170,14 @@ class SmartContractService {
       await this.loadPortis()
     }
 
-    const refreshUser = () =>
-      this.getCurrentUser().then(account => {
-        this.currentUser = account
+    const refreshUser = async () =>
+      this.web3.eth.getAccounts().then(accounts => {
+        console.log(`Updating USER from ${this.currentUser} to ${accounts[0]}`)
+        this.currentUser = accounts[0]
       })
-    refreshUser.bind(this)
+
     const refreshDapp = async () =>
       Promise.all([refreshUser(), this.refreshContracts()])
-
-    // Will refresh local store when new user is chosen:
-    if (
-      this.web3.currentProvider &&
-      this.web3.currentProvider.publicConfigStore
-    ) {
-      this.web3.currentProvider.publicConfigStore.on('update', refreshDapp)
-    }
 
     return refreshDapp()
   }
