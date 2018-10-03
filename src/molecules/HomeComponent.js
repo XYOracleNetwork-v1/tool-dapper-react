@@ -55,12 +55,20 @@ const MainLayoutDiv = glam.div({
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
   if (account) {
-    returnDivs.push(<Div className="account-right">Wallet: {account}</Div>)
+    returnDivs.push(
+      <Div key="account" className="account-right">
+        Wallet: {account}
+      </Div>,
+    )
   }
   if (network) {
-    returnDivs.push(<Div className="network-right">Network: {network}</Div>)
+    returnDivs.push(
+      <Div key="network" className="network-right">
+        Network: {network}
+      </Div>,
+    )
   }
-  return returnDivs
+  return <Div>{returnDivs}</Div>
 }
 
 const ChangeNetworkDiv = ({ validNetwork }) => {
@@ -132,6 +140,7 @@ class HomeComponent extends Component {
               href="https://github.com/XYOracleNetwork/tool-dapper-react"
               className="link-right"
               target="_blank"
+              rel="noopener noreferrer"
             >
               View on Github
             </a>
@@ -166,7 +175,6 @@ class HomeComponent extends Component {
                   const contract = this.state.service.contractObject(
                     contractName,
                   )
-                  console.log('CONTRACTTT', contract)
                   if (!contract) {
                     return <Div />
                   }

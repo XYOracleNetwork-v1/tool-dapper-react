@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import glam, { Div, Img, Button, Input } from 'glamorous'
+import glam, { Div, Input } from 'glamorous'
 import { DetailsHeader } from '../atoms/DetailsHeader'
 import { DetailsButton } from '../atoms/DetailsButton'
 import { withRouter } from 'react-router-dom'

@@ -91,7 +91,6 @@ class SmartContractService {
     return Promise.all(
       this.smartContracts.map(contract => this.validContract(contract.name)),
     ).then(results => {
-      console.log('valid results', results)
       if (results.length == 0) {
         throw new Error('No contracts found on this network')
       } else {
@@ -101,7 +100,6 @@ class SmartContractService {
   }
 
   validContract = async name => {
-    console.log('Validating Contract', name)
     const address = this.contractAddress(name)
     return new Promise((resolve, reject) => {
       this.web3.eth

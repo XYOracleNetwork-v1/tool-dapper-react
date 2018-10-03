@@ -30,8 +30,11 @@ export const Row = ({ name, value }) => (
 export const eventDatas = event => {
   const { returnValues } = event
   const datas = []
-  Object.entries(returnValues).forEach(([index, value]) => {
-    datas.push(nvc(index, value))
+  Object.entries(returnValues).forEach(([name, value]) => {
+    console.log(name, value)
+    if (isNaN(name)) {
+      datas.push(nvc(name, value))
+    }
   })
   return datas
 }
@@ -41,7 +44,6 @@ export const EventTables = props => {
   const eventTables = []
   let index = 0
   Object.entries(events).forEach(([name, event], v1, v2) => {
-    console.log('SDF', v1, v2)
     let header = nvc('Event', name, colors[index % colors.length])
     let rows = eventDatas(event)
     eventTables.push(<ResultTable key={name} header={header} rows={rows} />)
@@ -67,7 +69,7 @@ export const TransactionReceipt = props => {
     nvc('Transaction Hash', transactionHash),
     nvc('Block #', blockNumber),
     nvc('Gas Used', gasUsed),
-    nvc('Gas Price', gasPrice),
+    // nvc('Gas Price', gasPrice),
   ]
   return (
     <Div
