@@ -15,7 +15,7 @@ const globFromFiles = dir => {
         console.log('Reading file', file)
         return {
           contractName: file.contractName,
-          data: JSON.parse(fs.readFileSync(file).toString()),
+          data: JSON.parse(fs.readFileSync(file)),
         }
       })
       // get the full paths of the file

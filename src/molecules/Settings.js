@@ -32,6 +32,7 @@ const CenterColumn = glam.div({
 
 class Settings extends Component {
   state = {
+    network: 'development',
     currentSource: 'local',
     local: '',
     ipfs: '',
@@ -48,15 +49,22 @@ class Settings extends Component {
         this.setState(result.settings)
       })
   }
+
   handleChange = changeEvent => {
     let name = changeEvent.target.name
     let newState = this.state
     newState[name] = changeEvent.target.value
     this.setState(newState)
   }
+
   handleOptionChange = changeEvent => {
     this.setState({
       currentSource: changeEvent.target.value,
+    })
+  }
+  handleNetworkChange = changeEvent => {
+    this.setState({
+      network: changeEvent.target.value,
     })
   }
 
@@ -94,10 +102,53 @@ class Settings extends Component {
         }}
       >
         <DetailsHeader>Settings</DetailsHeader>
-        <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
-          ABI Source
-        </DetailsHeader>
+
         <form onSubmit={this.handleFormSubmit}>
+          <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
+            Portis Network
+          </DetailsHeader>
+          <RowLayout css={{ justifyContent: 'space-between' }}>
+            <Div>
+              <Input
+                type="radio"
+                value="development"
+                checked={this.state.network === 'development'}
+                onChange={this.handleNetworkChange}
+              />{' '}
+              Development (local)
+            </Div>
+            <Div>
+              <Input
+                type="radio"
+                value="kovan"
+                checked={this.state.network === 'kovan'}
+                onChange={this.handleNetworkChange}
+              />{' '}
+              Kovan
+            </Div>
+            <Div>
+              <Input
+                type="radio"
+                value="ropsten"
+                checked={this.state.network === 'ropsten'}
+                onChange={this.handleNetworkChange}
+              />{' '}
+              Ropsten
+            </Div>
+            <Div>
+              <Input
+                type="radio"
+                value="mainnet"
+                checked={this.state.network === 'mainnet'}
+                onChange={this.handleNetworkChange}
+              />{' '}
+              Main-Net
+            </Div>
+          </RowLayout>
+
+          <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
+            ABI Source
+          </DetailsHeader>
           <RowLayout>
             <LeftColumn>
               <Input

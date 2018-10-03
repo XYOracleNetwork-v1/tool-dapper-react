@@ -6,8 +6,6 @@ const ipfs = new ipfsAPI({
   protocol: 'https',
 })
 
-const remotePath = '/tmp/ABI/ipfs'
-
 const downloadFiles = ipfsHash => {
   return new Promise((resolve, reject) => {
     let abi = []
@@ -27,4 +25,4 @@ const downloadFiles = ipfsHash => {
   })
 }
 
-module.exports = { downloadFiles, remotePath }
+module.exports = { downloadFiles }

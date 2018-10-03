@@ -22,15 +22,17 @@ const Sidebar = glam.div({
 const SelectContractLayout = glam.div({
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'space-between',
   width: '100%',
   height: '251px',
   backgroundColor: '#5B5C6D',
 })
 
 const SelectContractContainer = glam.div({
+  paddingTop: 10,
   paddingLeft: 37,
   paddingRight: 37,
-  paddingTop: 30,
+  flex: 1,
 })
 
 const HeaderDiv = glam.div({
@@ -40,6 +42,7 @@ const HeaderDiv = glam.div({
   backgroundColor: '#3c3e51',
   paddingRight: 54,
   height: 113,
+  textAlign: 'right',
 })
 
 const MainLayoutDiv = glam.div({
@@ -49,21 +52,31 @@ const MainLayoutDiv = glam.div({
   height: '100%',
 })
 
+const AccountDiv = ({ account }) => {
+  if (!account) {
+    return null
+  }
+  return <Div className="account-right">Account: {account}</Div>
+}
+
 const ChangeNetworkDiv = ({ validNetwork }) => {
   if (validNetwork === true) {
     return null
   }
   return (
-    <Div
-      css={{
-        color: '#4D4D5C',
-        backgroundColor: '#FF6161',
-        width: '100%',
-        padding: 10,
-      }}
-    >
-      No contracts deployed at the ABI source. Make sure your contracts are
-      deployed on the current ethereum network.
+    <Div>
+      <Div
+        css={{
+          color: '#4D4D5C',
+          backgroundColor: '#FF6161',
+          width: '100%',
+          padding: 10,
+        }}
+      >
+        No contracts deployed at the ABI source. Make sure your contracts are
+        deployed on the current ethereum network.
+      </Div>
+      <Redirect to="/settings" />
     </Div>
   )
 }
@@ -110,6 +123,7 @@ class HomeComponent extends Component {
             >
               View on Github
             </a>
+            <AccountDiv account={this.service.currentUser} />
           </Div>
         </HeaderDiv>
         <MainLayoutDiv>
@@ -126,6 +140,37 @@ class HomeComponent extends Component {
                   contracts={this.service.getAllSmartContracts()}
                 />
               </SelectContractContainer>
+              <Route
+                path="/:contract"
+                render={props => {
+                  const match = props.match
+                  if (!match.params) {
+                    return <Div />
+                  }
+                  const contractName = match.params.contract
+                  const contract = this.service.contractNamed(contractName)
+                  if (!contract) {
+                    return <Div />
+                  }
+                  return (
+                    <Div
+                      css={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        textAlign: 'center',
+                        justifyContent: 'space-around',
+                        padding: 14,
+                        color: '#C8C8C8',
+                        fontFamily: 'PT Sans',
+                        fontSize: 14,
+                      }}
+                    >
+                      <Div>Address:</Div>
+                      {contract._address}
+                    </Div>
+                  )
+                }}
+              />
             </SelectContractLayout>
             <Route
               path="/:contract"

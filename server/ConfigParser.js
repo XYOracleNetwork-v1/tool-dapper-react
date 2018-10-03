@@ -60,6 +60,7 @@ class ABIConfigParser {
       local: this.config.get(`ABISource`, `local`),
       ipfs: this.config.get(`ABISource`, `ipfs`),
       remote: this.config.get(`ABISource`, `remote`),
+      network: this.config.get(`ABISource`, `network`),
     }
   }
 }
