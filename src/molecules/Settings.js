@@ -91,6 +91,48 @@ class Settings extends Component {
       })
   }
 
+  networkRadioInputs = options => {
+    let inputs = []
+    options.forEach(({ network, description }) => {
+      inputs.push(
+        <Div key={description}>
+          <Input
+            type="radio"
+            value={network}
+            checked={this.state.network === network}
+            onChange={this.handleNetworkChange}
+          />
+          {description}
+        </Div>,
+      )
+    })
+    return inputs
+  }
+
+  leftColumnDiv = (source, description) => (
+    <LeftColumn>
+      <Input
+        type="radio"
+        value={source}
+        checked={this.state.currentSource === { source }}
+        onChange={this.handleOptionChange}
+      />
+      {description}
+    </LeftColumn>
+  )
+
+  centerColumnDiv = (source, value, placeholder) => (
+    <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
+      <SettingsInput
+        type="text"
+        value={value}
+        name={source}
+        placeholder={placeholder}
+        onChange={this.handleChange}
+      />
+    </CenterColumn>
+  )
+
   render() {
     return (
       <Div
@@ -99,6 +141,7 @@ class Settings extends Component {
           fontFamily: 'PT Sans',
           flex: 1,
           overflow: 'auto',
+          marginRight: 60,
         }}
       >
         <DetailsHeader>Settings</DetailsHeader>
@@ -108,106 +151,40 @@ class Settings extends Component {
             Portis Network
           </DetailsHeader>
           <RowLayout css={{ justifyContent: 'space-between' }}>
-            <Div>
-              <Input
-                type="radio"
-                value="development"
-                checked={this.state.network === 'development'}
-                onChange={this.handleNetworkChange}
-              />{' '}
-              Development (local)
-            </Div>
-            <Div>
-              <Input
-                type="radio"
-                value="kovan"
-                checked={this.state.network === 'kovan'}
-                onChange={this.handleNetworkChange}
-              />{' '}
-              Kovan
-            </Div>
-            <Div>
-              <Input
-                type="radio"
-                value="ropsten"
-                checked={this.state.network === 'ropsten'}
-                onChange={this.handleNetworkChange}
-              />{' '}
-              Ropsten
-            </Div>
-            <Div>
-              <Input
-                type="radio"
-                value="mainnet"
-                checked={this.state.network === 'mainnet'}
-                onChange={this.handleNetworkChange}
-              />{' '}
-              Main-Net
-            </Div>
+            {this.networkRadioInputs([
+              { network: 'development', description: 'Development (local)' },
+              { network: 'kovan', description: 'Kovan' },
+              { network: 'ropsten', description: 'Ropsten' },
+              { network: 'mainnet', description: 'Main Net' },
+            ])}
           </RowLayout>
 
           <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
             ABI Source
           </DetailsHeader>
           <RowLayout>
-            <LeftColumn>
-              <Input
-                type="radio"
-                value="local"
-                checked={this.state.currentSource === 'local'}
-                onChange={this.handleOptionChange}
-              />
-              Local Path
-            </LeftColumn>
-            <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
-              <SettingsInput
-                type="text"
-                value={this.state.local}
-                name="local"
-                placeholder="ie. /path/to/abi/folder"
-                onChange={this.handleChange}
-              />
-            </CenterColumn>
+            {this.leftColumnDiv('local', 'Local Path')}
+            {this.centerColumnDiv(
+              'local',
+              this.state.local,
+              'ie. /path/to/abi/folder',
+            )}
           </RowLayout>
           <RowLayout>
-            <LeftColumn>
-              <Input
-                type="radio"
-                value="ipfs"
-                checked={this.state.currentSource === 'ipfs'}
-                onChange={this.handleOptionChange}
-              />
-              IPFS Address
-            </LeftColumn>
-            <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
-              <SettingsInput
-                type="text"
-                value={this.state.ipfs}
-                name="ipfs"
-                placeholder="ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ"
-                onChange={this.handleChange}
-              />
-            </CenterColumn>
+            {this.leftColumnDiv('ipfs', 'IPFS Address')}
+            {this.centerColumnDiv(
+              'ipfs',
+              this.state.ipfs,
+              'ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ',
+            )}
           </RowLayout>
           <RowLayout>
-            <LeftColumn>
-              <Input
-                type="radio"
-                value="remote"
-                checked={this.state.currentSource === 'remote'}
-                onChange={this.handleOptionChange}
-              />
-              AWS Bucket
-            </LeftColumn>
-            <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
-              <SettingsInput
-                type="text"
-                value={this.state.remote}
-                name="remote"
-                placeholder="ie. layerone.smart-contracts/ABI"
-                onChange={this.handleChange}
-              />
-            </CenterColumn>
+            {this.leftColumnDiv('remote', 'AWS Bucket')}
+            {this.centerColumnDiv(
+              'remote',
+              this.state.remote,
+              'ie. layerone.smart-contracts/ABI',
+            )}
           </RowLayout>
 
           <DetailsButton css={{ display: 'flex', marginTop: 50 }} type="submit">

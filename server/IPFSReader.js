@@ -10,7 +10,6 @@ const downloadFiles = ipfsHash => {
   return new Promise((resolve, reject) => {
     let abi = []
     ipfs.get(ipfsHash, (err, files) => {
-      console.log('FILES', err, files)
       if (err) {
         reject(err)
         return

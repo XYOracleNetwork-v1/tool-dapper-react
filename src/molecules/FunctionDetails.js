@@ -7,6 +7,12 @@ import { TransactionReceipt } from '../atoms/TransactionReceipt'
 import { DetailsHeader } from '../atoms/DetailsHeader'
 import { DetailsButton } from '../atoms/DetailsButton'
 
+const MainDiv = glam.div({
+  color: '#4D4D5C',
+  fontFamily: 'PT Sans',
+  flex: 1,
+  overflow: 'auto',
+})
 const FunctionPropertiesDiv = glam.div({
   display: 'flex',
   flexDirection: 'column',
@@ -14,7 +20,7 @@ const FunctionPropertiesDiv = glam.div({
   lineHeight: '30px',
   paddingLeft: '20px',
   fontSize: '16px',
-  width: 280,
+  minWidth: 250,
 })
 
 const FunctionParamLayout = glam.div({
@@ -22,12 +28,16 @@ const FunctionParamLayout = glam.div({
   flexDirection: 'row',
   paddingBottom: '30px',
   borderBottom: '1px solid #979797',
+  width: '100%',
+  flex: 1,
 })
 const FunctionParamList = glam.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  paddingLeft: 50,
+  paddingLeft: 30,
+  paddingRight: 30,
+  flex: 1,
 })
 
 const InputBar = glam.input({
@@ -37,15 +47,15 @@ const InputBar = glam.input({
   border: '1px solid #E0E0E0',
   borderRadius: '6px',
   backgroundColor: '#F6F6F6',
-  width: 290,
   height: 40,
+  flex: 1,
 })
 
 const ParamInputDiv = glam.div({
   marginTop: 8,
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
+  minWidth: 300,
 })
 
 class FunctionDetails extends Component {
@@ -106,6 +116,7 @@ class FunctionDetails extends Component {
     return undefined
   }
 
+
   handleChange = e => {
     const { method } = this.state
 
@@ -113,9 +124,7 @@ class FunctionDetails extends Component {
       if (input.name === e.target.name) {
         return { ...input, value: e.target.value }
       }
-      console.log('INPUTS', e.target.name)
       if (e.target.name === 'Value') {
-        console.log('Adding Value To Method', e.target.value)
         this.setState({ value: e.target.value })
       }
       return input
@@ -160,9 +169,15 @@ class FunctionDetails extends Component {
         ).call()
         this.setState({ transactionResult: result })
       } else {
+        console.log(`Calling ${this.contract} with params ${inputParams}`)
+        // For debugging purposes if you need to examine the call to web3 provider:
+        // this.contract.methods
+        //   .mint(...inputParams)
+        //   .send({ from: user, value: this.state.value })
         this.contract.methods[methodName](...inputParams)
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
+            console.log('Got receipts', transactionReceipt)
             this.setState({ transactionReceipt })
           })
           .catch(e => this.setState({ transactionError: e }))
@@ -207,14 +222,7 @@ class FunctionDetails extends Component {
     } = this.state
 
     return (
-      <Div
-        css={{
-          color: '#4D4D5C',
-          fontFamily: 'PT Sans',
-          flex: 1,
-          overflow: 'auto',
-        }}
-      >
+      <MainDiv>
         <DetailsHeader>
           {method.name}
           ()
@@ -238,7 +246,7 @@ class FunctionDetails extends Component {
         <TransactionResult result={transactionResult} />
         <TransactionError error={transactionError} />
         <TransactionReceipt {...transactionReceipt} />
-      </Div>
+      </MainDiv>
     )
   }
 }

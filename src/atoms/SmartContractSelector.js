@@ -48,6 +48,7 @@ class SmartContractSelector extends Component {
         <Dropdown
           css={{
             height: 60,
+            fontFamily: 'PT Sans',
           }}
           options={options}
           onChange={this._onSelect}
