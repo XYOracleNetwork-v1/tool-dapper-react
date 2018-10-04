@@ -57,7 +57,16 @@ class Settings extends Component {
     this.setState(newState)
   }
 
+  handleSourceSelect = changeEvent => {
+    console.log('Selected', changeEvent.target.name)
+    this.setState({
+      currentSource: changeEvent.target.name,
+    })
+  }
+
   handleOptionChange = changeEvent => {
+    console.log('Selected Option', changeEvent.target.value)
+
     this.setState({
       currentSource: changeEvent.target.value,
     })
@@ -114,7 +123,7 @@ class Settings extends Component {
       <Input
         type="radio"
         value={source}
-        checked={this.state.currentSource === { source }}
+        checked={this.state.currentSource === source}
         onChange={this.handleOptionChange}
       />
       {description}
@@ -129,6 +138,7 @@ class Settings extends Component {
         name={source}
         placeholder={placeholder}
         onChange={this.handleChange}
+        onSelect={this.handleSourceSelect}
       />
     </CenterColumn>
   )
