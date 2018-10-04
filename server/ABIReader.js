@@ -12,7 +12,6 @@ const globFromFiles = dir => {
         )
       }
       const contractDatas = files.map(file => {
-        console.log('Reading file', file)
         return {
           contractName: file.contractName,
           data: JSON.parse(fs.readFileSync(file)),

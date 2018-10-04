@@ -104,6 +104,7 @@ class FunctionDetails extends Component {
             transactionError: undefined,
             transactionReceipt: undefined,
             inputs: [],
+            value: 0,
           })
         }
       }
@@ -125,11 +126,11 @@ class FunctionDetails extends Component {
       if (input.name === e.target.name) {
         return { ...input, value: e.target.value }
       }
-      if (e.target.name === 'Value') {
-        this.setState({ value: e.target.value })
-      }
       return input
     })
+    if (e.target.name === 'Value') {
+      this.setState({ value: e.target.value })
+    }
     this.setState({ inputs: newInputs })
   }
 
@@ -158,10 +159,12 @@ class FunctionDetails extends Component {
       if (!user) {
         throw new Error('No Current User, Refresh Page, or Login Metamask')
       }
+      console.log('VALUE', this.state.value)
       if (
-        inputParams.length === 0 ||
-        stateMutability === 'view' ||
-        stateMutability === 'pure'
+        this.state.value === 0 &&
+        (inputParams.length === 0 ||
+          stateMutability === 'view' ||
+          stateMutability === 'pure')
       ) {
         console.log(
           `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
@@ -195,19 +198,25 @@ class FunctionDetails extends Component {
     }
   }
 
-  getInput = name => this.state.inputs.filter(input => input.name == name)[0]
+  getInputValue = name => {
+    let val = ''
+    let input = this.state.inputs.filter(input => input.name == name)
+    if (input) {
+      val = input[0] ? (input[0].value ? input[0].value : '') : ''
+    }
+    return val
+  }
 
   getInputs = method => {
     let results = method.inputs.map(input => (
       <ParamInputDiv key={input.name}>
         {input.name}{' '}
         <InputBar
+          type="text"
           name={input.name}
           placeholder={input.type}
           onChange={this.handleChange}
-          value={
-            this.getInput(input.name) ? this.getInput(input.name).value : ''
-          }
+          value={this.getInputValue(input.name)}
         />
       </ParamInputDiv>
     ))
@@ -216,9 +225,11 @@ class FunctionDetails extends Component {
         <ParamInputDiv key="Value">
           Value To Transfer{' '}
           <InputBar
+            type="text"
             name="Value"
             placeholder="ETH (wei)"
             onChange={this.handleChange}
+            value={this.state.value}
           />
         </ParamInputDiv>,
       )
