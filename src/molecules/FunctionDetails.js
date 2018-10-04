@@ -63,7 +63,6 @@ class FunctionDetails extends Component {
     method: {
       inputs: [],
       outputs: [],
-      value: 0,
       name: 'loading...',
       type: '',
     },
@@ -71,6 +70,8 @@ class FunctionDetails extends Component {
     transactionResult: undefined,
     transactionReceipt: undefined,
     transactionError: undefined,
+    inputs: this.props.inputs,
+    value: 0,
   }
 
   contract = {}
@@ -102,6 +103,7 @@ class FunctionDetails extends Component {
             transactionResult: undefined,
             transactionError: undefined,
             transactionReceipt: undefined,
+            inputs: [],
           })
         }
       }
@@ -116,7 +118,6 @@ class FunctionDetails extends Component {
     return undefined
   }
 
-
   handleChange = e => {
     const { method } = this.state
 
@@ -129,9 +130,7 @@ class FunctionDetails extends Component {
       }
       return input
     })
-    const newMethod = method
-    newMethod.inputs = newInputs
-    this.setState({ method: newMethod })
+    this.setState({ inputs: newInputs })
   }
 
   handleExecute = async () => {
@@ -144,8 +143,8 @@ class FunctionDetails extends Component {
     })
 
     const methodName = method.name
-    const { inputs, stateMutability } = method
-    const inputParams = inputs.map(i => {
+    const { stateMutability } = method
+    const inputParams = this.state.inputs.map(i => {
       if (['uint256', 'uint128', 'uint64'].includes(i.type)) {
         if (!Number.isNaN(i.value)) {
           return new BigNumber(i.value)
@@ -164,12 +163,21 @@ class FunctionDetails extends Component {
         stateMutability === 'view' ||
         stateMutability === 'pure'
       ) {
+        console.log(
+          `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+            inputParams,
+          )}`,
+        )
         const result = await this.contract.methods[methodName](
           ...inputParams,
         ).call()
         this.setState({ transactionResult: result })
       } else {
-        console.log(`Calling ${this.contract} with params ${inputParams}`)
+        console.log(
+          `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
+            inputParams,
+          )}`,
+        )
         // For debugging purposes if you need to examine the call to web3 provider:
         // this.contract.methods
         //   .mint(...inputParams)
@@ -187,6 +195,8 @@ class FunctionDetails extends Component {
     }
   }
 
+  getInput = name => this.state.inputs.filter(input => input.name == name)[0]
+
   getInputs = method => {
     let results = method.inputs.map(input => (
       <ParamInputDiv key={input.name}>
@@ -195,6 +205,9 @@ class FunctionDetails extends Component {
           name={input.name}
           placeholder={input.type}
           onChange={this.handleChange}
+          value={
+            this.getInput(input.name) ? this.getInput(input.name).value : ''
+          }
         />
       </ParamInputDiv>
     ))

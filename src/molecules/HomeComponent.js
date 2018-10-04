@@ -246,7 +246,11 @@ class HomeComponent extends Component {
             <Route
               path="/:contract/:method"
               render={props => (
-                <FunctionDetails {...props} service={this.state.service} />
+                <FunctionDetails
+                  {...props}
+                  service={this.state.service}
+                  inputs={[]}
+                />
               )}
               service={this.state.service}
             />
