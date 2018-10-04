@@ -38,14 +38,13 @@ const HeaderRow = ({ header }) => {
 export const RowDivs = ({ rows }) => {
   const rowDivs = []
   rows.forEach(({ name, value }, index) => {
-    console.log('INDEX', index)
     let seperator = undefined
     if (index < rows.length - 1) {
       seperator = <Seperator />
     }
     rowDivs.push(
-      <Div>
-        <ReceiptRow key={name}>
+      <Div key={name}>
+        <ReceiptRow>
           <LeftColumn>{name}</LeftColumn>
           <RightColumn>{value}</RightColumn>
         </ReceiptRow>

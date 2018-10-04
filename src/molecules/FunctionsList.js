@@ -11,7 +11,7 @@ const FunctionsHeaderDiv = glam.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  height: 80,
+  height: 88,
   paddingLeft: 37,
   paddingTop: 10,
   borderBottom: '1px solid #979797',
@@ -46,17 +46,19 @@ export const FunctionsList = props => {
     return null
   }
   /* eslint no-underscore-dangle: */
-  const sortedMethods = contract._jsonInterface
-    .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 0))
-    .map(method => {
+  const sortedMethods = []
+  contract._jsonInterface
+    // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
+    .forEach(method => {
       if (method.name && method.type === 'function') {
-        return (
-          <MethodLink key={method.signature} match={match} method={method} />
+        sortedMethods.push(
+          <MethodLink key={method.signature} match={match} method={method} />,
         )
       }
-      return undefined
+      return sortedMethods
     })
 
+  console.log('Sorted Methods', sortedMethods)
   return (
     <FunctionsDiv>
       <FunctionsHeaderDiv>

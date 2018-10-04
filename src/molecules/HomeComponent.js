@@ -26,6 +26,7 @@ const SelectContractLayout = glam.div({
   width: '100%',
   height: '251px',
   backgroundColor: '#5B5C6D',
+  fontFamily: 'PT Sans',
 })
 
 const SelectContractContainer = glam.div({
@@ -45,6 +46,23 @@ const HeaderDiv = glam.div({
   textAlign: 'right',
 })
 
+const NetworkAddressDiv = glam.div({
+  width: 60,
+  textAlign: 'right',
+  paddingRight: 5,
+  // flexDirection: 'row',
+  // justifyContent: 'flex-start',
+})
+
+const NetworkAddressRowDiv = glam.div({
+  display: 'flex',
+  flexDirection: 'row',
+  textAlign: 'left',
+  color: '#C8C8C8',
+  fontFamily: 'PT Sans',
+  fontSize: 14,
+  marginTop: 5,
+})
 const MainLayoutDiv = glam.div({
   display: 'flex',
   flexDirection: 'row',
@@ -54,13 +72,12 @@ const MainLayoutDiv = glam.div({
 
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
-  if (account) {
-    returnDivs.push(
-      <Div key="account" className="account-right">
-        Wallet: {account}
-      </Div>,
-    )
-  }
+
+  returnDivs.push(
+    <Div key="account" className="account-right">
+      Wallet: {account ? account : 'None Found'}
+    </Div>,
+  )
   if (network) {
     returnDivs.push(
       <Div key="network" className="network-right">
@@ -178,43 +195,22 @@ class HomeComponent extends Component {
                     return <Div />
                   }
                   return (
-                    <Div>
-                      <Div
-                        css={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          textAlign: 'center',
-                          justifyContent: 'space-between',
-                          paddingTop: 14,
-                          paddingLeft: 14,
-                          paddingRight: 14,
-                          color: '#C8C8C8',
-                          fontFamily: 'PT Sans',
-                          fontSize: 14,
-                        }}
-                      >
-                        <Div>On Networks:</Div>
+                    <Div
+                      css={{
+                        padding: 10,
+                        paddingBottom: 14,
+                      }}
+                    >
+                      <NetworkAddressRowDiv>
+                        <NetworkAddressDiv>Networks:</NetworkAddressDiv>
                         {this.state.service.getNetworksString(
                           contract.networks,
                         )}
-                      </Div>
-                      <Div
-                        css={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          textAlign: 'center',
-                          justifyContent: 'space-between',
-                          paddingBottom: 14,
-                          paddingLeft: 14,
-                          paddingRight: 14,
-                          color: '#C8C8C8',
-                          fontFamily: 'PT Sans',
-                          fontSize: 14,
-                        }}
-                      >
-                        <Div>Address:</Div>
+                      </NetworkAddressRowDiv>
+                      <NetworkAddressRowDiv>
+                        <NetworkAddressDiv>Address:</NetworkAddressDiv>
                         {contract.address}
-                      </Div>
+                      </NetworkAddressRowDiv>
                     </Div>
                   )
                 }}
@@ -231,6 +227,7 @@ class HomeComponent extends Component {
             css={{
               display: 'flex',
               flexDirection: 'column',
+              flex: 1,
             }}
           >
             <ChangeNetworkDiv validNetwork={validNetwork} />
