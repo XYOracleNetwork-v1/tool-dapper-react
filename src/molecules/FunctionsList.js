@@ -58,7 +58,6 @@ export const FunctionsList = props => {
       return sortedMethods
     })
 
-  console.log('Sorted Methods', sortedMethods)
   return (
     <FunctionsDiv>
       <FunctionsHeaderDiv>
