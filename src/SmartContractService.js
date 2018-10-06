@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
-import { isLocalhost } from './registerServiceWorker'
 
 class SmartContractService {
   constructor() {
@@ -163,6 +162,12 @@ class SmartContractService {
       })
   }
 
+  refreshUser = async () =>
+    this.web3.eth.getAccounts().then(accounts => {
+      console.log(`Updating USER from ${this.currentUser} to ${accounts[0]}`)
+      this.currentUser = accounts[0]
+    })
+
   async reloadWeb3() {
     if (typeof window.web3 !== 'undefined') {
       this.web3 = new Web3(window.web3.currentProvider)
@@ -170,14 +175,8 @@ class SmartContractService {
       await this.loadPortis()
     }
 
-    const refreshUser = async () =>
-      this.web3.eth.getAccounts().then(accounts => {
-        console.log(`Updating USER from ${this.currentUser} to ${accounts[0]}`)
-        this.currentUser = accounts[0]
-      })
-
     const refreshDapp = async () =>
-      Promise.all([refreshUser(), this.refreshContracts()])
+      Promise.all([this.refreshUser(), this.refreshContracts()])
 
     return refreshDapp()
   }
