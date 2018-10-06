@@ -31,7 +31,6 @@ export const eventDatas = event => {
   const { returnValues } = event
   const datas = []
   Object.entries(returnValues).forEach(([name, value]) => {
-    console.log(name, value)
     if (isNaN(name)) {
       datas.push(nvc(name, value))
     }

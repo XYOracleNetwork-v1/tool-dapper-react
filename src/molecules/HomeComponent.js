@@ -115,18 +115,27 @@ class HomeComponent extends Component {
     validNetwork: true,
     service: new SmartContractService(),
     serviceError: undefined,
+    currentUser: undefined,
   }
 
   componentWillMount() {
-    // Will refresh local store when new user is chosen:
-    if (this.state.service.getCurrentConfigStore()) {
-      this.state.service.getCurrentConfigStore().on('update', this.reloadWeb3)
-    }
-    this.reloadWeb3()
+    this.reloadWeb3().then(() => {
+      // Will refresh local store when new user is chosen:
+      if (this.state.service.getCurrentConfigStore()) {
+        this.state.service.getCurrentConfigStore().on('update', this.reloadUser)
+      }
+    })
+  }
+
+  reloadUser = () => {
+    return this.state.service.refreshUser().then(user => {
+      this.setState({ currentUser: user })
+    })
   }
 
   reloadWeb3 = () => {
-    this.state.service
+    console.log('Reload Web3 called in home')
+    return this.state.service
       .reloadWeb3()
       .then(() => this.state.service.validateContracts())
       .then(validNetwork => {
@@ -246,11 +255,7 @@ class HomeComponent extends Component {
             <Route
               path="/:contract/:method"
               render={props => (
-                <FunctionDetails
-                  {...props}
-                  service={this.state.service}
-                  inputs={[]}
-                />
+                <FunctionDetails {...props} service={this.state.service} />
               )}
               service={this.state.service}
             />

@@ -8,33 +8,33 @@ import { DetailsHeader } from '../atoms/DetailsHeader'
 import { DetailsButton } from '../atoms/DetailsButton'
 
 const MainDiv = glam.div({
-  color: '#4D4D5C',
-  fontFamily: 'PT Sans',
+  color: `#4D4D5C`,
+  fontFamily: `PT Sans`,
   flex: 1,
-  overflow: 'auto',
+  overflow: `auto`,
 })
 const FunctionPropertiesDiv = glam.div({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flexStart',
-  lineHeight: '30px',
-  paddingLeft: '20px',
-  fontSize: '16px',
+  display: `flex`,
+  flexDirection: `column`,
+  justifyContent: `flexStart`,
+  lineHeight: `30px`,
+  paddingLeft: `20px`,
+  fontSize: `16px`,
   minWidth: 250,
 })
 
 const FunctionParamLayout = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
-  paddingBottom: '30px',
-  borderBottom: '1px solid #979797',
-  width: '100%',
+  display: `flex`,
+  flexDirection: `row`,
+  paddingBottom: `30px`,
+  borderBottom: `1px solid #979797`,
+  width: `100%`,
   flex: 1,
 })
 const FunctionParamList = glam.div({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
+  display: `flex`,
+  flexDirection: `column`,
+  justifyContent: `flex-start`,
   paddingLeft: 30,
   paddingRight: 30,
   flex: 1,
@@ -44,17 +44,17 @@ const InputBar = glam.input({
   marginTop: 8,
   marginRight: 8,
   paddingLeft: 8,
-  border: '1px solid #E0E0E0',
-  borderRadius: '6px',
-  backgroundColor: '#F6F6F6',
+  border: `1px solid #E0E0E0`,
+  borderRadius: `6px`,
+  backgroundColor: `#F6F6F6`,
   height: 40,
   flex: 1,
 })
 
 const ParamInputDiv = glam.div({
   marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column',
+  display: `flex`,
+  flexDirection: `column`,
   minWidth: 300,
 })
 
@@ -63,14 +63,14 @@ class FunctionDetails extends Component {
     method: {
       inputs: [],
       outputs: [],
-      name: 'loading...',
-      type: '',
+      name: `loading...`,
+      type: ``,
     },
     service: this.props.service,
     transactionResult: undefined,
     transactionReceipt: undefined,
     transactionError: undefined,
-    inputs: this.props.inputs,
+    inputs: undefined,
     value: 0,
   }
 
@@ -121,14 +121,19 @@ class FunctionDetails extends Component {
 
   handleChange = e => {
     const { method } = this.state
+    const inputs =
+      this.state.inputs && this.state.inputs.length > 0
+        ? this.state.inputs
+        : method.inputs
 
-    const newInputs = method.inputs.map(input => {
+    const newInputs = inputs.map(input => {
       if (input.name === e.target.name) {
         return { ...input, value: e.target.value }
       }
       return input
     })
-    if (e.target.name === 'Value') {
+
+    if (e.target.name === `Value`) {
       this.setState({ value: e.target.value })
     }
     this.setState({ inputs: newInputs })
@@ -146,7 +151,7 @@ class FunctionDetails extends Component {
     const methodName = method.name
     const { stateMutability } = method
     const inputParams = this.state.inputs.map(i => {
-      if (['uint256', 'uint128', 'uint64'].includes(i.type)) {
+      if ([`uint256`, `uint128`, `uint64`].includes(i.type)) {
         if (!Number.isNaN(i.value)) {
           return new BigNumber(i.value)
         }
@@ -155,16 +160,16 @@ class FunctionDetails extends Component {
     })
 
     try {
-      let user = this.state.service.getCurrentUser()
+      const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error('No Current User, Refresh Page, or Login Metamask')
+        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
       }
-      console.log('VALUE', this.state.value)
+      console.log(`VALUE`, this.state.value)
       if (
         this.state.value === 0 &&
         (inputParams.length === 0 ||
-          stateMutability === 'view' ||
-          stateMutability === 'pure')
+          stateMutability === `view` ||
+          stateMutability === `pure`)
       ) {
         console.log(
           `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
@@ -188,7 +193,7 @@ class FunctionDetails extends Component {
         this.contract.methods[methodName](...inputParams)
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
-            console.log('Got receipts', transactionReceipt)
+            console.log(`Got receipts`, transactionReceipt)
             this.setState({ transactionReceipt })
           })
           .catch(e => this.setState({ transactionError: e }))
@@ -199,18 +204,18 @@ class FunctionDetails extends Component {
   }
 
   getInputValue = name => {
-    let val = ''
-    let input = this.state.inputs.filter(input => input.name == name)
+    let val = ``
+    const input = this.state.inputs.filter(input => input.name == name)
     if (input) {
-      val = input[0] ? (input[0].value ? input[0].value : '') : ''
+      val = input[0] ? (input[0].value ? input[0].value : ``) : ``
     }
     return val
   }
 
   getInputs = method => {
-    let results = method.inputs.map(input => (
+    const results = method.inputs.map(input => (
       <ParamInputDiv key={input.name}>
-        {input.name}{' '}
+        {input.name}
         <InputBar
           type="text"
           name={input.name}
@@ -220,10 +225,11 @@ class FunctionDetails extends Component {
         />
       </ParamInputDiv>
     ))
-    if (method.stateMutability === 'payable') {
+    if (method.stateMutability === `payable`) {
       results.push(
         <ParamInputDiv key="Value">
-          Value To Transfer{' '}
+          Value To Transfer
+          {` `}
           <InputBar
             type="text"
             name="Value"
@@ -256,7 +262,7 @@ class FunctionDetails extends Component {
             {method.name}(
             {method.inputs
               .map(input => `${input.type} ${input.name}`)
-              .join(', ')}
+              .join(`, `)}
             )<Div>{method.stateMutability}</Div>
             {method.outputs.map(
               output => `returns (${output.type} ${output.name})`,
