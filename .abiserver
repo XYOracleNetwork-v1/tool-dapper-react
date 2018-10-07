@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/trufflecon/erc20/build/contracts
+local=/Users/kevin/GitHub/trufflecon/erc20/build/contracts
 currentSource=local
-ipfs=QmXMmkiMeCzF2SC323PsGHJREbmsw1JTfsoqqwcvSRYphp
+ipfs=QmVtqYRHbKxvyisv5Cpy9NnDAKWBZQWRLBBT4hj86ykASd
 remote=
-network=kovan
+network=development
 
