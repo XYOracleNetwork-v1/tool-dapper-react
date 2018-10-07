@@ -171,21 +171,21 @@ class FunctionDetails extends Component {
           stateMutability === `view` ||
           stateMutability === `pure`)
       ) {
-        console.log(
-          `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
-            inputParams,
-          )}`,
-        )
+        // console.log(
+        //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+        //     inputParams,
+        //   )}`,
+        // )
         const result = await this.contract.methods[methodName](
           ...inputParams,
         ).call()
         this.setState({ transactionResult: result })
       } else {
-        console.log(
-          `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
-            inputParams,
-          )}`,
-        )
+        // console.log(
+        //   `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
+        //     inputParams,
+        //   )}`,
+        // )
         // For debugging purposes if you need to examine the call to web3 provider:
         // this.contract.methods
         //   .mint(...inputParams)
@@ -205,7 +205,7 @@ class FunctionDetails extends Component {
 
   getInputValue = name => {
     let val = ``
-    const input = this.state.inputs.filter(input => input.name == name)
+    const input = this.state.inputs.filter(input => input.name === name)
     if (input) {
       val = input[0] ? (input[0].value ? input[0].value : ``) : ``
     }

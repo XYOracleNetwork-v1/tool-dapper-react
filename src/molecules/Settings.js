@@ -165,6 +165,7 @@ class Settings extends Component {
               { network: 'development', description: 'Development (local)' },
               { network: 'kovan', description: 'Kovan' },
               { network: 'ropsten', description: 'Ropsten' },
+              { network: 'rinkeby', description: 'Rinkeby' },
               { network: 'mainnet', description: 'Main Net' },
             ])}
           </RowLayout>

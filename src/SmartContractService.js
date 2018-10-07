@@ -34,10 +34,16 @@ class SmartContractService {
 
   getNetworkString = (iterator, netId) => {
     let addComma = (iterator, word) => (iterator > 0 ? `, ${word}` : word)
-    let word = ''
+    let word = 'localhost'
     switch (netId) {
       case '1':
         word = 'mainnet'
+        break
+      case '3':
+        word = 'roptsten'
+        break
+      case '4':
+        word = 'rinkeby'
         break
       case '42':
         word = 'kovan'
