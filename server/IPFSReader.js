@@ -14,11 +14,17 @@ const downloadFiles = ipfsHash => {
         reject(err)
         return
       }
-      files.forEach(file => {
-        if (file.content) {
-          abi.push({ data: JSON.parse(String(file.content)) })
-        }
-      })
+      try {
+        files.forEach(file => {
+          if (file.content) {
+            abi.push({ data: JSON.parse(String(file.content)) })
+          }
+        })
+      } catch (err) {
+        reject(err)
+        return
+      }
+
       resolve(abi)
     })
   })

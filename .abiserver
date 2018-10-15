@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/trufflecon/erc20/build/contracts
-currentSource=local
-ipfs=QmVtqYRHbKxvyisv5Cpy9NnDAKWBZQWRLBBT4hj86ykASd
+local=/Users/kevin/GitHub/sdk-dache-nodejs/contracts
+currentSource=ipfs
+ipfs=QmQk8sVHTX8Dos5qePVNNTqcu53vfuikvcpx8N7JcnTPZ4
 remote=
 network=development
 
