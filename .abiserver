@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/trufflecon/erc20/build/contracts
+local=/Users/kevin/GitHub/dapp-saverasheed-solidity/build/contracts
 currentSource=local
-ipfs=QmVtqYRHbKxvyisv5Cpy9NnDAKWBZQWRLBBT4hj86ykASd
+ipfs=QmXZQ4N3rPCGfRCYFPerDdoSePjZLB1q8RXPcpLQbQgZVs
 remote=
 network=development
 

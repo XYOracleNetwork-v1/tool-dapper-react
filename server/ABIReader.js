@@ -6,6 +6,9 @@ const globFromFiles = dir => {
     const jsonPath = dir + '/*.json'
 
     glob(jsonPath, function(er, files) {
+      if (er) {
+        return reject(er)
+      }
       if (!files || files.length === 0) {
         return reject(
           new Error(`Path '${jsonPath}' does not include json files.`),
