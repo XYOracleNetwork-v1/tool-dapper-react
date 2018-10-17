@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/sdk-dache-nodejs/contracts
-currentSource=ipfs
-ipfs=QmQk8sVHTX8Dos5qePVNNTqcu53vfuikvcpx8N7JcnTPZ4
+local=/Users/kevin/GitHub/dapp-saverasheed-solidity/build/contracts
+currentSource=local
+ipfs=QmXZQ4N3rPCGfRCYFPerDdoSePjZLB1q8RXPcpLQbQgZVs
 remote=
 network=development
 

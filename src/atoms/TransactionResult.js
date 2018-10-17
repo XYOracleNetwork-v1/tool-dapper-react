@@ -14,11 +14,6 @@ const TransactionResult = ({ result }) => {
   if (result === undefined) {
     return null
   }
-
-  return (
-    <ResultDiv>
-      Result: {result.toString() ? result.toString() : 'null'}
-    </ResultDiv>
-  )
+  return <ResultDiv>Result: {JSON.stringify(result, null, 2)} </ResultDiv>
 }
 export default TransactionResult
