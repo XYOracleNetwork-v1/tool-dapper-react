@@ -26,6 +26,8 @@
 
 # Pt. I. - Let's Get Dapper
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
+
 1. When in doubt, `yarn` it out in the project directory:
 ```
 yarn
