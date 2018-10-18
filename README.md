@@ -1,10 +1,10 @@
 <h1 align="center">
-  <img alt="Dapploy" src="https://github.com/XYOracleNetwork/tool-dapper-react/blob/master/src/assets/dapper-logo.svg" width="300" backgroundColor="black">
+  <img alt="Dapploy" src="https://ipfs.xyo.network/ipfs/QmYoV7gMcDeTEMrdGnKAs2VYL3E1ckRC3aNL5pdT7PazZL" width="300" backgroundColor="black">
 </h1>
 
 <p align="center">
   <a href="https://circleci.com/gh/XYOracleNetwork/tool-dapper-nodejs">
-    <img alt="Circle Status" src="https://circleci.com/gh/XYOracleNetwork/tool-dapper-react.svg?style=shield&circle-token=17875bb2726cc569f5426d27748d6386f2401f5b">
+    <img alt="Circle Status" src="https://circleci.com/gh/XYOracleNetwork/tool-dapper-react.svg?style=shield&circle-token=1b563e086dc010649989a743f6fb89a3cd5bf93a">
   </a>
   <a href="https://gitter.im/XYOracleNetwork/Dev">
     <img alt="Gitter Chat" src="https://img.shields.io/gitter/room/XYOracleNetwork/Stardust.svg">
@@ -26,21 +26,62 @@
 
 # Pt. I. - Let's Get Dapper
 
-1. When in doubt, `yarn` it out:
-   Run `yarn`
+[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
 
-2. Run `yarn start` to start the client. This should open up `localhost:3000` in a chrome browser.
+1. When in doubt, `yarn` it out in the project directory:
+```
+yarn
+```
 
-You should see the Dapper UI with no smart contracts loaded.
+2. Add alias for running dapper from terminal:
+```
+echo "alias dapper=\"cd /<path_to_project>/tool-dapper-react && yarn start && cd -\""| cat >> .bash_profile
+```
 
-# Pt. II. - Play with your Smart Contracts
+# Pt. II - Dapploy Some Contracts locally
 
 We need to deploy some smart contracts
 
-1. Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) and run `dapploy init` to create your first standalone smart contact app with scaffolding for a web3 javascript interface.
+1. Use [Dapploy](https://github.com/XYOracleNetwork/tool-dappdeployer-node) and create your first standalone smart contact project:
+```
+./dapploy init
+./dapploy
+``` 
 
-**or** Use [Truffle](https://truffleframework.com) to deploy your smart contracts to any Ethereum blockchain
+**or** Use [Truffle](https://truffleframework.com) to deploy your smart contracts to any Ethereum blockchain, and note the folder of your ABI, usually in `<truffle_project>/build/contracts`
 
-2. Once you have deployed the contracts, in Dapper, go to the settings cog and copy the directory of the deployed ABI located in `build/contracts` of the truffle project
+# Pt. III - View Local Contracts
 
-3. You can view and pass transactions to your smart contracts!
+1. If you don't already have it, [download and install Ganache from their site](https://truffleframework.com/ganache)
+
+2. Same with [MetaMask from their site](https://metamask.io/)
+
+3. Configure Ganache on 8545:
+ - Open Ganache
+ - Click the Gear Icon thingy ( ⚙️ ) to open `Preferences...`.	
+   Make sure that port is set to 8545.	
+ - Click "Save and Restart" in the top-right of Ganache	
+ 
+4. Configure Metamask network to `localhost`
+ - Sign into Metamask and change Network on Metamask to localhost 8545		
+ 
+5. Add ganache account to metamask
+ - In your Ganache UI, you'll see a list of ~10 addresses. Click the key icon (🔑) next to one of 'em. And then COPY the "Private Key"		
+ 
+6. Start dapper. This should open up `localhost:3000` in a chrome browser.
+```
+yarn start
+```
+
+You should see the Dapper UI with no smart contracts loaded.
+
+
+# Pt. III. - Play with your Smart Contracts
+
+1. In Dapper UI, go to the settings cog and select `Local Path` and enter `<truffle_project>/build/contracts` (Priject dir from Pt. II)
+
+3. Tap `Save` and you should be able to see the FungibleToken in the dropdown and play with it!
+
+4. Select `name()` function and you should see the name, "Fun Token" displayed.
+
+<img src="https://ipfs.xyo.network/ipfs/QmeHnp8ZZS9tdM8aCbGC9xHhmW8CGDem8PiELvdNZxpfY9" />
