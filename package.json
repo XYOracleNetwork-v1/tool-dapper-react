@@ -1,12 +1,12 @@
 {
-  "name": "tool-dapper-react",
-  "version": "0.2.2",
-  "description": "An automated smart contract web viewer. Run with dapploy, or as standalone.",
+  "name": "@xyo-network/tool-dapper-react",
+  "version": "0.2.3",
+  "description": "An automated smart contract web viewer. Run on any ABI folder",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/XYOracleNetwork/tool-dapper-react.git"
   },
-  "homepage": "https://s3-us-west-1.amazonaws.com/dapper.layerone.co/",
+  "homepage": "http://dapperbeta.layerone.co/",
   "keywords": [
     "xyo",
     "dapploy",
@@ -26,7 +26,7 @@
     "glamorous": "^4.13.1",
     "glob": "^7.1.3",
     "history": "^4.7.2",
-    "ipfs-api": "^24.0.1",
+    "ipfs-api": "^25.0.0",
     "json-loader": "^0.5.7",
     "nodemon": "^1.18.4",
     "portis": "^1.2.12",
@@ -34,7 +34,7 @@
     "react-dom": "^16.4.1",
     "react-dropdown": "^1.6.2",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.4",
+    "react-scripts": "^2.0.5",
     "s3": "^4.4.0",
     "untildify": "^3.0.3",
     "web3": "^1.0.0-beta.35"
@@ -46,8 +46,7 @@
     "@storybook/react": "^3.4.10",
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0",
-    "eslint": "^5.4.0",
-    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1"
@@ -64,5 +63,11 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

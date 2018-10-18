@@ -150,12 +150,8 @@ class FunctionDetails extends Component {
 
     const methodName = method.name
     const { stateMutability } = method
+    console.log('Inputs', this.state.inputs)
     const inputParams = this.state.inputs.map(i => {
-      if ([`uint256`, `uint128`, `uint64`].includes(i.type)) {
-        if (!Number.isNaN(i.value)) {
-          return new BigNumber(i.value)
-        }
-      }
       return i.value
     })
 
@@ -213,18 +209,24 @@ class FunctionDetails extends Component {
   }
 
   getInputs = method => {
-    const results = method.inputs.map(input => (
-      <ParamInputDiv key={input.name}>
-        {input.name}
-        <InputBar
-          type="text"
-          name={input.name}
-          placeholder={input.type}
-          onChange={this.handleChange}
-          value={this.getInputValue(input.name)}
-        />
-      </ParamInputDiv>
-    ))
+    const results = method.inputs.map((input, index) => {
+      if (input.name == '') {
+        input.name = `param ${index}`
+      }
+      return (
+        <ParamInputDiv key={input.name}>
+          {input.name}
+          <InputBar
+            type="text"
+            name={input.name}
+            placeholder={input.type}
+            onChange={this.handleChange}
+            value={this.getInputValue(input.name)}
+          />
+        </ParamInputDiv>
+      )
+    })
+
     if (method.stateMutability === `payable`) {
       results.push(
         <ParamInputDiv key="Value">
