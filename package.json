@@ -1,7 +1,7 @@
 {
   "name": "@xyo-network/tool-dapper-react",
   "version": "0.2.3",
-  "description": "An automated smart contract web viewer. Run with dapploy, or as standalone.",
+  "description": "An automated smart contract web viewer. Run on any ABI folder",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/XYOracleNetwork/tool-dapper-react.git"
