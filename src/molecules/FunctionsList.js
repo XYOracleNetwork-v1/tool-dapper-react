@@ -12,7 +12,7 @@ const FunctionsHeaderDiv = glam.div({
   flexDirection: 'column',
   justifyContent: 'center',
   height: 88,
-  paddingLeft: 37,
+  paddingLeft: 27,
   paddingTop: 10,
   borderBottom: '1px solid #979797',
 })
@@ -21,7 +21,7 @@ const FunctionsListDiv = glam.div({
   flexDirection: 'column',
   paddingTop: 33,
   lineHeight: '37px',
-  paddingLeft: 70,
+  paddingLeft: 30,
 })
 
 export const MethodLink = ({ match, method }) => (

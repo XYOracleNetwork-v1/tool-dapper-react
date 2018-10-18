@@ -3,5 +3,5 @@ local=/Users/kevin/GitHub/dapp-saverasheed-solidity/build/contracts
 currentSource=local
 ipfs=QmXZQ4N3rPCGfRCYFPerDdoSePjZLB1q8RXPcpLQbQgZVs
 remote=
-network=development
+network=kovan
 
