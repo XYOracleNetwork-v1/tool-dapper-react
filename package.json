@@ -45,6 +45,7 @@
     "@storybook/addons": "^4.0.0",
     "@storybook/react": "^4.0.0",
     "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
     "babel-runtime": "^6.26.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -69,8 +70,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "bin": {
-    "dapper": "npm run start"
-  }
+  ]
 }
