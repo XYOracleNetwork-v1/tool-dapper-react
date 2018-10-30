@@ -1,6 +1,6 @@
 {
   "name": "@xyo-network/tool-dapper-react",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "An automated smart contract web viewer. Run on any ABI folder",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "xyo-nodejs"
   ],
   "author": "Kevin Weiler",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/XYOracleNetwork/tool-dapper-react/issues"
   },
@@ -69,5 +69,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "bin": {
+    "dapper": "yarn start"
+  }
 }
