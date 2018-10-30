@@ -71,6 +71,6 @@
     "not op_mini all"
   ],
   "bin": {
-    "dapper": "yarn start"
+    "dapper": "npm run start"
   }
 }
