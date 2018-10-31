@@ -33,9 +33,9 @@
 yarn
 ```
 
-2. Add alias for running dapper from terminal:
+2. Run dapper
 ```
-echo "alias dapper=\"cd /<path_to_project>/tool-dapper-react && yarn start && cd -\""| cat >> .bash_profile
+yarn start
 ```
 
 # Pt. II - Dapploy Some Contracts locally

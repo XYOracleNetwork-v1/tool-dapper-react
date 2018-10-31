@@ -1,7 +1,7 @@
 [ABISource]
-local=/Users/kevin/GitHub/dapp-saverasheed-solidity/build/contracts
+local=
 currentSource=local
-ipfs=QmXZQ4N3rPCGfRCYFPerDdoSePjZLB1q8RXPcpLQbQgZVs
+ipfs=
 remote=
 network=kovan
 
