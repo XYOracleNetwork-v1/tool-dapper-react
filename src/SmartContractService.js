@@ -163,8 +163,7 @@ class SmartContractService {
         return sc
       })
       .catch(err => {
-        console.log('Caught here', err)
-        // throw new Error('Could not refresh', err)
+        console.log('Error Refreshing', err)
       })
   }
 

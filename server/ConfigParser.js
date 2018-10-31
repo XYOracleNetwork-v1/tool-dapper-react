@@ -32,9 +32,7 @@ class ABIConfigParser {
   }
   updateSettings(settings) {
     let settingsArray = Object.entries(settings)
-    console.log('Settings Array', settingsArray)
     settingsArray.forEach(([index, value]) => {
-      console.log('Here', index, value)
       this.update('ABISource', index, value)
     })
   }

@@ -35,6 +35,7 @@ const readLocalABI = dir => {
 const validatePath = dir => {
   return new Promise((resolve, reject) => {
     if (!dir) {
+      console.log('Add path in Dapper settings')
       reject(new Error('Path is undefined'))
     }
     fs.readdir(dir, (err, files) => {
