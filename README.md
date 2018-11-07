@@ -14,10 +14,11 @@
     </a>
     <a href="https://david-dm.org/xyoraclenetwork/tool-dapper-react" title="dependencies status"><img src="https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg"/></a>
   <a href="https://david-dm.org/xyoraclenetwork/tool-dapper-react?type=dev" title="devDependencies status"><img src="https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg"/></a>
+    <a href="https://greenkeeper.io/" title="devDependencies status"><img src="https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg"/></a>
 </p>
 
 <h3 align="center">
-  "View your Smart Contracts"
+  "Simulate your Smart Contracts"
 </h3>
 <p align="center">
   Made with ❤️
@@ -26,7 +27,6 @@
 
 # Pt. I. - Let's Get Dapper
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
 
 1. When in doubt, `yarn` it out in the project directory:
 ```
