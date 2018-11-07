@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import glam, { Div } from 'glamorous'
-import { BigNumber } from 'bignumber.js'
 import TransactionResult from '../atoms/TransactionResult'
 import TransactionError from '../atoms/TransactionError'
 import { TransactionReceipt } from '../atoms/TransactionReceipt'
@@ -210,7 +209,7 @@ class FunctionDetails extends Component {
 
   getInputs = method => {
     const results = method.inputs.map((input, index) => {
-      if (input.name == '') {
+      if (input.name === '') {
         input.name = `param ${index}`
       }
       return (
