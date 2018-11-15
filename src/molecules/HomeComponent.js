@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { Route, Link, Redirect } from 'react-router-dom'
-import SmartContractService from '../SmartContractService'
+import SmartContractService from '../organisms/SmartContractService'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import FunctionDetails from './FunctionDetails'
@@ -9,6 +9,7 @@ import Settings from './Settings'
 import logo from '../assets/dapper-logo.svg'
 import cog from '../assets/cog.svg'
 import './css/HomeComponent.css'
+import { withCookies } from 'react-cookie'
 
 const Sidebar = glam.div({
   display: 'flex',
@@ -113,7 +114,7 @@ const ChangeNetworkDiv = ({ validNetwork }) => {
 class HomeComponent extends Component {
   state = {
     validNetwork: true,
-    service: new SmartContractService(),
+    service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
   }
@@ -134,9 +135,8 @@ class HomeComponent extends Component {
   }
 
   reloadWeb3 = () => {
-    console.log('Reload Web3 called in home')
     return this.state.service
-      .reloadWeb3()
+      .reloadWeb3(this.props.cookies)
       .then(() => this.state.service.validateContracts())
       .then(validNetwork => {
         this.setState({
@@ -265,4 +265,4 @@ class HomeComponent extends Component {
     )
   }
 }
-export default HomeComponent
+export default withCookies(HomeComponent)

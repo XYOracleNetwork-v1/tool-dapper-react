@@ -1,127 +1,121 @@
-import React, { Component } from 'react'
-import glam, { Div, Input } from 'glamorous'
-import { DetailsHeader } from '../atoms/DetailsHeader'
-import { DetailsButton } from '../atoms/DetailsButton'
-import { withRouter } from 'react-router-dom'
+import React, { Component } from 'react';
+import glam, { Div, Input } from 'glamorous';
+import { withRouter } from 'react-router-dom';
+import { withCookies } from 'react-cookie';
+import { DetailsHeader } from '../atoms/DetailsHeader';
+import { DetailsButton } from '../atoms/DetailsButton';
+import fetchABI from '../organisms/ABIReader';
+import FolderDropzone from '../organisms/FolderDropzone';
 
 const SettingsInput = glam.input({
   paddingLeft: 12,
-  border: '1px solid #E0E0E0',
-  borderRadius: '6px',
-  backgroundColor: '#F6F6F6',
+  border: `1px solid #E0E0E0`,
+  borderRadius: `6px`,
+  backgroundColor: `#F6F6F6`,
   width: 500,
   height: 40,
-})
+});
 const RowLayout = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
+  display: `flex`,
+  flexDirection: `row`,
   paddingRight: 30,
   marginBottom: 40,
   marginLeft: 50,
-})
+});
 const LeftColumn = glam.div({
   minWidth: 170,
   width: 170,
   marginTop: 10,
-})
+});
 const CenterColumn = glam.div({
   lineHeight: 1,
   flex: 1,
   maxWidth: 500,
-})
+});
 
 class Settings extends Component {
-  state = {
-    network: 'development',
-    currentSource: 'local',
-    local: '',
-    ipfs: '',
-    remote: '',
+  constructor(props) {
+    super(props);
+
+    const { cookies } = props;
+    this.state = {
+      portisNetwork: cookies.get(`portisNetwork`) || `development`,
+      currentSource: cookies.get(`currentSource`) || `local`,
+      local: cookies.get(`local`) || ``,
+      remote: cookies.get(`remote`) || ``,
+      ipfs: cookies.get(`ipfs`) || ``,
+    };
   }
 
-  componentWillMount() {
-    fetch('http://localhost:5000/settings')
-      .then(result => {
-        return result.json()
-      })
-      .then(result => {
-        console.log(result.settings)
-        this.setState(result.settings)
-      })
+  handleChange = (changeEvent) => {
+    this.stateChange(changeEvent.target.name, changeEvent.target.value);
   }
 
-  handleChange = changeEvent => {
-    let name = changeEvent.target.name
-    let newState = this.state
-    newState[name] = changeEvent.target.value
-    this.setState(newState)
+  stateChange = (stateKey, stateValue) => {
+    console.log(`attempting State Change`, stateKey, stateValue);
+    this.props.cookies.set(stateKey, stateValue, {
+      path: `/`,
+    });
+    const newState = this.state;
+    newState[stateKey] = stateValue;
+
+    this.setState(newState);
   }
 
-  handleSourceSelect = changeEvent => {
-    console.log('Selected', changeEvent.target.name)
-    this.setState({
-      currentSource: changeEvent.target.name,
-    })
-  }
+  handleSourceSelect = changeEvent => this.stateChange(`currentSource`, changeEvent.target.name)
 
-  handleOptionChange = changeEvent => {
-    console.log('Selected Option', changeEvent.target.value)
+  handleOptionChange = changeEvent => this.stateChange(`currentSource`, changeEvent.target.value)
 
-    this.setState({
-      currentSource: changeEvent.target.value,
-    })
-  }
-  handleNetworkChange = changeEvent => {
-    this.setState({
-      network: changeEvent.target.value,
-    })
-  }
+  handleNetworkChange = changeEvent => this.stateChange(`portisNetwork`, changeEvent.target.value)
 
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault()
+  handleFormSubmit = (formSubmitEvent) => {
+    formSubmitEvent.preventDefault();
     // TODO show activity indicator
-    console.log('You have selected:', this.state.currentSource)
+    console.log(`You have selected:`, this.state.currentSource);
 
-    fetch('http://localhost:5000/settings', {
-      method: 'post',
-      body: JSON.stringify({ settings: this.state }),
-      headers: { 'Content-Type': 'application/json' },
-    })
+    this.props
+      .onSave()
       .then(() => {
-        return this.props.onSave()
+        this.props.history.push(`/`);
       })
-      .then(() => {
-        this.props.history.push(`/`)
-      })
-      .catch(err => {
-        this.props.onSave()
-        this.props.history.push(`/`)
-        console.log('Could not save', err)
-      })
+      .catch((err) => {
+        this.props.history.push(`/`);
+        console.log(`Could not save`, err);
+      });
   }
 
-  networkRadioInputs = options => {
-    let inputs = []
+  refreshABI = async () => {
+    if (!this.props.cookies) {
+      return true
+    }
+    console.log(`REFRESHING ABI`, this.props.cookies);
+    return fetchABI(this.props.cookies).then(() => {
+      return this.props.onSave();
+    });
+  }
+
+  networkRadioInputs = (options) => {
+    const inputs = [];
     options.forEach(({ network, description }) => {
       inputs.push(
         <Div key={description}>
           <Input
-            type="radio"
+            type='radio'
             value={network}
-            checked={this.state.network === network}
+            checked={this.state.portisNetwork === network}
             onChange={this.handleNetworkChange}
           />
           {description}
         </Div>,
-      )
-    })
-    return inputs
+      );
+    });
+    return inputs;
   }
 
   leftColumnDiv = (source, description) => (
     <LeftColumn>
       <Input
-        type="radio"
+        type='radio'
         value={source}
         checked={this.state.currentSource === source}
         onChange={this.handleOptionChange}
@@ -131,9 +125,9 @@ class Settings extends Component {
   )
 
   centerColumnDiv = (source, value, placeholder) => (
-    <CenterColumn css={{ display: 'flex', flexDirection: 'row' }}>
+    <CenterColumn css={{ display: `flex`, flexDirection: `row` }}>
       <SettingsInput
-        type="text"
+        type='text'
         value={value}
         name={source}
         placeholder={placeholder}
@@ -147,64 +141,70 @@ class Settings extends Component {
     return (
       <Div
         css={{
-          color: '#4D4D5C',
-          fontFamily: 'PT Sans',
+          color: `#4D4D5C`,
+          fontFamily: `PT Sans`,
           flex: 1,
-          overflow: 'auto',
+          overflow: `auto`,
           marginRight: 60,
         }}
       >
         <DetailsHeader>Settings</DetailsHeader>
 
-        <form onSubmit={this.handleFormSubmit}>
-          <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
+        <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
             Portis Network
-          </DetailsHeader>
-          <RowLayout css={{ justifyContent: 'space-between' }}>
-            {this.networkRadioInputs([
-              { network: 'development', description: 'Development (local)' },
-              { network: 'kovan', description: 'Kovan' },
-              { network: 'ropsten', description: 'Ropsten' },
-              { network: 'rinkeby', description: 'Rinkeby' },
-              { network: 'mainnet', description: 'Main Net' },
-            ])}
-          </RowLayout>
+        </DetailsHeader>
+        <RowLayout css={{ justifyContent: `space-between` }}>
+          {this.networkRadioInputs([
+            { network: `development`, description: `Development (local)` },
+            { network: `kovan`, description: `Kovan` },
+            { network: `ropsten`, description: `Ropsten` },
+            { network: `rinkeby`, description: `Rinkeby` },
+            { network: `mainnet`, description: `Main Net` },
+          ])}
+        </RowLayout>
 
-          <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
+        <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
             ABI Source
-          </DetailsHeader>
-          <RowLayout>
-            {this.leftColumnDiv('local', 'Local Path')}
-            {this.centerColumnDiv(
-              'local',
-              this.state.local,
-              'ie. /path/to/abi/folder',
-            )}
-          </RowLayout>
-          <RowLayout>
-            {this.leftColumnDiv('ipfs', 'IPFS Address')}
-            {this.centerColumnDiv(
-              'ipfs',
-              this.state.ipfs,
-              'ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ',
-            )}
-          </RowLayout>
-          <RowLayout>
-            {this.leftColumnDiv('remote', 'AWS Bucket')}
-            {this.centerColumnDiv(
-              'remote',
-              this.state.remote,
-              'ie. layerone.smart-contracts/ABI',
-            )}
-          </RowLayout>
+        </DetailsHeader>
+        <Div style={{
+          margin: 20,
+          display: `flex`,
+          justifyContent: `center`,
+          align: `center`,
+          textAlign: `center`
+        }}>
+          <FolderDropzone onSave={async (ipfsHash) => {
+            this.stateChange(`ipfs`,ipfsHash)
+            await this.refreshABI()
+          }} />
 
-          <DetailsButton css={{ display: 'flex', marginTop: 50 }} type="submit">
-            Save
-          </DetailsButton>
-        </form>
+        </Div>
+        {/* <RowLayout>
+          {this.leftColumnDiv(`local`, `Local Path`)}
+          {this.centerColumnDiv(
+            `local`,
+            this.state.local,
+            `ie. /path/to/abi/folder`,
+          )}
+        </RowLayout> */}
+
+        
+
+        <RowLayout>
+          {this.leftColumnDiv(`ipfs`, `IPFS Address`)}
+          {this.centerColumnDiv(
+            `ipfs`,
+            this.state.ipfs,
+            `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
+          )}
+        </RowLayout>
+        <DetailsButton css={{ display: `flex`, marginTop: 50 }} onClick={this.handleFormSubmit}>
+          Save
+        </DetailsButton>
+
       </Div>
-    )
+    );
   }
 }
 
-export default withRouter(Settings)
+export default withCookies(withRouter(Settings));

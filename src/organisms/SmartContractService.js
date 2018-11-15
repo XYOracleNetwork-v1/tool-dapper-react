@@ -1,9 +1,16 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
+import { fetchABI } from './ABIReader'
+import { withCookies } from 'react-cookie'
 
 class SmartContractService {
-  constructor() {
+  constructor(props) {
+    console.log('WHAT PROPS? ', props)
+    const { cookies } = props
+    this.cookies = {
+      portisNetwork: cookies.get('portisNetwork') || 'mainnet',
+    }
     console.log('Init SmartContractService')
     this.smartContracts = []
     this.currentUser = undefined
@@ -55,28 +62,22 @@ class SmartContractService {
     return addComma(iterator, word)
   }
 
-  loadPortis = async () => {
-    return fetch('http://localhost:5000/settings')
-      .then(result => {
-        return result.json()
-      })
-      .then(result => {
-        let network = result.settings.network
-        if (network && network !== 'development') {
-          this.web3 = new Web3(
-            new PortisProvider({
-              apiKey: '3b1ca5fed7f439bf72771e64e9442d74',
-              network: network,
-            }),
-          )
-        } else {
-          this.web3 = new Web3(
-            new PortisProvider({
-              providerNodeUrl: 'http://localhost:8545',
-            }),
-          )
-        }
-      })
+  portisProvider = () => {
+    let network = this.cookies.portisNetwork
+    if (network && network !== 'development') {
+      return new Web3(
+        new PortisProvider({
+          apiKey: '3b1ca5fed7f439bf72771e64e9442d74',
+          network: network,
+        }),
+      )
+    } else {
+      return new Web3(
+        new PortisProvider({
+          providerNodeUrl: 'http://localhost:8545',
+        }),
+      )
+    }
   }
 
   contractObject = name =>
@@ -109,9 +110,8 @@ class SmartContractService {
     return new Promise((resolve, reject) => {
       this.web3.eth
         .getCode(address)
-        .then(
-          code =>
-            code === '0x0' || code === '0x' ? resolve(false) : resolve(true),
+        .then(code =>
+          code === '0x0' || code === '0x' ? resolve(false) : resolve(true),
         )
         .catch(err => reject(err))
     })
@@ -119,11 +119,9 @@ class SmartContractService {
 
   getCurrentUser = () => this.currentUser
 
-  refreshContracts = async _ => {
-    console.log('Refreshing contracts')
+  refreshContracts = async cookies => {
     let contracts = []
-    return fetch('http://localhost:5000/abi')
-      .then(contractDatas => contractDatas.json())
+    return fetchABI(cookies)
       .then(data => {
         contracts = data.abi
         return this.web3.eth.net.getId()
@@ -173,15 +171,15 @@ class SmartContractService {
       this.currentUser = accounts[0]
     })
 
-  async reloadWeb3() {
+  async reloadWeb3(cookies) {
     if (window.ethereum) {
-      console.log("Here, window.ethereum", window.ethereum)
+      console.log('Here, window.ethereum', window.ethereum)
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
       try {
         // Request account access if needed
         await window.ethereum.enable()
-        console.log("window.ethereum enabled!")
+        console.log('window.ethereum enabled!')
         // Acccounts now exposed
       } catch (error) {
         console.log('got some error', error)
@@ -192,11 +190,11 @@ class SmartContractService {
     } else if (typeof window.web3 !== 'undefined') {
       this.web3 = new Web3(window.web3.currentProvider)
     } else {
-      await this.loadPortis()
+      this.web3 = this.portisProvider()
     }
 
     const refreshDapp = async () =>
-      Promise.all([this.refreshUser(), this.refreshContracts()])
+      Promise.all([this.refreshUser(), this.refreshContracts(cookies)])
 
     return refreshDapp()
   }
