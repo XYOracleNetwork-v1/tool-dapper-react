@@ -23,7 +23,6 @@ const SettingsInput = glam.input({
   width: 500,
   height: 40,
 })
-const RadioInput = props => <Input type={`radio`} {...props} />
 
 const RowLayout = glam.div({
   display: `flex`,
@@ -106,16 +105,20 @@ class Settings extends Component {
     })
   }
 
+  radioInput = (value, checked, onChange) => (
+    <Input type={`radio`} value={value} checked={checked} onChange={onChange} />
+  )
+
   networkRadioInputs = () => {
     const inputs = []
     networkDescriptions.forEach(({ network, description }) => {
       inputs.push(
         <Div key={description}>
-          <RadioInput
-            value={network}
-            checked={this.state.portisNetwork === network}
-            onChange={this.handleNetworkChange}
-          />
+          {this.radioInput(
+            network,
+            this.state.portisNetwork === network,
+            this.handleNetworkChange,
+          )}
           {description}
         </Div>,
       )
@@ -125,11 +128,11 @@ class Settings extends Component {
 
   leftColumnDiv = (source, description) => (
     <LeftColumn>
-      <RadioInput
-        value={source}
-        checked={this.state.currentSource === source}
-        onChange={this.handleOptionChange}
-      />
+      {this.radioInput(
+        source,
+        this.state.currentSource === source,
+        this.handleOptionChange,
+      )}
       {description}
     </LeftColumn>
   )
@@ -183,13 +186,10 @@ class Settings extends Component {
             this.state.ipfs,
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
-          <DetailsButton
-            onClick={this.handleFormSubmit}
-          >
+          <DetailsButton onClick={this.handleFormSubmit}>
             Update IPFS
           </DetailsButton>
         </RowLayout>
-        
       </SettingsLayout>
     )
   }
