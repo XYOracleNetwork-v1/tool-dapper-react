@@ -5,9 +5,7 @@ const IPFS = require(`ipfs-api`)
 //   port: 5002,
 //   protocol: `https`,
 // })
-const ipfs = new IPFS(
-  `ipfs.infura.io`,
-  5001, {
+const ipfs = new IPFS(`ipfs.infura.io`, 5001, {
   protocol: `https`,
 })
 // const ipfs = new IPFS(`localhost`, 5001, {
@@ -15,19 +13,8 @@ const ipfs = new IPFS(
 // })
 const folder = `contracts`
 
-const pinToIPFS = hash =>
-  new Promise((resolve, reject) => {
-    ipfs.pin.add(hash, (err, res) => {
-      if (err) {
-        reject(err)
-      } else {
-        console.log(` $ Contracts pinned on IPFS`)
-        resolve(res)
-      }
-    })
-  })
 
-const addToIPFS = data =>
+const uploadIPFS = data =>
   new Promise((resolve, reject) =>
     ipfs.add(
       data,
@@ -40,7 +27,7 @@ const addToIPFS = data =>
           res.forEach(fileObj => {
             console.log(` $ Storing contract`, fileObj.path)
 
-            if (fileObj.path === folder || fileObj.path == ``) {
+            if (fileObj.path === folder || fileObj.path === ``) {
               console.log(` $ Contracts stored to IPFS`, fileObj.hash)
               console.log(
                 ` $ View contracts at https://ipfs.xyo.network/ipfs/${
@@ -60,20 +47,4 @@ const addToIPFS = data =>
     ),
   )
 
-const uploadIPFS = data => {
-  // abiFilePaths(program)
-  // .then((files) => {
-  //   const data = []
-  //   files.forEach((filePath) => {
-  //     const content = fs.readFileSync(filePath)
-  //     const ipfsPath = `${folder}/${path.basename(filePath)}`
-  //     data.push({ path: ipfsPath, content })
-  //   })
-  //   return data
-  // })
-  return addToIPFS(data)
-    .catch(err => {
-      console.log(err)
-    })
-}
 export default uploadIPFS

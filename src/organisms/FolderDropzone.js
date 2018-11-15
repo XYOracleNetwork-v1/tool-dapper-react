@@ -12,7 +12,7 @@ const handleSubmit = (data, onSave) => {
   })
 }
 const DroppedFileDiv = ({ files, onSave }) => {
-  if (files.length == 0) {
+  if (files.length === 0) {
     return null
   }
 

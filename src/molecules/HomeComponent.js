@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import glam, { Div, Img } from 'glamorous'
-import { Route, Link, Redirect } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import SmartContractService from '../organisms/SmartContractService'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'

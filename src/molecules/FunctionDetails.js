@@ -70,10 +70,7 @@ class FunctionDetails extends Component {
     transactionReceipt: undefined,
     transactionError: undefined,
     inputs: undefined,
-    value: 0,
   }
-
-  contract = {}
 
   componentDidMount() {
     this.updateInputs()
@@ -149,17 +146,13 @@ class FunctionDetails extends Component {
 
     const methodName = method.name
     const { stateMutability } = method
-    console.log(`Inputs`, this.state.inputs)
-    const inputParams = this.state.inputs.map(i => {
-      return i.value
-    })
+    const inputParams = this.state.inputs.map(i => i.value)
 
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
         throw new Error(`No Current User, Refresh Page, or Login Metamask`)
       }
-      console.log(`VALUE`, this.state.value)
       if (
         this.state.value === 0 &&
         (inputParams.length === 0 ||
@@ -185,7 +178,7 @@ class FunctionDetails extends Component {
         // this.contract.methods
         //   .mint(...inputParams)
         //   .send({ from: user, value: this.state.value })
-        this.contract.methods[methodName](...inputParams)
+        await this.contract.methods[methodName](...inputParams)
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
             console.log(`Got receipts`, transactionReceipt)
@@ -210,7 +203,7 @@ class FunctionDetails extends Component {
   getInputs = method => {
     const results = method.inputs.map((input, index) => {
       if (input.name === ``) {
-        input.name = `param ${index}`
+        input.name = `param${index}`
       }
       return (
         <ParamInputDiv key={input.name}>
@@ -230,7 +223,6 @@ class FunctionDetails extends Component {
       results.push(
         <ParamInputDiv key='Value'>
           Value To Transfer
-          {` `}
           <InputBar
             type='text'
             name='Value'
@@ -249,7 +241,7 @@ class FunctionDetails extends Component {
       {method.name}(
       {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
       <Div>{method.stateMutability}</Div>
-      {method.outputs.length == 0 ? `` : `returns (` +
+      {method.outputs.length === 0 ? `` : `returns (` +
         method.outputs
           .map(
             output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
@@ -270,8 +262,7 @@ class FunctionDetails extends Component {
     return (
       <MainDiv>
         <DetailsHeader>
-          {method.name}
-          ()
+          {method.name}()
         </DetailsHeader>
         <FunctionParamLayout>
           <FunctionPropertiesDiv>
