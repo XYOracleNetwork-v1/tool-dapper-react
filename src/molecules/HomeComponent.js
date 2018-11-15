@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import glam, { Div, Img } from 'glamorous'
-import { Route, Link, Redirect } from 'react-router-dom'
-import SmartContractService from '../SmartContractService'
+import { Route, Link } from 'react-router-dom'
+import SmartContractService from '../organisms/SmartContractService'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import FunctionDetails from './FunctionDetails'
@@ -9,24 +9,25 @@ import Settings from './Settings'
 import logo from '../assets/dapper-logo.svg'
 import cog from '../assets/cog.svg'
 import './css/HomeComponent.css'
+import { withCookies } from 'react-cookie'
 
 const Sidebar = glam.div({
-  display: 'flex',
-  flexDirection: 'column',
+  display: `flex`,
+  flexDirection: `column`,
   width: 413,
   minWidth: 413,
-  borderRight: '1px solid #979797',
-  backgroundColor: '#F8F8F8',
+  borderRight: `1px solid #979797`,
+  backgroundColor: `#F8F8F8`,
 })
 
 const SelectContractLayout = glam.div({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  width: '100%',
-  height: '251px',
-  backgroundColor: '#5B5C6D',
-  fontFamily: 'PT Sans',
+  display: `flex`,
+  flexDirection: `column`,
+  justifyContent: `space-between`,
+  width: `100%`,
+  height: `251px`,
+  backgroundColor: `#5B5C6D`,
+  fontFamily: `PT Sans`,
 })
 
 const SelectContractContainer = glam.div({
@@ -37,50 +38,50 @@ const SelectContractContainer = glam.div({
 })
 
 const HeaderDiv = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  backgroundColor: '#3c3e51',
+  display: `flex`,
+  flexDirection: `row`,
+  justifyContent: `space-between`,
+  backgroundColor: `#3c3e51`,
   paddingRight: 54,
   height: 113,
-  textAlign: 'right',
+  textAlign: `right`,
 })
 
 const NetworkAddressDiv = glam.div({
   width: 60,
-  textAlign: 'right',
+  textAlign: `right`,
   paddingRight: 5,
   // flexDirection: 'row',
   // justifyContent: 'flex-start',
 })
 
 const NetworkAddressRowDiv = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
-  textAlign: 'left',
-  color: '#C8C8C8',
-  fontFamily: 'PT Sans',
+  display: `flex`,
+  flexDirection: `row`,
+  textAlign: `left`,
+  color: `#C8C8C8`,
+  fontFamily: `PT Sans`,
   fontSize: 14,
   marginTop: 5,
 })
 const MainLayoutDiv = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  height: '100%',
+  display: `flex`,
+  flexDirection: `row`,
+  justifyContent: `flex-start`,
+  height: `100%`,
 })
 
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
 
   returnDivs.push(
-    <Div key="account" className="account-right">
-      Wallet: {account ? account : 'None Found'}
+    <Div key='account' className='account-right'>
+      Wallet: {account ? account : `None Found`}
     </Div>,
   )
   if (network) {
     returnDivs.push(
-      <Div key="network" className="network-right">
+      <Div key='network' className='network-right'>
         Network: {network}
       </Div>,
     )
@@ -96,16 +97,16 @@ const ChangeNetworkDiv = ({ validNetwork }) => {
     <Div>
       <Div
         css={{
-          color: '#4D4D5C',
-          backgroundColor: '#FF6161',
-          width: '100%',
+          color: `#4D4D5C`,
+          backgroundColor: `#FF6161`,
+          width: `100%`,
           padding: 10,
         }}
       >
         No contracts deployed at the ABI source. Make sure your contracts are
         deployed on the current ethereum network.
       </Div>
-      <Redirect to="/settings" />
+      {/* <Redirect to="/settings" /> */}
     </Div>
   )
 }
@@ -113,7 +114,7 @@ const ChangeNetworkDiv = ({ validNetwork }) => {
 class HomeComponent extends Component {
   state = {
     validNetwork: true,
-    service: new SmartContractService(),
+    service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
   }
@@ -122,7 +123,7 @@ class HomeComponent extends Component {
     this.reloadWeb3().then(() => {
       // Will refresh local store when new user is chosen:
       if (this.state.service.getCurrentConfigStore()) {
-        this.state.service.getCurrentConfigStore().on('update', this.reloadUser)
+        this.state.service.getCurrentConfigStore().on(`update`, this.reloadUser)
       }
     })
   }
@@ -134,9 +135,8 @@ class HomeComponent extends Component {
   }
 
   reloadWeb3 = () => {
-    console.log('Reload Web3 called in home')
     return this.state.service
-      .reloadWeb3()
+      .reloadWeb3(this.props.cookies)
       .then(() => this.state.service.validateContracts())
       .then(validNetwork => {
         this.setState({
@@ -148,7 +148,7 @@ class HomeComponent extends Component {
         if (err) {
           this.setState({ serviceError: err })
         }
-        console.log('Caught error while injecting', err)
+        console.log(`Caught error while injecting`, err)
       })
   }
 
@@ -157,15 +157,15 @@ class HomeComponent extends Component {
   render() {
     const { validNetwork } = this.state
     return (
-      <Div css={{ height: '100%', width: '100%' }}>
+      <Div css={{ height: `100%`, width: `100%` }}>
         <HeaderDiv>
-          <Img className="image-header-logo" src={logo} />
-          <Div className="vertical-center">
+          <Img className='image-header-logo' src={logo} />
+          <Div className='vertical-center'>
             <a
-              href="https://github.com/XYOracleNetwork/tool-dapper-react"
-              className="link-right"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://github.com/XYOracleNetwork/tool-dapper-react'
+              className='link-right'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               View on Github
             </a>
@@ -178,8 +178,8 @@ class HomeComponent extends Component {
         <MainLayoutDiv>
           <Sidebar>
             <SelectContractLayout>
-              <Div className="select-contract-layout">
-                <header className="select-contract"> Select Contract </header>{' '}
+              <Div className='select-contract-layout'>
+                <header className='select-contract'> Select Contract </header>{` `}
                 <Link to={`/settings`}>
                   <Img src={cog} />
                 </Link>
@@ -190,7 +190,7 @@ class HomeComponent extends Component {
                 />
               </SelectContractContainer>
               <Route
-                path="/:contract"
+                path='/:contract'
                 render={props => {
                   const match = props.match
                   if (!match.params) {
@@ -226,7 +226,7 @@ class HomeComponent extends Component {
               />
             </SelectContractLayout>
             <Route
-              path="/:contract"
+              path='/:contract'
               render={props => (
                 <FunctionsList {...props} service={this.state.service} />
               )}
@@ -234,15 +234,15 @@ class HomeComponent extends Component {
           </Sidebar>
           <Div
             css={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: `flex`,
+              flexDirection: `column`,
               flex: 1,
             }}
           >
             <ChangeNetworkDiv validNetwork={validNetwork} />
 
             <Route
-              path="/settings"
+              path='/settings'
               render={props => (
                 <Settings
                   {...props}
@@ -253,7 +253,7 @@ class HomeComponent extends Component {
             />
 
             <Route
-              path="/:contract/:method"
+              path='/:contract/:method'
               render={props => (
                 <FunctionDetails {...props} service={this.state.service} />
               )}
@@ -265,4 +265,4 @@ class HomeComponent extends Component {
     )
   }
 }
-export default HomeComponent
+export default withCookies(HomeComponent)

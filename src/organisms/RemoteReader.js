@@ -1,5 +1,5 @@
-var s3 = require('s3')
-
+// var s3 = require('s3')
+var s3 = undefined
 const remotePath = '/tmp/ABI/remote'
 const downloadFiles = bucketName => {
   const client = s3.createClient()
