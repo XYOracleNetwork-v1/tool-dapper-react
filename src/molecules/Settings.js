@@ -1,13 +1,20 @@
-import React, { Component } from 'react';
-import glam, { Div, Input } from 'glamorous';
-import { withRouter } from 'react-router-dom';
-import { withCookies } from 'react-cookie';
-import { DetailsHeader } from '../atoms/DetailsHeader';
-import { DetailsButton } from '../atoms/DetailsButton';
-import fetchABI from '../organisms/ABIReader';
-import FolderDropzone from '../organisms/FolderDropzone';
-import  {readSettings}  from '../atoms/CookieReader'
+import React, { Component } from "react"
+import glam, { Div, Input } from "glamorous"
+import { withRouter } from "react-router-dom"
+import { withCookies } from "react-cookie"
+import { DetailsHeader } from "../atoms/DetailsHeader"
+import { DetailsButton } from "../atoms/DetailsButton"
+import fetchABI from "../organisms/ABIReader"
+import FolderDropzone from "../organisms/FolderDropzone"
+import { readSettings } from "../atoms/CookieReader"
 
+const networkDescriptions = [
+  { network: `development`, description: `Development (local)` },
+  { network: `kovan`, description: `Kovan` },
+  { network: `ropsten`, description: `Ropsten` },
+  { network: `rinkeby`, description: `Rinkeby` },
+  { network: `mainnet`, description: `Main Net` },
+]
 const SettingsInput = glam.input({
   paddingLeft: 12,
   border: `1px solid #E0E0E0`,
@@ -15,101 +22,110 @@ const SettingsInput = glam.input({
   backgroundColor: `#F6F6F6`,
   width: 500,
   height: 40,
-});
+})
+const RadioInput = props => <Input type={`radio`} {...props} />
+
 const RowLayout = glam.div({
   display: `flex`,
   flexDirection: `row`,
   paddingRight: 30,
   marginBottom: 40,
   marginLeft: 50,
-});
+})
 const LeftColumn = glam.div({
   minWidth: 170,
   width: 170,
   marginTop: 10,
-});
+})
 const CenterColumn = glam.div({
   lineHeight: 1,
   flex: 1,
   maxWidth: 500,
-});
-
+})
+const SettingsLayout = glam.div({
+  color: `#4D4D5C`,
+  fontFamily: `PT Sans`,
+  flex: 1,
+  overflow: `auto`,
+  marginRight: 60,
+})
 class Settings extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = readSettings(props.cookies)
   }
 
-  handleChange = (changeEvent) => {
-    this.stateChange(changeEvent.target.name, changeEvent.target.value);
+  handleChange = changeEvent => {
+    this.stateChange(changeEvent.target.name, changeEvent.target.value)
   }
 
   stateChange = (stateKey, stateValue) => {
-    console.log(`attempting State Change`, stateKey, stateValue);
+    console.log(`attempting State Change`, stateKey, stateValue)
     this.props.cookies.set(stateKey, stateValue, {
       path: `/`,
-    });
-    const newState = this.state;
-    newState[stateKey] = stateValue;
+    })
+    const newState = this.state
+    newState[stateKey] = stateValue
 
-    this.setState(newState);
+    this.setState(newState)
   }
 
-  handleSourceSelect = changeEvent => this.stateChange(`currentSource`, changeEvent.target.name)
+  handleSourceSelect = changeEvent =>
+    this.stateChange(`currentSource`, changeEvent.target.name)
 
-  handleOptionChange = changeEvent => this.stateChange(`currentSource`, changeEvent.target.value)
+  handleOptionChange = changeEvent =>
+    this.stateChange(`currentSource`, changeEvent.target.value)
 
-  handleNetworkChange = changeEvent => this.stateChange(`portisNetwork`, changeEvent.target.value)
+  handleNetworkChange = changeEvent =>
+    this.stateChange(`portisNetwork`, changeEvent.target.value)
 
-  handleFormSubmit = (formSubmitEvent) => {
-    formSubmitEvent.preventDefault();
+  handleFormSubmit = formSubmitEvent => {
+    formSubmitEvent.preventDefault()
     // TODO show activity indicator
-    console.log(`You have selected:`, this.state.currentSource);
+    console.log(`You have selected:`, this.state.currentSource)
 
     this.props
       .onSave()
       .then(() => {
-        this.props.history.push(`/`);
+        this.props.history.push(`/`)
       })
-      .catch((err) => {
-        this.props.history.push(`/`);
-        console.log(`Could not save`, err);
-      });
+      .catch(err => {
+        this.props.history.push(`/`)
+        console.log(`Could not save`, err)
+      })
   }
 
   refreshABI = async () => {
     if (!this.props.cookies) {
       return true
     }
-    console.log(`REFRESHING ABI`, this.props.cookies);
+    console.log(`REFRESHING ABI`, this.props.cookies)
     return fetchABI(this.props.cookies).then(() => {
-      return this.props.onSave();
-    });
+      return this.props.onSave()
+    })
   }
 
-  networkRadioInputs = (options) => {
-    const inputs = [];
-    options.forEach(({ network, description }) => {
+  networkRadioInputs = () => {
+    const inputs = []
+    networkDescriptions.forEach(({ network, description }) => {
       inputs.push(
         <Div key={description}>
-          <Input
-            type='radio'
+          <RadioInput
             value={network}
             checked={this.state.portisNetwork === network}
             onChange={this.handleNetworkChange}
           />
           {description}
         </Div>,
-      );
-    });
-    return inputs;
+      )
+    })
+    return inputs
   }
 
   leftColumnDiv = (source, description) => (
     <LeftColumn>
-      <Input
-        type='radio'
+      <RadioInput
         value={source}
         checked={this.state.currentSource === source}
         onChange={this.handleOptionChange}
@@ -133,57 +149,33 @@ class Settings extends Component {
 
   render() {
     return (
-      <Div
-        css={{
-          color: `#4D4D5C`,
-          fontFamily: `PT Sans`,
-          flex: 1,
-          overflow: `auto`,
-          marginRight: 60,
-        }}
-      >
+      <SettingsLayout>
         <DetailsHeader>Settings</DetailsHeader>
-
         <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
-            Portis Network
+          Portis Network
         </DetailsHeader>
         <RowLayout css={{ justifyContent: `space-between` }}>
-          {this.networkRadioInputs([
-            { network: `development`, description: `Development (local)` },
-            { network: `kovan`, description: `Kovan` },
-            { network: `ropsten`, description: `Ropsten` },
-            { network: `rinkeby`, description: `Rinkeby` },
-            { network: `mainnet`, description: `Main Net` },
-          ])}
+          {this.networkRadioInputs()}
         </RowLayout>
-
         <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
-            ABI Source
+          ABI Source
         </DetailsHeader>
-        <Div style={{
-          margin: 20,
-          display: `flex`,
-          justifyContent: `center`,
-          align: `center`,
-          textAlign: `center`
-        }}>
-          <FolderDropzone onSave={async (ipfsHash) => {
-            this.stateChange(`ipfs`,ipfsHash)
-            await this.refreshABI()
-          }} />
-
+        <Div
+          style={{
+            margin: 40,
+            display: `flex`,
+            justifyContent: `center`,
+            align: `center`,
+            textAlign: `center`,
+          }}
+        >
+          <FolderDropzone
+            onSave={async ipfsHash => {
+              this.stateChange(`ipfs`, ipfsHash)
+              await this.refreshABI()
+            }}
+          />
         </Div>
-        {/* <RowLayout>
-          {this.leftColumnDiv(`local`, `Local Path`)}
-          {this.centerColumnDiv(
-            `local`,
-            this.state.local,
-            `ie. /path/to/abi/folder`,
-          )}
-        </RowLayout> */}
-
-        
-
         <RowLayout>
           {this.leftColumnDiv(`ipfs`, `IPFS Address`)}
           {this.centerColumnDiv(
@@ -191,14 +183,16 @@ class Settings extends Component {
             this.state.ipfs,
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
+          <DetailsButton
+            onClick={this.handleFormSubmit}
+          >
+            Update IPFS
+          </DetailsButton>
         </RowLayout>
-        <DetailsButton css={{ display: `flex`, marginTop: 50 }} onClick={this.handleFormSubmit}>
-          Save
-        </DetailsButton>
-
-      </Div>
-    );
+        
+      </SettingsLayout>
+    )
   }
 }
 
-export default withCookies(withRouter(Settings));
+export default withCookies(withRouter(Settings))
