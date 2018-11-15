@@ -173,16 +173,14 @@ class SmartContractService {
 
   async reloadWeb3(cookies) {
     if (window.ethereum) {
-      console.log('Here, window.ethereum', window.ethereum)
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
       try {
         // Request account access if needed
         await window.ethereum.enable()
-        console.log('window.ethereum enabled!')
         // Acccounts now exposed
       } catch (error) {
-        console.log('got some error', error)
+        console.log('SmartContractService reloadWeb3 error', error)
         // User denied account access...
 
         return Promise.reject(error)

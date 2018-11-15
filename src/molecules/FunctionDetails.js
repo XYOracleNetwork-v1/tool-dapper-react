@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import glam, { Div } from 'glamorous'
-import TransactionResult from '../atoms/TransactionResult'
-import TransactionError from '../atoms/TransactionError'
-import { TransactionReceipt } from '../atoms/TransactionReceipt'
-import { DetailsHeader } from '../atoms/DetailsHeader'
-import { DetailsButton } from '../atoms/DetailsButton'
+import React, { Component } from "react"
+import glam, { Div } from "glamorous"
+import TransactionResult from "../atoms/TransactionResult"
+import TransactionError from "../atoms/TransactionError"
+import { TransactionReceipt } from "../atoms/TransactionReceipt"
+import { DetailsHeader } from "../atoms/DetailsHeader"
+import { DetailsButton } from "../atoms/DetailsButton"
 
 const MainDiv = glam.div({
   color: `#4D4D5C`,
@@ -149,7 +149,7 @@ class FunctionDetails extends Component {
 
     const methodName = method.name
     const { stateMutability } = method
-    console.log('Inputs', this.state.inputs)
+    console.log(`Inputs`, this.state.inputs)
     const inputParams = this.state.inputs.map(i => {
       return i.value
     })
@@ -209,14 +209,14 @@ class FunctionDetails extends Component {
 
   getInputs = method => {
     const results = method.inputs.map((input, index) => {
-      if (input.name === '') {
+      if (input.name === ``) {
         input.name = `param ${index}`
       }
       return (
         <ParamInputDiv key={input.name}>
           {input.name}
           <InputBar
-            type="text"
+            type='text'
             name={input.name}
             placeholder={input.type}
             onChange={this.handleChange}
@@ -228,13 +228,13 @@ class FunctionDetails extends Component {
 
     if (method.stateMutability === `payable`) {
       results.push(
-        <ParamInputDiv key="Value">
+        <ParamInputDiv key='Value'>
           Value To Transfer
           {` `}
           <InputBar
-            type="text"
-            name="Value"
-            placeholder="ETH (wei)"
+            type='text'
+            name='Value'
+            placeholder='ETH (wei)'
             onChange={this.handleChange}
             value={this.state.value}
           />
@@ -243,6 +243,21 @@ class FunctionDetails extends Component {
     }
     return results
   }
+
+  functionProperties = method => (
+    <Div>
+      {method.name}(
+      {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
+      <Div>{method.stateMutability}</Div>
+      {method.outputs.length == 0 ? `` : `returns (` +
+        method.outputs
+          .map(
+            output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
+          )
+          .join(`, `) +
+        `)`}
+    </Div>
+  )
 
   render() {
     const {
@@ -260,17 +275,9 @@ class FunctionDetails extends Component {
         </DetailsHeader>
         <FunctionParamLayout>
           <FunctionPropertiesDiv>
-            {method.name}(
-            {method.inputs
-              .map(input => `${input.type} ${input.name}`)
-              .join(`, `)}
-            )<Div>{method.stateMutability}</Div>
-            {method.outputs.map(
-              output => `returns (${output.type} ${output.name})`,
-            )}
+            {this.functionProperties(method)}
           </FunctionPropertiesDiv>
           <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-
           <DetailsButton onClick={this.handleExecute}>EXECUTE</DetailsButton>
         </FunctionParamLayout>
 

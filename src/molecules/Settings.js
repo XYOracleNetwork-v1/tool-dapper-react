@@ -6,6 +6,7 @@ import { DetailsHeader } from '../atoms/DetailsHeader';
 import { DetailsButton } from '../atoms/DetailsButton';
 import fetchABI from '../organisms/ABIReader';
 import FolderDropzone from '../organisms/FolderDropzone';
+import  {readSettings}  from '../atoms/CookieReader'
 
 const SettingsInput = glam.input({
   paddingLeft: 12,
@@ -37,14 +38,7 @@ class Settings extends Component {
   constructor(props) {
     super(props);
 
-    const { cookies } = props;
-    this.state = {
-      portisNetwork: cookies.get(`portisNetwork`) || `development`,
-      currentSource: cookies.get(`currentSource`) || `local`,
-      local: cookies.get(`local`) || ``,
-      remote: cookies.get(`remote`) || ``,
-      ipfs: cookies.get(`ipfs`) || ``,
-    };
+    this.state = readSettings(props.cookies)
   }
 
   handleChange = (changeEvent) => {

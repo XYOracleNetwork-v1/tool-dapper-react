@@ -20,8 +20,8 @@ const DroppedFileDiv = ({ files, onSave }) => {
   files.forEach(file => {
     const reader = new FileReader()
     reader.onload = () => {
-      const fileAsBinaryString = new Buffer(reader.result)
-      data.push({ path: file.name, content: fileAsBinaryString })
+      const fileBuf = new Buffer(reader.result)
+      data.push({ path: file.name, content: fileBuf })
     }
     reader.onabort = () => console.log(`file reading was aborted`)
     reader.onerror = () => console.log(`file reading has failed`)
