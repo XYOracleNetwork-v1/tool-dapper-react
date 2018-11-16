@@ -3,10 +3,10 @@ import glam, { Div, Input } from "glamorous"
 import { withRouter } from "react-router-dom"
 import { withCookies } from "react-cookie"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import { DetailsButton } from "../atoms/DetailsButton"
 import fetchABI from "../organisms/ABIReader"
 import FolderDropzone from "../organisms/FolderDropzone"
 import { readSettings } from "../atoms/CookieReader"
+import ProgressButton, { STATE } from "react-progress-button"
 
 const networkDescriptions = [
   { network: `development`, description: `Development (local)` },
@@ -53,6 +53,9 @@ class Settings extends Component {
     super(props)
 
     this.state = readSettings(props.cookies)
+    this.setState({
+      updateBtnState: STATE.NOTHING,
+    })
   }
 
   handleChange = changeEvent => {
@@ -81,16 +84,14 @@ class Settings extends Component {
 
   handleFormSubmit = formSubmitEvent => {
     formSubmitEvent.preventDefault()
-    // TODO show activity indicator
-    console.log(`You have selected:`, this.state.currentSource)
-
+    this.setState({ updateBtnState: STATE.LOADING })
     this.props
-      .onSave()
-      .then(() => {
-        this.props.history.push(`/`)
+      .onSave(true)
+      .then(wtf => {
+        this.setState({ updateBtnState: STATE.SUCCESS })
       })
       .catch(err => {
-        this.props.history.push(`/`)
+        this.setState({ updateBtnState: STATE.ERROR })
         console.log(`Could not save`, err)
       })
   }
@@ -99,7 +100,6 @@ class Settings extends Component {
     if (!this.props.cookies) {
       return true
     }
-    console.log(`REFRESHING ABI`, this.props.cookies)
     return fetchABI(this.props.cookies).then(() => {
       return this.props.onSave()
     })
@@ -151,6 +151,7 @@ class Settings extends Component {
   )
 
   render() {
+    console.log(`SETTINGS STATE`, this.state.updateBtnState)
     return (
       <SettingsLayout>
         <DetailsHeader>Settings</DetailsHeader>
@@ -175,7 +176,7 @@ class Settings extends Component {
           <FolderDropzone
             onSave={async ipfsHash => {
               this.stateChange(`ipfs`, ipfsHash)
-              await this.refreshABI()
+              return this.refreshABI()
             }}
           />
         </Div>
@@ -186,9 +187,14 @@ class Settings extends Component {
             this.state.ipfs,
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
-          <DetailsButton onClick={this.handleFormSubmit}>
-            Update IPFS
-          </DetailsButton>
+          <Div style={{ width: 200, marginLeft: 20 }}>
+            <ProgressButton
+              state={this.state.updateBtnState}
+              onClick={this.handleFormSubmit}
+            >
+              Update IPFS
+            </ProgressButton>
+          </Div>
         </RowLayout>
       </SettingsLayout>
     )

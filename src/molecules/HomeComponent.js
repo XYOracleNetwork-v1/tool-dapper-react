@@ -134,7 +134,7 @@ class HomeComponent extends Component {
     })
   }
 
-  reloadWeb3 = () => {
+  reloadWeb3 = async (shouldThrow = false) => {
     return this.state.service
       .reloadWeb3(this.props.cookies)
       .then(() => this.state.service.validateContracts())
@@ -148,7 +148,11 @@ class HomeComponent extends Component {
         if (err) {
           this.setState({ serviceError: err })
         }
-        console.log(`Caught error while injecting`, err)
+        if (shouldThrow) {
+          console.log(`Caught error while injecting`, err)
+
+          throw err
+        }
       })
   }
 

@@ -9,7 +9,7 @@ import './App.css'
 const App = () => (
   <CookiesProvider>
     <BrowserRouter createHistory={createBrowserHistory}>
-      <HomeComponent/>
+      <HomeComponent />
     </BrowserRouter>
   </CookiesProvider>  
 )

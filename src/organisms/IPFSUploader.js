@@ -13,13 +13,14 @@ const ipfs = new IPFS(`ipfs.infura.io`, 5001, {
 // })
 const folder = `contracts`
 
-
 const uploadIPFS = data =>
   new Promise((resolve, reject) =>
     ipfs.add(
       data,
       { recursive: false, wrapWithDirectory: true, pin: true },
       (err, res) => {
+        console.log(`DATA`, data)
+
         if (err) {
           console.log(`Got IPFS error:`, err)
           reject(err)
