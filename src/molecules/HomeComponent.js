@@ -51,8 +51,6 @@ const NetworkAddressDiv = glam.div({
   width: 60,
   textAlign: `right`,
   paddingRight: 5,
-  // flexDirection: 'row',
-  // justifyContent: 'flex-start',
 })
 
 const NetworkAddressRowDiv = glam.div({

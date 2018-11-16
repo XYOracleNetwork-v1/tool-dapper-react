@@ -5,6 +5,7 @@ import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
 import { DetailsButton } from "../atoms/DetailsButton"
+import ProgressButton, { STATE } from "react-progress-button"
 
 const MainDiv = glam.div({
   color: `#4D4D5C`,
@@ -64,6 +65,7 @@ class FunctionDetails extends Component {
       outputs: [],
       name: `loading...`,
       type: ``,
+      executeBtnState: STATE.LOADING,
     },
     service: this.props.service,
     transactionResult: undefined,
@@ -101,6 +103,7 @@ class FunctionDetails extends Component {
             transactionReceipt: undefined,
             inputs: [],
             value: 0,
+            executeBtnState: STATE.NOTHING
           })
         }
       }
@@ -142,6 +145,7 @@ class FunctionDetails extends Component {
       transactionResult: undefined,
       transactionError: undefined,
       transactionReceipt: undefined,
+      executeBtnState: STATE.LOADING,
     })
 
     const methodName = method.name
@@ -167,7 +171,10 @@ class FunctionDetails extends Component {
         const result = await this.contract.methods[methodName](
           ...inputParams,
         ).call()
-        this.setState({ transactionResult: result })
+        this.setState({ 
+          transactionResult: result,
+          executeBtnState: STATE.success,
+        })
       } else {
         // console.log(
         //   `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
@@ -182,12 +189,21 @@ class FunctionDetails extends Component {
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
             console.log(`Got receipts`, transactionReceipt)
-            this.setState({ transactionReceipt })
+            this.setState({ 
+              transactionReceipt, 
+              executeBtnState: STATE.SUCCESS,
+            })
           })
-          .catch(e => this.setState({ transactionError: e }))
+          .catch(e => this.setState({ 
+            transactionError: e,
+            executeBtnState: STATE.ERROR,
+          }))
       }
     } catch (e) {
-      this.setState({ transactionError: e })
+      this.setState({ 
+        transactionError: e,
+        executeBtnState: STATE.ERROR,
+      })
     }
   }
 
@@ -241,13 +257,15 @@ class FunctionDetails extends Component {
       {method.name}(
       {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
       <Div>{method.stateMutability}</Div>
-      {method.outputs.length === 0 ? `` : `returns (` +
-        method.outputs
-          .map(
-            output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
-          )
-          .join(`, `) +
-        `)`}
+      {method.outputs.length === 0
+        ? ``
+        : `returns (` +
+          method.outputs
+            .map(
+              output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
+            )
+            .join(`, `) +
+          `)`}
     </Div>
   )
 
@@ -261,15 +279,13 @@ class FunctionDetails extends Component {
 
     return (
       <MainDiv>
-        <DetailsHeader>
-          {method.name}()
-        </DetailsHeader>
+        <DetailsHeader>{method.name}()</DetailsHeader>
         <FunctionParamLayout>
           <FunctionPropertiesDiv>
             {this.functionProperties(method)}
           </FunctionPropertiesDiv>
           <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          <DetailsButton onClick={this.handleExecute}>EXECUTE</DetailsButton>
+          <ProgressButton state={this.state.executeBtnState} onClick={this.handleExecute}>EXECUTE</ProgressButton>
         </FunctionParamLayout>
 
         <TransactionResult result={transactionResult} />
