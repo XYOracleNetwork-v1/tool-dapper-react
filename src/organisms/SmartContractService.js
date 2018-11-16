@@ -113,7 +113,6 @@ class SmartContractService {
         .then(code =>
           code === '0x0' || code === '0x' ? resolve(false) : resolve(true),
         )
-        .catch(err => reject(err))
     })
   }
 
@@ -160,9 +159,6 @@ class SmartContractService {
         this.smartContracts = sc
         return sc
       })
-      .catch(err => {
-        console.log('Error Refreshing', err)
-      })
   }
 
   refreshUser = async () =>
@@ -183,7 +179,7 @@ class SmartContractService {
         console.log('SmartContractService reloadWeb3 error', error)
         // User denied account access...
 
-        return Promise.reject(error)
+        throw Promise.reject(error)
       }
     } else if (typeof window.web3 !== 'undefined') {
       this.web3 = new Web3(window.web3.currentProvider)

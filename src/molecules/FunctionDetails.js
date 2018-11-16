@@ -1,61 +1,11 @@
 import React, { Component } from "react"
-import glam, { Div } from "glamorous"
+import { Div } from "glamorous"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import { DetailsButton } from "../atoms/DetailsButton"
-
-const MainDiv = glam.div({
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
-  flex: 1,
-  overflow: `auto`,
-})
-const FunctionPropertiesDiv = glam.div({
-  display: `flex`,
-  flexDirection: `column`,
-  justifyContent: `flexStart`,
-  lineHeight: `30px`,
-  paddingLeft: `20px`,
-  fontSize: `16px`,
-  minWidth: 250,
-})
-
-const FunctionParamLayout = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  paddingBottom: `30px`,
-  borderBottom: `1px solid #979797`,
-  width: `100%`,
-  flex: 1,
-})
-const FunctionParamList = glam.div({
-  display: `flex`,
-  flexDirection: `column`,
-  justifyContent: `flex-start`,
-  paddingLeft: 30,
-  paddingRight: 30,
-  flex: 1,
-})
-
-const InputBar = glam.input({
-  marginTop: 8,
-  marginRight: 8,
-  paddingLeft: 8,
-  border: `1px solid #E0E0E0`,
-  borderRadius: `6px`,
-  backgroundColor: `#F6F6F6`,
-  height: 40,
-  flex: 1,
-})
-
-const ParamInputDiv = glam.div({
-  marginTop: 8,
-  display: `flex`,
-  flexDirection: `column`,
-  minWidth: 300,
-})
+import ProgressButton, { STATE } from "react-progress-button"
+import {MainDiv, FunctionParamLayout, FunctionPropertiesDiv, FunctionParamList, InputBar, ParamInputDiv } from './FunctionDetailsComponents'
 
 class FunctionDetails extends Component {
   state = {
@@ -64,6 +14,7 @@ class FunctionDetails extends Component {
       outputs: [],
       name: `loading...`,
       type: ``,
+      executeBtnState: STATE.LOADING,
     },
     service: this.props.service,
     transactionResult: undefined,
@@ -101,6 +52,7 @@ class FunctionDetails extends Component {
             transactionReceipt: undefined,
             inputs: [],
             value: 0,
+            executeBtnState: STATE.NOTHING,
           })
         }
       }
@@ -142,6 +94,7 @@ class FunctionDetails extends Component {
       transactionResult: undefined,
       transactionError: undefined,
       transactionReceipt: undefined,
+      executeBtnState: STATE.LOADING,
     })
 
     const methodName = method.name
@@ -167,7 +120,10 @@ class FunctionDetails extends Component {
         const result = await this.contract.methods[methodName](
           ...inputParams,
         ).call()
-        this.setState({ transactionResult: result })
+        this.setState({
+          transactionResult: result,
+          executeBtnState: STATE.success,
+        })
       } else {
         // console.log(
         //   `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
@@ -182,12 +138,23 @@ class FunctionDetails extends Component {
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
             console.log(`Got receipts`, transactionReceipt)
-            this.setState({ transactionReceipt })
+            this.setState({
+              transactionReceipt,
+              executeBtnState: STATE.SUCCESS,
+            })
           })
-          .catch(e => this.setState({ transactionError: e }))
+          .catch(e =>
+            this.setState({
+              transactionError: e,
+              executeBtnState: STATE.ERROR,
+            }),
+          )
       }
     } catch (e) {
-      this.setState({ transactionError: e })
+      this.setState({
+        transactionError: e,
+        executeBtnState: STATE.ERROR,
+      })
     }
   }
 
@@ -241,13 +208,15 @@ class FunctionDetails extends Component {
       {method.name}(
       {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
       <Div>{method.stateMutability}</Div>
-      {method.outputs.length === 0 ? `` : `returns (` +
-        method.outputs
-          .map(
-            output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
-          )
-          .join(`, `) +
-        `)`}
+      {method.outputs.length === 0
+        ? ``
+        : `returns (` +
+          method.outputs
+            .map(
+              output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
+            )
+            .join(`, `) +
+          `)`}
     </Div>
   )
 
@@ -261,15 +230,18 @@ class FunctionDetails extends Component {
 
     return (
       <MainDiv>
-        <DetailsHeader>
-          {method.name}()
-        </DetailsHeader>
+        <DetailsHeader>{method.name}()</DetailsHeader>
         <FunctionParamLayout>
           <FunctionPropertiesDiv>
             {this.functionProperties(method)}
           </FunctionPropertiesDiv>
           <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          <DetailsButton onClick={this.handleExecute}>EXECUTE</DetailsButton>
+          <ProgressButton
+            state={this.state.executeBtnState}
+            onClick={this.handleExecute}
+          >
+            EXECUTE
+          </ProgressButton>
         </FunctionParamLayout>
 
         <TransactionResult result={transactionResult} />
