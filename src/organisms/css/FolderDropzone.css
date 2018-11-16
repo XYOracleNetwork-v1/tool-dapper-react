@@ -20,13 +20,13 @@
     #button-disabled {
       width: 200px;
       margin: 100px auto;
-    } */
+    }  */
 .pb-container {
   display: inline-block;
   text-align: center;
   width: 100%;
   max-width: 300px;
-  margin: 20px;
+  margin-right: 20px;
 }
 .pb-container .pb-button {
   background: transparent;

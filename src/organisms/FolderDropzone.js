@@ -2,10 +2,9 @@ import React from "react"
 import Dropzone from "react-dropzone"
 import { Div } from "glamorous"
 import uploadIPFS from "./IPFSUploader"
-import { DetailsButton } from "../atoms/DetailsButton"
 import ProgressButton, { STATE } from "react-progress-button"
-
 import "./css/FolderDropzone.css"
+
 const { fromEvent } = require(`file-selector`)
 
 class DroppedFileDiv extends React.Component {
@@ -50,33 +49,31 @@ class DroppedFileDiv extends React.Component {
       })
   }
   render() {
-    console.log(`CURRENT STATE`, this.state.uploadBtnState)
     let { files } = this.props
-    if (files.length === 0) {
-      return null
-    }
-    return (
-      <Div style={{ textAlign: `left` }}>
-        <h2>Dropped files and folders</h2>
-        <ul>
-          {files.map(f => (
-            <li key={f.name}>
-              {f.path} - {f.size} bytes
-            </li>
-          ))}
-        </ul>
-        <div>
+    if (files.length > 0) {
+      return (
+        <Div style={{ textAlign: `left` }}>
+          <h2>Dropped files and folders</h2>
+          <ul>
+            {files.map(f => (
+              <li key={f.name}>
+                {f.path} - {f.size} bytes
+              </li>
+            ))}
+          </ul>
           <ProgressButton
             state={this.state.uploadBtnState}
             onClick={this.handleClick}
-          >
-            Upload Contracts
+            >
+              Upload Contracts
           </ProgressButton>
-        </div>
-      </Div>
-    )
+        </Div>
+      )
+    } 
+    return null
   }
 }
+
 const parentStyle = {
   alignSelf: `center`,
   padding: 20,
@@ -100,24 +97,16 @@ class FolderDropzone extends React.Component {
   render() {
     return (
       <Div>
-        <Div>
-          <Dropzone
-            style={parentStyle}
-            getDataTransferItems={evt => fromEvent(evt)}
-            onDrop={this.onDrop}
+        <Dropzone
+          style={parentStyle}
+          getDataTransferItems={evt => fromEvent(evt)}
+          onDrop={this.onDrop}
           >
-            <Div
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                marginTop: 50,
-              }}
-            >
-              Drop ABI Folder here{` `}
-            </Div>
-            <p> ie. [solidity_project]/build/contracts</p>
-          </Dropzone>
-        </Div>
+          <h2>
+              Drop ABI Folder here
+          </h2>
+          <p> ie. [solidity_project]/build/contracts</p>
+        </Dropzone>
         <DroppedFileDiv
           files={this.state.files}
           onSave={hash => this.props.onSave(hash)}

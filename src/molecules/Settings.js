@@ -45,7 +45,6 @@ const SettingsLayout = glam.div({
   color: `#4D4D5C`,
   fontFamily: `PT Sans`,
   flex: 1,
-  overflow: `auto`,
   marginRight: 60,
 })
 class Settings extends Component {

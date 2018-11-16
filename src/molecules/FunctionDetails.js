@@ -1,62 +1,11 @@
 import React, { Component } from "react"
-import glam, { Div } from "glamorous"
+import { Div } from "glamorous"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import { DetailsButton } from "../atoms/DetailsButton"
 import ProgressButton, { STATE } from "react-progress-button"
-
-const MainDiv = glam.div({
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
-  flex: 1,
-  overflow: `auto`,
-})
-const FunctionPropertiesDiv = glam.div({
-  display: `flex`,
-  flexDirection: `column`,
-  justifyContent: `flexStart`,
-  lineHeight: `30px`,
-  paddingLeft: `20px`,
-  fontSize: `16px`,
-  minWidth: 250,
-})
-
-const FunctionParamLayout = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  paddingBottom: `30px`,
-  borderBottom: `1px solid #979797`,
-  width: `100%`,
-  flex: 1,
-})
-const FunctionParamList = glam.div({
-  display: `flex`,
-  flexDirection: `column`,
-  justifyContent: `flex-start`,
-  paddingLeft: 30,
-  paddingRight: 30,
-  flex: 1,
-})
-
-const InputBar = glam.input({
-  marginTop: 8,
-  marginRight: 8,
-  paddingLeft: 8,
-  border: `1px solid #E0E0E0`,
-  borderRadius: `6px`,
-  backgroundColor: `#F6F6F6`,
-  height: 40,
-  flex: 1,
-})
-
-const ParamInputDiv = glam.div({
-  marginTop: 8,
-  display: `flex`,
-  flexDirection: `column`,
-  minWidth: 300,
-})
+import {MainDiv, FunctionParamLayout, FunctionPropertiesDiv, FunctionParamList, InputBar, ParamInputDiv } from './FunctionDetailsComponents'
 
 class FunctionDetails extends Component {
   state = {
@@ -103,7 +52,7 @@ class FunctionDetails extends Component {
             transactionReceipt: undefined,
             inputs: [],
             value: 0,
-            executeBtnState: STATE.NOTHING
+            executeBtnState: STATE.NOTHING,
           })
         }
       }
@@ -171,7 +120,7 @@ class FunctionDetails extends Component {
         const result = await this.contract.methods[methodName](
           ...inputParams,
         ).call()
-        this.setState({ 
+        this.setState({
           transactionResult: result,
           executeBtnState: STATE.success,
         })
@@ -189,18 +138,20 @@ class FunctionDetails extends Component {
           .send({ from: user, value: this.state.value })
           .then(transactionReceipt => {
             console.log(`Got receipts`, transactionReceipt)
-            this.setState({ 
-              transactionReceipt, 
+            this.setState({
+              transactionReceipt,
               executeBtnState: STATE.SUCCESS,
             })
           })
-          .catch(e => this.setState({ 
-            transactionError: e,
-            executeBtnState: STATE.ERROR,
-          }))
+          .catch(e =>
+            this.setState({
+              transactionError: e,
+              executeBtnState: STATE.ERROR,
+            }),
+          )
       }
     } catch (e) {
-      this.setState({ 
+      this.setState({
         transactionError: e,
         executeBtnState: STATE.ERROR,
       })
@@ -285,7 +236,12 @@ class FunctionDetails extends Component {
             {this.functionProperties(method)}
           </FunctionPropertiesDiv>
           <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          <ProgressButton state={this.state.executeBtnState} onClick={this.handleExecute}>EXECUTE</ProgressButton>
+          <ProgressButton
+            state={this.state.executeBtnState}
+            onClick={this.handleExecute}
+          >
+            EXECUTE
+          </ProgressButton>
         </FunctionParamLayout>
 
         <TransactionResult result={transactionResult} />
