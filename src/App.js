@@ -1,5 +1,5 @@
 import React from 'react'
-import HomeComponent from './molecules/HomeComponent'
+import HomeComponent from './organisms/HomeComponent'
 import { BrowserRouter } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { CookiesProvider } from 'react-cookie'

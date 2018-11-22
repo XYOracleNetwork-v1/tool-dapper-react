@@ -3,8 +3,8 @@ import glam, { Div, Input } from "glamorous"
 import { withRouter } from "react-router-dom"
 import { withCookies } from "react-cookie"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import fetchABI from "../organisms/ABIReader"
-import FolderDropzone from "../organisms/FolderDropzone"
+import fetchABI from "./ABIReader"
+import FolderDropzone from "./FolderDropzone"
 import { readSettings } from "../atoms/CookieReader"
 import ProgressButton, { STATE } from "react-progress-button"
 
@@ -47,14 +47,15 @@ const SettingsLayout = glam.div({
   flex: 1,
   marginRight: 60,
 })
+
 class Settings extends Component {
   constructor(props) {
     super(props)
 
-    this.state = readSettings(props.cookies)
-    this.setState({
-      updateBtnState: STATE.NOTHING,
-    })
+    this.state = {
+      ...readSettings(props.cookies),
+      updateBtnState: STATE.NOTHING
+    }
   }
 
   handleChange = changeEvent => {
@@ -150,7 +151,6 @@ class Settings extends Component {
   )
 
   render() {
-    console.log(`SETTINGS STATE`, this.state.updateBtnState)
     return (
       <SettingsLayout>
         <DetailsHeader>Settings</DetailsHeader>

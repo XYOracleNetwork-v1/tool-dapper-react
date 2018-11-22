@@ -5,7 +5,7 @@ import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
 import ProgressButton, { STATE } from "react-progress-button"
-import {MainDiv, FunctionParamLayout, FunctionPropertiesDiv, FunctionParamList, InputBar, ParamInputDiv } from './FunctionDetailsComponents'
+import {MainDiv, FunctionParamLayout, FunctionPropertiesDiv, FunctionParamList, InputBar, ParamInputDiv } from '../molecules/FunctionDetailsComponents'
 
 class FunctionDetails extends Component {
   state = {

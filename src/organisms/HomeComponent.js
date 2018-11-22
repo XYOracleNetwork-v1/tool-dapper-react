@@ -1,15 +1,16 @@
-import React, { Component } from 'react'
-import glam, { Div, Img } from 'glamorous'
-import { Route, Link } from 'react-router-dom'
-import SmartContractService from '../organisms/SmartContractService'
-import SmartContractSelector from '../atoms/SmartContractSelector'
-import { FunctionsList } from './FunctionsList'
-import FunctionDetails from './FunctionDetails'
-import Settings from './Settings'
-import logo from '../assets/dapper-logo.svg'
-import cog from '../assets/cog.svg'
-import './css/HomeComponent.css'
-import { withCookies } from 'react-cookie'
+import React, { Component } from "react"
+import glam, { Div, Img } from "glamorous"
+import { Route, Link } from "react-router-dom"
+import SmartContractService from "./SmartContractService"
+import SmartContractSelector from "../atoms/SmartContractSelector"
+import { FunctionsList } from "../molecules/FunctionsList"
+import FunctionDetails from "./FunctionDetails"
+import Settings from "./Settings"
+import logo from "../assets/dapper-logo.svg"
+import cog from "../assets/cog.svg"
+import "./css/HomeComponent.css"
+import { withCookies } from "react-cookie"
+import DeployToNetwork from "../molecules/DeployToNetwork"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -87,28 +88,6 @@ const CurNetwork = ({ account, network }) => {
   return <Div>{returnDivs}</Div>
 }
 
-const ChangeNetworkDiv = ({ validNetwork }) => {
-  if (validNetwork === true) {
-    return null
-  }
-  return (
-    <Div>
-      <Div
-        css={{
-          color: `#4D4D5C`,
-          backgroundColor: `#FF6161`,
-          width: `100%`,
-          padding: 10,
-        }}
-      >
-        No contracts deployed at the ABI source. Make sure your contracts are
-        deployed on the current ethereum network.
-      </Div>
-      {/* <Redirect to="/settings" /> */}
-    </Div>
-  )
-}
-
 class HomeComponent extends Component {
   state = {
     validNetwork: true,
@@ -181,7 +160,8 @@ class HomeComponent extends Component {
           <Sidebar>
             <SelectContractLayout>
               <Div className='select-contract-layout'>
-                <header className='select-contract'> Select Contract </header>{` `}
+                <header className='select-contract'> Select Contract </header>
+                {` `}
                 <Link to={`/settings`}>
                   <Img src={cog} />
                 </Link>
@@ -241,7 +221,10 @@ class HomeComponent extends Component {
               flex: 1,
             }}
           >
-            <ChangeNetworkDiv validNetwork={validNetwork} />
+            <DeployToNetwork
+              currentNetwork={this.state.service.getCurrentNetwork()}
+              validNetwork={validNetwork}
+            />
 
             <Route
               path='/settings'
