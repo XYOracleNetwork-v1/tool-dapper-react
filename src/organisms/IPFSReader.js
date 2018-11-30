@@ -1,5 +1,5 @@
 // import IPFS from 'ipfs-mini'
-import IPFS from "ipfs-api"
+import IPFS from "ipfs-http-client"
 
 // const ipfs = new IPFS({
 //   host: `ipfs.xyo.network`,
