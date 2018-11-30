@@ -20,10 +20,7 @@
 <h3 align="center">
   "Simulate your Smart Contracts"
 </h3>
-<p align="center">
-  Made with ❤️
-  <br/>by [XYO](https://xyo.network)
-</p>
+<p align="center">Made with  ❤️  by [<b>XY - The Persistent Company</b>] (https://xy.company)</p>
 
 # Pt. I. - Let's Get Dapper
 
