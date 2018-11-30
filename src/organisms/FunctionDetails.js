@@ -5,7 +5,14 @@ import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
 import ProgressButton, { STATE } from "react-progress-button"
-import {MainDiv, FunctionParamLayout, FunctionPropertiesDiv, FunctionParamList, InputBar, ParamInputDiv } from '../molecules/FunctionDetailsComponents'
+import {
+  MainDiv,
+  FunctionParamLayout,
+  FunctionPropertiesDiv,
+  FunctionParamList,
+  InputBar,
+  ParamInputDiv,
+} from "../molecules/FunctionDetailsComponents"
 
 class FunctionDetails extends Component {
   state = {
@@ -21,6 +28,7 @@ class FunctionDetails extends Component {
     transactionReceipt: undefined,
     transactionError: undefined,
     inputs: undefined,
+    contract: undefined,
   }
 
   componentDidMount() {
@@ -34,16 +42,15 @@ class FunctionDetails extends Component {
   updateInputs = () => {
     const { match } = this.props
     const { method } = this.state
-    const { signature } = method
+    const signature = method.signature || method.name
 
     const methodSig = match.params.method
-
     if (signature !== methodSig) {
       const contractName = match.params.contract
-      this.contract = this.state.service.contractNamed(contractName)
-      if (this.contract) {
-        const { _jsonInterface } = this.contract
-        const newMethod = this.methodObject(_jsonInterface, methodSig)
+      let contract = this.state.service.contractObject(contractName)
+      if (contract) {
+        const { abi } = contract
+        const newMethod = this.methodObject(abi, methodSig)
         if (newMethod) {
           this.setState({
             method: newMethod,
@@ -53,6 +60,7 @@ class FunctionDetails extends Component {
             inputs: [],
             value: 0,
             executeBtnState: STATE.NOTHING,
+            contract: contract,
           })
         }
       }
@@ -60,7 +68,9 @@ class FunctionDetails extends Component {
   }
 
   methodObject = (methods, sig) => {
-    const methodObj = methods.find(method => method.signature === sig)
+    const methodObj = methods.find(
+      method => method.signature === sig || method.name === sig,
+    )
     if (methodObj) {
       return methodObj
     }
@@ -87,9 +97,58 @@ class FunctionDetails extends Component {
     this.setState({ inputs: newInputs })
   }
 
-  handleExecute = async () => {
+  executeContract = async (user, contract) => {
     const { method } = this.state
 
+    const inputParams = this.state.inputs.map(i => i.value)
+    const methodName = method.name
+    const { stateMutability } = method
+    if (
+      this.state.value === 0 &&
+      (inputParams.length === 0 ||
+        stateMutability === `view` ||
+        stateMutability === `pure`)
+    ) {
+      // console.log(
+      //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+      //     inputParams,
+      //   )}`,
+      // )
+      const result = await contract.methods[methodName](...inputParams).call()
+      this.setState({
+        transactionResult: result,
+        executeBtnState: STATE.SUCCESS,
+      })
+    } else {
+      // console.log(
+      //   `Calling ${contract} ${methodName} with params ${JSON.stringify(
+      //     inputParams,
+      //   )}`,
+      // )
+      // For debugging purposes if you need to examine the call to web3 provider:
+      // contract.methods
+      //   .mint(...inputParams)
+      //   .send({ from: user, value: this.state.value })
+      await contract.methods[methodName](...inputParams)
+        .send({ from: user, value: this.state.value })
+        .then(transactionReceipt => {
+          console.log(`Got receipts`, transactionReceipt)
+          this.setState({
+            transactionReceipt,
+            executeBtnState: STATE.SUCCESS,
+          })
+        })
+        .catch(e =>
+          this.setState({
+            transactionError: e,
+            executeBtnState: STATE.ERROR,
+          }),
+        )
+    }
+  }
+
+  handleExecute = async e => {
+    e.preventDefault()
     this.setState({
       transactionResult: undefined,
       transactionError: undefined,
@@ -97,59 +156,24 @@ class FunctionDetails extends Component {
       executeBtnState: STATE.LOADING,
     })
 
-    const methodName = method.name
-    const { stateMutability } = method
-    const inputParams = this.state.inputs.map(i => i.value)
-
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
         throw new Error(`No Current User, Refresh Page, or Login Metamask`)
       }
-      if (
-        this.state.value === 0 &&
-        (inputParams.length === 0 ||
-          stateMutability === `view` ||
-          stateMutability === `pure`)
-      ) {
-        // console.log(
-        //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
-        //     inputParams,
-        //   )}`,
-        // )
-        const result = await this.contract.methods[methodName](
-          ...inputParams,
-        ).call()
-        this.setState({
-          transactionResult: result,
-          executeBtnState: STATE.success,
-        })
-      } else {
-        // console.log(
-        //   `Calling ${this.contract} ${methodName} with params ${JSON.stringify(
-        //     inputParams,
-        //   )}`,
-        // )
-        // For debugging purposes if you need to examine the call to web3 provider:
-        // this.contract.methods
-        //   .mint(...inputParams)
-        //   .send({ from: user, value: this.state.value })
-        await this.contract.methods[methodName](...inputParams)
-          .send({ from: user, value: this.state.value })
-          .then(transactionReceipt => {
-            console.log(`Got receipts`, transactionReceipt)
-            this.setState({
-              transactionReceipt,
-              executeBtnState: STATE.SUCCESS,
-            })
-          })
-          .catch(e =>
-            this.setState({
-              transactionError: e,
-              executeBtnState: STATE.ERROR,
-            }),
-          )
+
+      const { selectedAddress } = this.props
+      if (!selectedAddress) {
+        throw new Error(
+          `No contract address selected, contract must be deployed at address.`,
+        )
       }
+
+      let contract = this.state.service.contractAtAddress(
+        this.state.contract.abi,
+        selectedAddress,
+      )
+      await this.executeContract(user, contract)
     } catch (e) {
       this.setState({
         transactionError: e,

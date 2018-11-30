@@ -1,92 +1,54 @@
 import React, { Component } from "react"
 import glam, { Div, Img } from "glamorous"
-import { Route, Link } from "react-router-dom"
+import { Route, Link, Switch } from "react-router-dom"
 import SmartContractService from "./SmartContractService"
 import SmartContractSelector from "../atoms/SmartContractSelector"
+import ContractAddressDropdown from "../atoms/ContractAddressDropdown"
 import { FunctionsList } from "../molecules/FunctionsList"
 import FunctionDetails from "./FunctionDetails"
 import Settings from "./Settings"
-import logo from "../assets/dapper-logo.svg"
 import cog from "../assets/cog.svg"
-import "./css/HomeComponent.css"
 import { withCookies } from "react-cookie"
-import DeployToNetwork from "../molecules/DeployToNetwork"
+import PageHeader from "../molecules/PageHeader"
+import ContractDeployment from "./ContractDeployment"
 
 const Sidebar = glam.div({
   display: `flex`,
   flexDirection: `column`,
   width: 413,
   minWidth: 413,
+  height: `100%`,
   borderRight: `1px solid #979797`,
   backgroundColor: `#F8F8F8`,
 })
 
 const SelectContractLayout = glam.div({
   display: `flex`,
+  height: 220,
   flexDirection: `column`,
-  justifyContent: `space-between`,
-  width: `100%`,
-  height: `251px`,
   backgroundColor: `#5B5C6D`,
   fontFamily: `PT Sans`,
+  padding: 30,
 })
 
-const SelectContractContainer = glam.div({
-  paddingTop: 10,
-  paddingLeft: 37,
-  paddingRight: 37,
-  flex: 1,
+const SelectContractHeader = glam.div({
+  color: `white`,
+  fontSize: 23,
 })
 
-const HeaderDiv = glam.div({
+const SpaceBetweenRow = glam.div({
   display: `flex`,
   flexDirection: `row`,
   justifyContent: `space-between`,
-  backgroundColor: `#3c3e51`,
-  paddingRight: 54,
-  height: 113,
-  textAlign: `right`,
 })
 
-const NetworkAddressDiv = glam.div({
-  width: 60,
-  textAlign: `right`,
-  paddingRight: 5,
-})
-
-const NetworkAddressRowDiv = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  textAlign: `left`,
-  color: `#C8C8C8`,
-  fontFamily: `PT Sans`,
-  fontSize: 14,
-  marginTop: 5,
-})
 const MainLayoutDiv = glam.div({
   display: `flex`,
   flexDirection: `row`,
   justifyContent: `flex-start`,
+  flex: 1,
   height: `100%`,
 })
-
-const CurNetwork = ({ account, network }) => {
-  let returnDivs = []
-
-  returnDivs.push(
-    <Div key='account' className='account-right'>
-      Wallet: {account ? account : `None Found`}
-    </Div>,
-  )
-  if (network) {
-    returnDivs.push(
-      <Div key='network' className='network-right'>
-        Network: {network}
-      </Div>,
-    )
-  }
-  return <Div>{returnDivs}</Div>
-}
 
 class HomeComponent extends Component {
   state = {
@@ -94,6 +56,7 @@ class HomeComponent extends Component {
     service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
+    selectedAddress: undefined,
   }
 
   componentWillMount() {
@@ -136,75 +99,29 @@ class HomeComponent extends Component {
   // validateNetwork
 
   render() {
-    const { validNetwork } = this.state
     return (
       <Div css={{ height: `100%`, width: `100%` }}>
-        <HeaderDiv>
-          <Img className='image-header-logo' src={logo} />
-          <Div className='vertical-center'>
-            <a
-              href='https://github.com/XYOracleNetwork/tool-dapper-react'
-              className='link-right'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              View on Github
-            </a>
-            <CurNetwork
-              account={this.state.service.getCurrentUser()}
-              network={this.state.service.getCurrentNetwork()}
-            />
-          </Div>
-        </HeaderDiv>
+        <PageHeader service={this.state.service} />
         <MainLayoutDiv>
           <Sidebar>
             <SelectContractLayout>
-              <Div className='select-contract-layout'>
-                <header className='select-contract'> Select Contract </header>
-                {` `}
+              <SpaceBetweenRow>
+                <SelectContractHeader>Select Contract</SelectContractHeader>
                 <Link to={`/settings`}>
                   <Img src={cog} />
                 </Link>
-              </Div>
-              <SelectContractContainer>
-                <SmartContractSelector
-                  contracts={this.state.service.getSmartContracts()}
-                />
-              </SelectContractContainer>
-              <Route
-                path='/:contract'
-                render={props => {
-                  const match = props.match
-                  if (!match.params) {
-                    return <Div />
-                  }
-                  const contractName = match.params.contract
-                  const contract = this.state.service.contractObject(
-                    contractName,
-                  )
-                  if (!contract) {
-                    return <Div />
-                  }
-                  return (
-                    <Div
-                      css={{
-                        padding: 10,
-                        paddingBottom: 14,
-                      }}
-                    >
-                      <NetworkAddressRowDiv>
-                        <NetworkAddressDiv>Networks:</NetworkAddressDiv>
-                        {this.state.service.getNetworksString(
-                          contract.networks,
-                        )}
-                      </NetworkAddressRowDiv>
-                      <NetworkAddressRowDiv>
-                        <NetworkAddressDiv>Address:</NetworkAddressDiv>
-                        {contract.address}
-                      </NetworkAddressRowDiv>
-                    </Div>
-                  )
+              </SpaceBetweenRow>
+              <SmartContractSelector
+                contracts={this.state.service.getSmartContracts()}
+              />
+              <ContractAddressDropdown
+                onChange={selection => {
+                  console.log(`Address Selected`, selection)
+                  this.setState({
+                    selectedAddress: selection,
+                  })
                 }}
+                service={this.state.service}
               />
             </SelectContractLayout>
             <Route
@@ -218,14 +135,8 @@ class HomeComponent extends Component {
             css={{
               display: `flex`,
               flexDirection: `column`,
-              flex: 1,
             }}
           >
-            <DeployToNetwork
-              currentNetwork={this.state.service.getCurrentNetwork()}
-              validNetwork={validNetwork}
-            />
-
             <Route
               path='/settings'
               render={props => (
@@ -236,14 +147,24 @@ class HomeComponent extends Component {
                 />
               )}
             />
-
-            <Route
-              path='/:contract/:method'
-              render={props => (
-                <FunctionDetails {...props} service={this.state.service} />
-              )}
-              service={this.state.service}
-            />
+            <Switch>
+              <Route
+                exact
+                path='/:contract/deploy'
+                render={props => (
+                  <ContractDeployment {...props} service={this.state.service} />
+                )}
+                service={this.state.service}
+              />
+              <Route
+                exact
+                path='/:contract/:method'
+                render={props => (
+                  <FunctionDetails {...props} service={this.state.service} selectedAddress={this.state.selectedAddress} />
+                )}
+                service={this.state.service}
+              />
+            </Switch>
           </Div>
         </MainLayoutDiv>
       </Div>
