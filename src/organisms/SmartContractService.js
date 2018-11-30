@@ -12,11 +12,8 @@ class SmartContractService {
     }
     console.log("Init SmartContractService")
     this.smartContracts = []
-    this.deployedContracts = {}
-    // console.log("CREATING SERCICE", localStorage.getItem("deployedContracts"))
+    this.loadLocalStoreObjects()
     this.currentUser = undefined
-    this.refreshContracts.bind(this)
-    this.reloadWeb3.bind(this)
   }
 
   getCurrentUser = () => this.currentUser
@@ -136,8 +133,39 @@ class SmartContractService {
     return this.deployedContractObjects(name, this.getCurrentNetworkId())
   }
 
-  loadLocalStoreObjects = () => {
+  loadLocalStoreObjects = async () => {
     let objects = JSON.parse(localStorage.getItem("deployedContracts"))
+    this.deployedContracts = objects || {}
+    // clean out invalid contracts for current network
+    await this.validateDeployedOnNetwork(this.getCurrentNetworkId)
+  }
+
+  validateDeployedOnNetwork = async netId => {
+    let promises = []
+
+    let previouslyDeployed = this.deployedContracts
+    Object.entries(previouslyDeployed).forEach(deployed => {
+      if (deployed[1] && deployed[1].netId == this.getCurrentNetworkId()) {
+        promises.push(this.validContract(deployed[1].name))
+      }
+    })
+    let results = await Promise.all(promises)
+    Object.entries(previouslyDeployed).forEach((deployed, index) => {
+      if (results[index] == false) {
+        console.log("DELETING INVALID CONTRACT", deployed)
+        delete previouslyDeployed[deployed[0]]
+      }
+    })
+
+    this.deployedContracts = previouslyDeployed
+  }
+
+  updateLocalStorage = () => {
+    let objects = JSON.parse(localStorage.getItem("deployedContracts"))
+    localStorage.setItem(
+      "deployedContracts",
+      JSON.stringify(this.deployedContracts),
+    )
   }
 
   storeABI = abiData => {
@@ -158,11 +186,8 @@ class SmartContractService {
     }
   }
 
-  storeDeployments = abiData => {
+  storeDeployments = async abiData => {
     let json = abiData.data
-    let contractObj
-    console.log("ABIDATA", json)
-    // STORE ABIS
     const deployments = Object.entries(json.networks)
     if (json && deployments.length > 0) {
       deployments.forEach(deployed => {
@@ -173,17 +198,15 @@ class SmartContractService {
           address,
           json.bytecode,
           json.abi,
+          '',
           deployed[0], // net id
         )
       })
     }
   }
 
-  addDeployedContract = (ipfs, name, address, bytecode, abi, netId) => {
-    if (!netId) {
-      netId = this.getCurrentNetworkId()
-    }
-    console.log("ADDING CONTRACT", ipfs, name, address, netId, abi)
+  addDeployedContract = (ipfs, name, address, bytecode, abi, notes = '', netId = this.getCurrentNetworkId()) => {
+
     if (address) {
       this.deployedContracts[address] = {
         ipfs: ipfs,
@@ -191,28 +214,25 @@ class SmartContractService {
         bytecode: bytecode,
         abi: abi,
         netId: netId,
+        notes: notes,
       }
 
-      // console.log("PRE store", JSON.stringify(storeObj))
-
-      // localStorage.setItem("deployedContracts", JSON.stringify(storeObj))
-      console.log("Post STORE TEST")
+      this.updateLocalStorage()
     }
   }
 
   refreshContracts = async cookies => {
     let { abi } = await fetchABI(cookies)
-    console.log("Contract leng", abi)
     await abi.forEach(this.storeABI)
     await abi.forEach(this.storeDeployments)
+    await this.validateDeployedOnNetwork(this.getCurrentNetworkId)
   }
 
   createContract = (abi, address) => {
-    console.log("making contract", abi, address)
     if (abi) {
       return new this.web3.eth.Contract(abi, address)
     }
-   
+
     return undefined
   }
 

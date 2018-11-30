@@ -3,6 +3,7 @@ body,
 #root {
   height: 100%;
   width: auto;
+  min-width: fit-content;
   margin: 0;
 }
 

@@ -13,6 +13,7 @@ import {
   InputBar,
   ParamInputDiv,
 } from "../molecules/FunctionDetailsComponents"
+import {getMethodSig} from '../molecules/FunctionsList'
 
 class FunctionDetails extends Component {
   state = {
@@ -41,9 +42,7 @@ class FunctionDetails extends Component {
 
   updateInputs = () => {
     const { match } = this.props
-    const { method } = this.state
-    const signature = method.signature || method.name
-
+    const signature = getMethodSig(this.state.method)
     const methodSig = match.params.method
     if (signature !== methodSig) {
       const contractName = match.params.contract
@@ -69,7 +68,7 @@ class FunctionDetails extends Component {
 
   methodObject = (methods, sig) => {
     const methodObj = methods.find(
-      method => method.signature === sig || method.name === sig,
+      method => getMethodSig(method) === sig
     )
     if (methodObj) {
       return methodObj
@@ -109,22 +108,22 @@ class FunctionDetails extends Component {
         stateMutability === `view` ||
         stateMutability === `pure`)
     ) {
-      // console.log(
-      //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
-      //     inputParams,
-      //   )}`,
-      // )
+      console.log(
+        `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+          inputParams,
+        )}`,
+      )
       const result = await contract.methods[methodName](...inputParams).call()
       this.setState({
         transactionResult: result,
         executeBtnState: STATE.SUCCESS,
       })
     } else {
-      // console.log(
-      //   `Calling ${contract} ${methodName} with params ${JSON.stringify(
-      //     inputParams,
-      //   )}`,
-      // )
+      console.log(
+        `Calling ${contract} ${methodName} with params ${JSON.stringify(
+          inputParams,
+        )}`,
+      )
       // For debugging purposes if you need to examine the call to web3 provider:
       // contract.methods
       //   .mint(...inputParams)

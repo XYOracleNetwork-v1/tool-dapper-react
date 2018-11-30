@@ -52,7 +52,6 @@ const MainLayoutDiv = glam.div({
 
 class HomeComponent extends Component {
   state = {
-    validNetwork: true,
     service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
@@ -77,17 +76,7 @@ class HomeComponent extends Component {
   reloadWeb3 = async (shouldThrow = false) => {
     return this.state.service
       .reloadWeb3(this.props.cookies)
-      .then(() => this.state.service.validateContracts())
-      .then(validNetwork => {
-        this.setState({
-          validNetwork: validNetwork,
-        })
-      })
       .catch(err => {
-        this.setState({ validNetwork: false })
-        if (err) {
-          this.setState({ serviceError: err })
-        }
         if (shouldThrow) {
           console.log(`Caught error while injecting`, err)
 

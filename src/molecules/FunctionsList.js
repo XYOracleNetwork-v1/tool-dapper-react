@@ -28,14 +28,17 @@ const FunctionsListDiv = glam.div({
   paddingLeft: 30,
 })
 
+export const getMethodSig = method => {
+  return method.signature || `${method.name}${method.inputs.length}`
+}
+
 export const MethodLink = ({ match, method }) => (
   <Div css={{}}>
     <Link
-      key={method.signature}
       style={{ textDecoration: `none` }}
       className='method-link'
       activeClassName='active-method-link'
-      to={`${match.url}/${method.signature || method.name}`}
+      to={`${match.url}/${getMethodSig(method)}`}
     >
       {method.name}
       ()
@@ -55,10 +58,10 @@ export const FunctionsList = props => {
   const sortedMethods = []
   contract.abi
     // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
-    .forEach(method => {
+    .forEach((method, index) => {
       if (method.name && method.type === `function`) {
         sortedMethods.push(
-          <MethodLink key={method.signature} match={match} method={method} />,
+          <MethodLink key={index} match={match} method={method} />,
         )
       }
       return sortedMethods

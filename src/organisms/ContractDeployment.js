@@ -28,6 +28,7 @@ class ContractDeployment extends Component {
     transactionReceipt: undefined,
     transactionError: undefined,
     inputs: undefined,
+    notes: ``,
   }
 
   componentDidMount() {
@@ -41,9 +42,9 @@ class ContractDeployment extends Component {
   updateInputs = () => {
     const { match } = this.props
     const contractName = match.params.contract
-    this.contract = this.state.service.contractObject(contractName)
-    if (this.contract && this.state.method.executeBtnState == STATE.LOADING) {
-      const { abi } = this.contract
+    let contract = this.state.service.contractObject(contractName)
+    if (contract && this.state.method.executeBtnState == STATE.LOADING) {
+      const { abi, notes } = contract
 
       const newMethod = this.methodObject(abi)
       if (newMethod) {
@@ -54,6 +55,7 @@ class ContractDeployment extends Component {
           transactionReceipt: undefined,
           inputs: [],
           value: 0,
+          notes: notes,
           executeBtnState: STATE.NOTHING,
         })
       }
@@ -85,11 +87,17 @@ class ContractDeployment extends Component {
     if (e.target.name === `Value`) {
       this.setState({ value: e.target.value })
     }
+
+    if (e.target.name === `Notes`) {
+      this.setState({ notes: e.target.value })
+    }
     this.setState({ inputs: newInputs })
   }
 
   deployContract = async user => {
-    const inputParams = this.state.inputs.map(i => i.value)
+    const inputParams = this.state.inputs
+      ? this.state.inputs.map(i => i.value)
+      : []
     let contractObj = this.state.service.contractObject(
       this.props.match.params.contract,
     )
@@ -119,15 +127,24 @@ class ContractDeployment extends Component {
             Name: contractObj.name,
           },
         })
-        let newObj = this.props.service.addDeployedContract(
+        this.props.service.addDeployedContract(
           contractObj.ipfs,
           contractObj.name,
           newContractInstance._address,
           contractObj.bytecode,
           contractObj.abi,
+          this.state.notes,
         )
-        this.props.onDeploy(newContractInstance._address)
-        console.log(`Received New Instance`, newContractInstance, newObj)
+        this.props.onDeploy(this.state.notes || newContractInstance._address)
+        console.log(
+          `Created New Instance`,
+          contractObj.ipfs,
+          contractObj.name,
+          newContractInstance._address,
+          contractObj.bytecode,
+          contractObj.abi,
+          this.state.notes,
+        )
       })
       .catch(error => {
         console.log(`error`, error)
@@ -171,11 +188,24 @@ class ContractDeployment extends Component {
   }
 
   getInputs = method => {
-    const results = method.inputs.map((input, index) => {
+    const results = []
+    results.push(
+      <ParamInputDiv key='Notes'>
+        Deployment Notes
+        <InputBar
+          type='text'
+          name='Notes'
+          placeholder='Optional Notes or Description'
+          onChange={this.handleChange}
+          value={this.state.notes || ``}
+        />
+      </ParamInputDiv>,
+    )
+    method.inputs.map((input, index) => {
       if (input.name === ``) {
         input.name = `param${index}`
       }
-      return (
+      results.push(
         <ParamInputDiv key={input.name}>
           {input.name}
           <InputBar
@@ -185,7 +215,7 @@ class ContractDeployment extends Component {
             onChange={this.handleChange}
             value={this.getInputValue(input.name)}
           />
-        </ParamInputDiv>
+        </ParamInputDiv>,
       )
     })
 
@@ -208,7 +238,7 @@ class ContractDeployment extends Component {
 
   functionProperties = method => (
     <Div>
-      {method.type}(
+      {method.type || `constructor`}(
       {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
       <Div>{method.stateMutability}</Div>
     </Div>
