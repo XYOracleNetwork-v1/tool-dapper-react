@@ -39,7 +39,6 @@ class ContractDeployment extends Component {
   }
 
   updateInputs = () => {
-    
     const { match } = this.props
     const contractName = match.params.contract
     this.contract = this.state.service.contractObject(contractName)
@@ -89,32 +88,17 @@ class ContractDeployment extends Component {
     this.setState({ inputs: newInputs })
   }
 
-  handleExecute = async (e) => {
-    e.preventDefault();
-
-    const { match } = this.props
-    const contractName = match.params.contract
-    this.setState({
-      transactionResult: undefined,
-      transactionError: undefined,
-      transactionReceipt: undefined,
-      executeBtnState: STATE.LOADING,
-    })
-
+  deployContract = async user => {
     const inputParams = this.state.inputs.map(i => i.value)
-    const user = this.state.service.getCurrentUser()
-    if (!user) {
-      this.setState({
-        executeBtnState: STATE.ERROR,
-        transactionError: new Error(
-          `No Current User, Refresh Page, or Login Metamask`,
-        ),
-      })
-      return
-    }
-    await this.contract.contract
+    let contractObj = this.state.service.contractObject(
+      this.props.match.params.contract,
+    )
+
+    let contract = this.state.service.createContract(contractObj.abi)
+
+    contract
       .deploy({
-        data: this.contract.bytecode,
+        data: contractObj.bytecode,
         arguments: inputParams,
       })
       .send(
@@ -129,15 +113,21 @@ class ContractDeployment extends Component {
       .then(newContractInstance => {
         this.setState({
           executeBtnState: STATE.SUCCESS,
-          transactionResult: newContractInstance
+          transactionResult: {
+            "Deployed To Address": newContractInstance._address,
+            IPFS: contractObj.ipfs,
+            Name: contractObj.name,
+          },
         })
-        let contractObj = this.props.service.addDeployedContract(
-          this.contract.ipfs,
-          contractName,
-          newContractInstance,
-          this.contract.bytecode,
+        let newObj = this.props.service.addDeployedContract(
+          contractObj.ipfs,
+          contractObj.name,
+          newContractInstance._address,
+          contractObj.bytecode,
+          contractObj.abi,
         )
-        console.log(`Received New Instance`, newContractInstance, contractObj)
+        this.props.onDeploy(newContractInstance._address)
+        console.log(`Received New Instance`, newContractInstance, newObj)
       })
       .catch(error => {
         console.log(`error`, error)
@@ -146,6 +136,29 @@ class ContractDeployment extends Component {
           transactionError: error,
         })
       })
+  }
+
+  handleExecute = async e => {
+    e.preventDefault()
+    this.setState({
+      transactionResult: undefined,
+      transactionError: undefined,
+      transactionReceipt: undefined,
+      executeBtnState: STATE.LOADING,
+    })
+    try {
+      const user = this.state.service.getCurrentUser()
+      if (!user) {
+        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
+      }
+
+      await this.deployContract(user)
+    } catch (e) {
+      this.setState({
+        transactionError: e,
+        executeBtnState: STATE.ERROR,
+      })
+    }
   }
 
   getInputValue = name => {
@@ -203,7 +216,6 @@ class ContractDeployment extends Component {
 
   render() {
     const { method, transactionResult, transactionReceipt } = this.state
-    console.log(`Render Contract Deployment`, this.state)
     return (
       <MainDiv>
         <DetailsHeader>{this.props.match.params.contract}</DetailsHeader>

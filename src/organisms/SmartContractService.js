@@ -126,7 +126,7 @@ class SmartContractService {
         deployed[1].name === name &&
         deployed[1].netId == netId
       ) {
-        contractsOnNet.push({address: deployed[0], ...deployed[1]})
+        contractsOnNet.push({ address: deployed[0], ...deployed[1] })
       }
     })
     return contractsOnNet
@@ -207,9 +207,13 @@ class SmartContractService {
     await abi.forEach(this.storeDeployments)
   }
 
-  contractAtAddress = async (abi, address) => {
-    const contract = new this.web3.eth.Contract(abi, address)
-    return contract
+  createContract = (abi, address) => {
+    console.log("making contract", abi, address)
+    if (abi) {
+      return new this.web3.eth.Contract(abi, address)
+    }
+   
+    return undefined
   }
 
   refreshUser = async () => {

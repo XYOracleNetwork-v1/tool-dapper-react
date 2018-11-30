@@ -96,6 +96,10 @@ class HomeComponent extends Component {
       })
   }
 
+  fetchContractObjects = (contractName) => this.state.service.currentDeployedContractObjects(
+    contractName,
+  )
+
   // validateNetwork
 
   render() {
@@ -114,15 +118,25 @@ class HomeComponent extends Component {
               <SmartContractSelector
                 contracts={this.state.service.getSmartContracts()}
               />
-              <ContractAddressDropdown
-                onChange={selection => {
-                  console.log(`Address Selected`, selection)
-                  this.setState({
-                    selectedAddress: selection,
-                  })
-                }}
-                service={this.state.service}
+              <Route
+                path='/:contract'
+                render={props => {
+                const {contract} = props.match.params
+                 return <ContractAddressDropdown
+                   onSelect={selection => {
+                     console.log(`CHANGE SELECTION`, selection)
+                      this.setState({
+                        selectedAddress: selection,
+                      })
+                    }}
+                   contractObjects={this.fetchContractObjects(contract)}
+                   service={this.state.service}
+                   selected={this.state.selectedAddress}
+                  />
+                  }
+                }
               />
+              
             </SelectContractLayout>
             <Route
               path='/:contract'
@@ -152,7 +166,11 @@ class HomeComponent extends Component {
                 exact
                 path='/:contract/deploy'
                 render={props => (
-                  <ContractDeployment {...props} service={this.state.service} />
+                  <ContractDeployment {...props} service={this.state.service} onDeploy={(address) =>
+                    this.setState({
+                      selectedAddress: address,
+                    })
+                  } />
                 )}
                 service={this.state.service}
               />

@@ -168,8 +168,8 @@ class FunctionDetails extends Component {
           `No contract address selected, contract must be deployed at address.`,
         )
       }
-
-      let contract = this.state.service.contractAtAddress(
+      console.log(`SNUCK PAST SELECTED ADDRESS`, selectedAddress, this.props)
+      let contract = this.state.service.createContract(
         this.state.contract.abi,
         selectedAddress,
       )
