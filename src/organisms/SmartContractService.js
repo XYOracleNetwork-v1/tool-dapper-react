@@ -170,6 +170,8 @@ class SmartContractService {
 
   storeABI = abiData => {
     let json = abiData.data
+    console.log("STORE ABI JSON:",json)
+
     if (json.bytecode !== "0x") {
       let abiObject = {
         ipfs: abiData.ipfs,

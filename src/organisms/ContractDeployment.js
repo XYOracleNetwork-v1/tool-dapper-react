@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Div } from "glamorous"
+import { isHexString } from "ethers/utils/bytes"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
@@ -29,6 +30,7 @@ class ContractDeployment extends Component {
     transactionError: undefined,
     inputs: undefined,
     notes: ``,
+    libraries: {},
   }
 
   componentDidMount() {
@@ -70,6 +72,12 @@ class ContractDeployment extends Component {
     return undefined
   }
 
+  handleLibChange = e => {
+    let libs = this.state.libraries
+    libs[e.target.name] = e.target.value
+    this.setState({ libraries: libs })
+  }
+
   handleChange = e => {
     const { method } = this.state
     const inputs =
@@ -94,6 +102,21 @@ class ContractDeployment extends Component {
     this.setState({ inputs: newInputs })
   }
 
+  findLibraryNames = bytecode => {
+    let regex = /__([A-Za-z0-9]+)[_]+/g
+    let match = bytecode.match(regex)
+    if (match && match.length > 0) {
+      console.log(`Found Library!`, match)
+      return match.map(m => m.replace(/_/g, ``))
+    }
+    return []
+  }
+
+  linkLibrary = (bytecode, libName, libAddress) => {
+    let symbol = `__` + libName + `_`.repeat(40 - libName.length - 2)
+    return bytecode.split(symbol).join(libAddress.toLowerCase().substr(2))
+  }
+
   deployContract = async user => {
     const inputParams = this.state.inputs
       ? this.state.inputs.map(i => i.value)
@@ -101,12 +124,19 @@ class ContractDeployment extends Component {
     let contractObj = this.state.service.contractObject(
       this.props.match.params.contract,
     )
-
+    let bytecode = contractObj.bytecode
     let contract = this.state.service.createContract(contractObj.abi)
+
+    let libraries = Object.entries(this.state.libraries)
+    if (libraries.count > 0) {
+      libraries.forEach(lib => {
+        bytecode = this.linkLibrary(bytecode, lib[0], lib[1])
+      })
+    }
 
     contract
       .deploy({
-        data: contractObj.bytecode,
+        data: bytecode,
         arguments: inputParams,
       })
       .send(
@@ -131,7 +161,7 @@ class ContractDeployment extends Component {
           contractObj.ipfs,
           contractObj.name,
           newContractInstance._address,
-          contractObj.bytecode,
+          bytecode,
           contractObj.abi,
           this.state.notes,
         )
@@ -141,7 +171,7 @@ class ContractDeployment extends Component {
           contractObj.ipfs,
           contractObj.name,
           newContractInstance._address,
-          contractObj.bytecode,
+          bytecode,
           contractObj.abi,
           this.state.notes,
         )
@@ -188,7 +218,29 @@ class ContractDeployment extends Component {
   }
 
   getInputs = method => {
+    let contractObj = this.state.service.contractObject(
+      this.props.match.params.contract,
+    )
     const results = []
+
+    if (contractObj) {
+      let libraries = this.findLibraryNames(contractObj.bytecode)
+      libraries.map((lib, index) => {
+        results.push(
+          <ParamInputDiv key={lib}>
+            {lib}
+            <InputBar
+              type='text'
+              name={lib}
+              placeholder='Library Address (0x...)'
+              onChange={this.handleLibChange}
+              value={this.state.libraries[lib]}
+            />
+          </ParamInputDiv>,
+        )
+      })
+    }
+
     results.push(
       <ParamInputDiv key='Notes'>
         Deployment Notes
@@ -250,19 +302,25 @@ class ContractDeployment extends Component {
       <MainDiv>
         <DetailsHeader>{this.props.match.params.contract}</DetailsHeader>
         <FunctionParamLayout>
-          <FunctionPropertiesDiv>
-            {this.functionProperties(method)}
-          </FunctionPropertiesDiv>
-          <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
+          <Div>
+            <FunctionPropertiesDiv>
+              {this.functionProperties(method)}
+            </FunctionPropertiesDiv>
+            <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
+          </Div>
+
           <ProgressButton
-            style={{ width: 300 }}
+            style={{ width: 260, margin:20 }}
             state={this.state.executeBtnState}
             onClick={this.handleExecute}
-          >
-            DEPLOY CONTRACT
+            >
+              Deploy Contract
           </ProgressButton>
         </FunctionParamLayout>
-
+        <Div css={{
+          width: `100%`,
+           borderBottom: `1px solid #979797`,
+}} />
         <TransactionResult result={transactionResult} />
         <TransactionError error={this.state.transactionError} />
         <TransactionReceipt {...transactionReceipt} />

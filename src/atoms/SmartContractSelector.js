@@ -15,6 +15,7 @@ class SmartContractSelector extends Component {
       this.setState({ selected: selection })
     }
     this.props.history.push(`/${selection.label}`)
+    this.props.onSelect(selection)
   }
 
   render() {

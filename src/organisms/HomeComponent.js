@@ -24,11 +24,12 @@ const Sidebar = glam.div({
 
 const SelectContractLayout = glam.div({
   display: `flex`,
-  height: 220,
+  height: 250,
   flexDirection: `column`,
   backgroundColor: `#5B5C6D`,
   fontFamily: `PT Sans`,
   padding: 30,
+  paddingBottom: 0
 })
 
 const SelectContractHeader = glam.div({
@@ -105,6 +106,11 @@ class HomeComponent extends Component {
                 </Link>
               </SpaceBetweenRow>
               <SmartContractSelector
+                onSelect={selection => {
+                  this.setState({
+                    selectedAddress: undefined,
+                  })
+                }}
                 contracts={this.state.service.getSmartContracts()}
               />
               <Route
@@ -125,7 +131,6 @@ class HomeComponent extends Component {
                   }
                 }
               />
-              
             </SelectContractLayout>
             <Route
               path='/:contract'

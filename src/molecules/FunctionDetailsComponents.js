@@ -5,6 +5,7 @@ export const MainDiv = glam.div({
   fontFamily: `PT Sans`,
   flex: 1,
   height: `100%`,
+  width: `auto`,
   overflow: `auto`,
 })
 
@@ -20,7 +21,7 @@ export const FunctionPropertiesDiv = glam.div({
 
 export const FunctionParamLayout = glam.div({
   display: `flex`,
-  flexDirection: `row`,
+  flexDirection: `column`,
   paddingBottom: `30px`,
   borderBottom: `1px solid #979797`,
   width: `100%`,

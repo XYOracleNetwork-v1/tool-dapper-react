@@ -1,9 +1,14 @@
 import React, { Component } from "react"
-import { Div } from "glamorous"
-import { Route, withRouter } from "react-router-dom"
+import glam, { Div } from "glamorous"
+import { withRouter } from "react-router-dom"
 import Dropdown from "react-dropdown"
 import "react-dropdown/style.css"
 import "./css/SmartContractSelector.css"
+
+const GreyTopped = glam.div({
+  paddingTop: 10,
+  color: `#c8c8c8`,
+})
 
 class ContractAddressDropdown extends Component {
   state = {
@@ -15,38 +20,53 @@ class ContractAddressDropdown extends Component {
   }
 
   getOptionValue = contractObject => {
-    return contractObject.notes || this.props.selected || contractObject.address
+    let val = contractObject.notes || contractObject.address
+    return val.length > 20 ? `${val.substring(0, 20)}...` : val
+  }
+
+  showSelectedDiv = () => {
+    if (this.props.selected) {
+      return (
+        <GreyTopped>
+          <Div>{this.props.selected}</Div>
+        </GreyTopped>
+      )
+    }
+    return null
   }
 
   dropdownDiv = () => {
     let contractObjects = this.props.contractObjects
 
     if (!contractObjects || contractObjects.length === 0) {
-      return <Div>No Contracts Deployed</Div>
+      return <GreyTopped>No Contracts Deployed</GreyTopped>
     }
     let value = this.getOptionValue(contractObjects[0])
 
     if (contractObjects.length == 1) {
-      let result = [<Div>Address: {contractObjects[0].address}</Div>]
+      let result = []
       if (contractObjects[0].notes !== ``) {
-        result.push(<Div>Deployment Notes: {contractObjects[0].notes}</Div>)
+        result.push(<Div>Notes: {contractObjects[0].notes}</Div>)
       }
-      return <Div>{result}</Div>
+      result.push(<Div>{contractObjects[0].address}</Div>)
+      return <GreyTopped>{result}</GreyTopped>
     }
     return (
-      <Dropdown
-        options={contractObjects.map(obj => {
-          let val = this.getOptionValue(obj)
-          val = val.length > 20 ? val.substring(0, 20) : val
-          return {
-            value: obj.address,
-            label: val,
-          }
-        })}
-        onChange={this._onSelect}
-        value={value}
-        placeholder='Nothing Selected'
-      />
+      <Div>
+        <Dropdown
+          options={contractObjects.map(obj => {
+            let val = this.getOptionValue(obj)
+            return {
+              value: obj.address,
+              label: val,
+            }
+          })}
+          onChange={this._onSelect}
+          value={this.props.selected}
+          placeholder='Nothing Selected'
+        />
+        {this.showSelectedDiv()}
+      </Div>
     )
   }
 
@@ -59,6 +79,13 @@ class ContractAddressDropdown extends Component {
         }}
       >
         {this.dropdownDiv()}
+        <Div>
+          {() => {
+            if (this.state.selected) {
+              return <Div>Address: {this.state.selectedAddress}</Div>
+            }
+          }}
+        </Div>
       </Div>
     )
   }
