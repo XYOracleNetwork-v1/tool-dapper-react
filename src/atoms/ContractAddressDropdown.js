@@ -36,20 +36,10 @@ class ContractAddressDropdown extends Component {
   }
 
   dropdownDiv = () => {
-    let contractObjects = this.props.contractObjects
+    let contractObjects = this.props.fetchObjects()
 
     if (!contractObjects || contractObjects.length === 0) {
       return <GreyTopped>No Contracts Deployed</GreyTopped>
-    }
-    let value = this.getOptionValue(contractObjects[0])
-
-    if (contractObjects.length == 1) {
-      let result = []
-      if (contractObjects[0].notes !== ``) {
-        result.push(<Div>Notes: {contractObjects[0].notes}</Div>)
-      }
-      result.push(<Div>{contractObjects[0].address}</Div>)
-      return <GreyTopped>{result}</GreyTopped>
     }
     return (
       <Div>

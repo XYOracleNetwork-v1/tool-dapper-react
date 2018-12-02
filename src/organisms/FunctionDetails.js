@@ -12,8 +12,10 @@ import {
   FunctionParamList,
   InputBar,
   ParamInputDiv,
+  Horizontal, 
+  FormattedProgressButton
 } from "../molecules/FunctionDetailsComponents"
-import {getMethodSig} from '../molecules/FunctionsList'
+import { getMethodSig } from "../molecules/FunctionsList"
 
 class FunctionDetails extends Component {
   state = {
@@ -29,7 +31,7 @@ class FunctionDetails extends Component {
     transactionReceipt: undefined,
     transactionError: undefined,
     inputs: undefined,
-    contract: undefined,
+    contractAbi: undefined,
   }
 
   componentDidMount() {
@@ -59,7 +61,7 @@ class FunctionDetails extends Component {
             inputs: [],
             value: 0,
             executeBtnState: STATE.NOTHING,
-            contract: contract,
+            contractAbi: abi,
           })
         }
       }
@@ -67,9 +69,7 @@ class FunctionDetails extends Component {
   }
 
   methodObject = (methods, sig) => {
-    const methodObj = methods.find(
-      method => getMethodSig(method) === sig
-    )
+    const methodObj = methods.find(method => getMethodSig(method) === sig)
     if (methodObj) {
       return methodObj
     }
@@ -169,7 +169,7 @@ class FunctionDetails extends Component {
       }
       console.log(`SNUCK PAST SELECTED ADDRESS`, selectedAddress, this.props)
       let contract = this.state.service.createContract(
-        this.state.contract.abi,
+        this.state.contractAbi,
         selectedAddress,
       )
       await this.executeContract(user, contract)
@@ -255,16 +255,19 @@ class FunctionDetails extends Component {
       <MainDiv>
         <DetailsHeader>{method.name}()</DetailsHeader>
         <FunctionParamLayout>
-          <FunctionPropertiesDiv>
-            {this.functionProperties(method)}
-          </FunctionPropertiesDiv>
-          <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          <ProgressButton
+          <Horizontal>
+            <FunctionPropertiesDiv>
+              {this.functionProperties(method)}
+            </FunctionPropertiesDiv>
+            <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
+          </Horizontal>
+
+          <FormattedProgressButton
             state={this.state.executeBtnState}
             onClick={this.handleExecute}
           >
-            EXECUTE
-          </ProgressButton>
+            Execute
+          </FormattedProgressButton>
         </FunctionParamLayout>
 
         <TransactionResult result={transactionResult} />

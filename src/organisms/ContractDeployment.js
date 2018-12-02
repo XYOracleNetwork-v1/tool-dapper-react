@@ -13,6 +13,8 @@ import {
   FunctionParamList,
   InputBar,
   ParamInputDiv,
+  Horizontal, 
+  FormattedProgressButton
 } from "../molecules/FunctionDetailsComponents"
 
 class ContractDeployment extends Component {
@@ -302,25 +304,26 @@ class ContractDeployment extends Component {
       <MainDiv>
         <DetailsHeader>{this.props.match.params.contract}</DetailsHeader>
         <FunctionParamLayout>
-          <Div>
+          <Horizontal>
             <FunctionPropertiesDiv>
               {this.functionProperties(method)}
             </FunctionPropertiesDiv>
             <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          </Div>
+          </Horizontal>
 
-          <ProgressButton
-            style={{ width: 260, margin:20 }}
+          <FormattedProgressButton
             state={this.state.executeBtnState}
             onClick={this.handleExecute}
-            >
-              Deploy Contract
-          </ProgressButton>
+          >
+            Deploy Contract
+          </FormattedProgressButton>
         </FunctionParamLayout>
-        <Div css={{
-          width: `100%`,
-           borderBottom: `1px solid #979797`,
-}} />
+        <Div
+          css={{
+            width: `100%`,
+            borderBottom: `1px solid #979797`,
+          }}
+        />
         <TransactionResult result={transactionResult} />
         <TransactionError error={this.state.transactionError} />
         <TransactionReceipt {...transactionReceipt} />

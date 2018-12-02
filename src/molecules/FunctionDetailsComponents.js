@@ -1,4 +1,6 @@
 import glam from "glamorous"
+import ProgressButton from "react-progress-button"
+import React from "react"
 
 export const MainDiv = glam.div({
   color: `#4D4D5C`,
@@ -7,6 +9,11 @@ export const MainDiv = glam.div({
   height: `100%`,
   width: `auto`,
   overflow: `auto`,
+})
+
+export const Horizontal = glam.div({
+  display: `flex`,
+  flexDirection: `row`,
 })
 
 export const FunctionPropertiesDiv = glam.div({
@@ -54,3 +61,13 @@ export const ParamInputDiv = glam.div({
   minWidth: 300,
 })
 
+export const FormattedProgressButton = props => (
+  <ProgressButton
+    style={{
+      width: 260,
+      margin: 20,
+      marginTop: 30,
+    }}
+    {...props}
+  />
+)

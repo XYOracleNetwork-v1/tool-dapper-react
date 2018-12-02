@@ -119,12 +119,11 @@ class HomeComponent extends Component {
                 const {contract} = props.match.params
                  return <ContractAddressDropdown
                    onSelect={selection => {
-                     console.log(`CHANGE SELECTION`, selection)
                       this.setState({
                         selectedAddress: selection,
                       })
                     }}
-                   contractObjects={this.fetchContractObjects(contract)}
+                   fetchObjects={() => this.fetchContractObjects(contract)}
                    service={this.state.service}
                    selected={this.state.selectedAddress}
                   />

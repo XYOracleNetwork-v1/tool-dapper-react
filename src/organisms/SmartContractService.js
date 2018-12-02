@@ -104,14 +104,19 @@ class SmartContractService {
     })
   }
 
-  validContract = async name => {
-    const address = this.contractAddress(name)
+  validContract = async address => {
     return new Promise((resolve, reject) => {
       this.web3.eth
         .getCode(address)
         .then(code =>
-          code === "0x0" || code === "0x" ? resolve(false) : resolve(true),
+          code === "0x0" || code === "0x"
+            ? resolve({ valid: false, address })
+            : resolve({ valid: true, address }),
         )
+        .catch(err => {
+          console.log("Something went wrong, ignore contract", err)
+          resolve({ valid: true, address })
+        })
     })
   }
 
@@ -145,18 +150,21 @@ class SmartContractService {
 
     let previouslyDeployed = this.deployedContracts
     Object.entries(previouslyDeployed).forEach(deployed => {
+      console.log("DEPLOYED", deployed)
       if (deployed[1] && deployed[1].netId == this.getCurrentNetworkId()) {
-        promises.push(this.validContract(deployed[1].name))
+        promises.push(this.validContract(deployed[0]))
       }
     })
-    let results = await Promise.all(promises)
-    Object.entries(previouslyDeployed).forEach((deployed, index) => {
-      if (results[index] == false) {
-        console.log("DELETING INVALID CONTRACT", deployed)
-        delete previouslyDeployed[deployed[0]]
-      }
-    })
+    console.log("GOT Promises VALIDATING", promises)
 
+    let results = await Promise.all(promises)
+    console.log("GOT RESULTS VALIDATING", results)
+    results.forEach(result => {
+      if (!result.valid) {
+        console.log("DELETING INVALID CONTRACT", result)
+        delete previouslyDeployed[result.address]
+      }
+    })
     this.deployedContracts = previouslyDeployed
   }
 
@@ -170,7 +178,7 @@ class SmartContractService {
 
   storeABI = abiData => {
     let json = abiData.data
-    console.log("STORE ABI JSON:",json)
+    console.log("STORE ABI JSON:", json)
 
     if (json.bytecode !== "0x") {
       let abiObject = {
@@ -200,15 +208,22 @@ class SmartContractService {
           address,
           json.bytecode,
           json.abi,
-          '',
+          "",
           deployed[0], // net id
         )
       })
     }
   }
 
-  addDeployedContract = (ipfs, name, address, bytecode, abi, notes = '', netId = this.getCurrentNetworkId()) => {
-
+  addDeployedContract = (
+    ipfs,
+    name,
+    address,
+    bytecode,
+    abi,
+    notes = "",
+    netId = this.getCurrentNetworkId(),
+  ) => {
     if (address) {
       this.deployedContracts[address] = {
         ipfs: ipfs,
