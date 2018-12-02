@@ -60,6 +60,12 @@ class ContractAddressDropdown extends Component {
     )
   }
 
+  addressCopyDiv = () => {
+    if (this.state.selected) {
+      return <Div>Address: {this.state.selectedAddress}</Div>
+    }
+    return null
+  }
   render() {
     return (
       <Div
@@ -70,11 +76,7 @@ class ContractAddressDropdown extends Component {
       >
         {this.dropdownDiv()}
         <Div>
-          {() => {
-            if (this.state.selected) {
-              return <Div>Address: {this.state.selectedAddress}</Div>
-            }
-          }}
+          {this.addressCopyDiv()}
         </Div>
       </Div>
     )

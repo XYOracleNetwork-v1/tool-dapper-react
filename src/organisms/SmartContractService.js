@@ -114,8 +114,8 @@ class SmartContractService {
             : resolve({ valid: true, address }),
         )
         .catch(err => {
-          console.log("Something went wrong, ignore contract", err)
-          resolve({ valid: true, address })
+          console.log("Exception caught, invalid contract")
+          resolve({ valid: false, address })
         })
     })
   }
@@ -150,15 +150,12 @@ class SmartContractService {
 
     let previouslyDeployed = this.deployedContracts
     Object.entries(previouslyDeployed).forEach(deployed => {
-      console.log("DEPLOYED", deployed)
       if (deployed[1] && deployed[1].netId == this.getCurrentNetworkId()) {
         promises.push(this.validContract(deployed[0]))
       }
     })
-    console.log("GOT Promises VALIDATING", promises)
 
     let results = await Promise.all(promises)
-    console.log("GOT RESULTS VALIDATING", results)
     results.forEach(result => {
       if (!result.valid) {
         console.log("DELETING INVALID CONTRACT", result)
@@ -178,7 +175,6 @@ class SmartContractService {
 
   storeABI = abiData => {
     let json = abiData.data
-    console.log("STORE ABI JSON:", json)
 
     if (json.bytecode !== "0x") {
       let abiObject = {
@@ -275,8 +271,11 @@ class SmartContractService {
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
       try {
+        console.log("Enabling web3")
         // Request account access if needed
         await window.ethereum.enable()
+        console.log("web3 Enabled")
+
         // Acccounts now exposed
       } catch (error) {
         console.log("SmartContractService reloadWeb3 error", error)
@@ -289,6 +288,7 @@ class SmartContractService {
     } else {
       this.web3 = this.portisProvider()
     }
+    console.log("Refreshing User")
 
     await this.refreshUser()
     this.currentNetwork = await this.refreshNetwork()

@@ -77,6 +77,7 @@ class HomeComponent extends Component {
   reloadWeb3 = async (shouldThrow = false) => {
     return this.state.service
       .reloadWeb3(this.props.cookies)
+      .then(() =>{this.setState({loaded: true})})
       .catch(err => {
         if (shouldThrow) {
           console.log(`Caught error while injecting`, err)
