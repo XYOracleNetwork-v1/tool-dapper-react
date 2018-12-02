@@ -145,6 +145,7 @@ class ContractDeployment extends Component {
         {
           value: this.state.value,
           from: user,
+          gas: 4712388 
         },
         function(error, transactionHash) {
           console.log(`Finished Deploy Call`, error, transactionHash)
@@ -167,7 +168,7 @@ class ContractDeployment extends Component {
           contractObj.abi,
           this.state.notes,
         )
-        this.props.onDeploy(this.state.notes || newContractInstance._address)
+        this.props.onDeploy({notes: this.state.notes, address: newContractInstance._address})
         console.log(
           `Created New Instance`,
           contractObj.ipfs,

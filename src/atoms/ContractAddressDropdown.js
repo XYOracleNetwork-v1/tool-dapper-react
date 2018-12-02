@@ -12,11 +12,21 @@ const GreyTopped = glam.div({
 
 class ContractAddressDropdown extends Component {
   state = {
-    selected: this.props.selected,
+    selectedNotes: this.props.selectedNotes,
+    selectedAddress: this.props.selectedAddress,
   }
 
   _onSelect = selection => {
-    this.props.onSelect(selection.value)
+    console.log(`Detected Selection`)
+    let contractObjects = this.props.fetchObjects()
+    contractObjects.forEach(obj => {
+      if (obj.address == selection.value || obj.notes == selection.value) {
+        console.log(`Found Selected Object`, obj)
+
+        this.props.onSelect({ notes: obj.notes, address: obj.address })
+        return
+      }
+    })
   }
 
   getOptionValue = contractObject => {
@@ -25,10 +35,10 @@ class ContractAddressDropdown extends Component {
   }
 
   showSelectedDiv = () => {
-    if (this.props.selected) {
+    if (this.props.selectedAddress) {
       return (
         <GreyTopped>
-          <Div>{this.props.selected}</Div>
+          <Div>{this.props.selectedAddress}</Div>
         </GreyTopped>
       )
     }
@@ -47,22 +57,25 @@ class ContractAddressDropdown extends Component {
           options={contractObjects.map(obj => {
             let val = this.getOptionValue(obj)
             return {
-              value: obj.address,
+              value: obj.notes || obj.address,
               label: val,
             }
           })}
           onChange={this._onSelect}
-          value={this.props.selected}
+          value={
+            this.props.selectedNotes
+              ? this.props.selectedNotes
+              : this.props.selectedAddress
+          }
           placeholder='Nothing Selected'
         />
-        {this.showSelectedDiv()}
       </Div>
     )
   }
 
   addressCopyDiv = () => {
-    if (this.state.selected) {
-      return <Div>Address: {this.state.selectedAddress}</Div>
+    if (this.props.selectedAddress) {
+      return <Div>Address: {this.props.selectedAddress}</Div>
     }
     return null
   }
@@ -75,9 +88,7 @@ class ContractAddressDropdown extends Component {
         }}
       >
         {this.dropdownDiv()}
-        <Div>
-          {this.addressCopyDiv()}
-        </Div>
+        {this.showSelectedDiv()}
       </Div>
     )
   }

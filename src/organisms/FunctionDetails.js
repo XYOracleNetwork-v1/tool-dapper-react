@@ -129,7 +129,7 @@ class FunctionDetails extends Component {
       //   .mint(...inputParams)
       //   .send({ from: user, value: this.state.value })
       await contract.methods[methodName](...inputParams)
-        .send({ from: user, value: this.state.value })
+        .send({ from: user, value: this.state.value, gas: 4712388 })
         .then(transactionReceipt => {
           console.log(`Got receipts`, transactionReceipt)
           this.setState({

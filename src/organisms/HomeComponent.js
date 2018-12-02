@@ -29,7 +29,7 @@ const SelectContractLayout = glam.div({
   backgroundColor: `#5B5C6D`,
   fontFamily: `PT Sans`,
   padding: 30,
-  paddingBottom: 0
+  paddingBottom: 0,
 })
 
 const SelectContractHeader = glam.div({
@@ -56,7 +56,7 @@ class HomeComponent extends Component {
     service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
-    selectedAddress: undefined,
+    deploymentSelection: undefined,
   }
 
   componentWillMount() {
@@ -77,7 +77,9 @@ class HomeComponent extends Component {
   reloadWeb3 = async (shouldThrow = false) => {
     return this.state.service
       .reloadWeb3(this.props.cookies)
-      .then(() =>{this.setState({loaded: true})})
+      .then(() => {
+        this.setState({ loaded: true })
+      })
       .catch(err => {
         if (shouldThrow) {
           console.log(`Caught error while injecting`, err)
@@ -87,9 +89,8 @@ class HomeComponent extends Component {
       })
   }
 
-  fetchContractObjects = (contractName) => this.state.service.currentDeployedContractObjects(
-    contractName,
-  )
+  fetchContractObjects = contractName =>
+    this.state.service.currentDeployedContractObjects(contractName)
 
   // validateNetwork
 
@@ -109,7 +110,7 @@ class HomeComponent extends Component {
               <SmartContractSelector
                 onSelect={selection => {
                   this.setState({
-                    selectedAddress: undefined,
+                    deploymentSelection: undefined,
                   })
                 }}
                 contracts={this.state.service.getSmartContracts()}
@@ -117,19 +118,22 @@ class HomeComponent extends Component {
               <Route
                 path='/:contract'
                 render={props => {
-                const {contract} = props.match.params
-                 return <ContractAddressDropdown
-                   onSelect={selection => {
-                      this.setState({
-                        selectedAddress: selection,
-                      })
-                    }}
-                   fetchObjects={() => this.fetchContractObjects(contract)}
-                   service={this.state.service}
-                   selected={this.state.selectedAddress}
-                  />
-                  }
-                }
+                  const { contract } = props.match.params
+                  return (
+                    <ContractAddressDropdown
+                      onSelect={selection => {
+                        console.log(`Setting to selection`, selection)
+                        this.setState({
+                          deploymentSelection: selection,
+                        })
+                      }}
+                      fetchObjects={() => this.fetchContractObjects(contract)}
+                      service={this.state.service}
+                      selectedAddress={this.state.deploymentSelection ? this.state.deploymentSelection.address : undefined}
+                      selectedNotes={this.state.deploymentSelection ? this.state.deploymentSelection.notes : undefined}
+                    />
+                  )
+                }}
               />
             </SelectContractLayout>
             <Route
@@ -160,11 +164,15 @@ class HomeComponent extends Component {
                 exact
                 path='/:contract/deploy'
                 render={props => (
-                  <ContractDeployment {...props} service={this.state.service} onDeploy={(address) =>
-                    this.setState({
-                      selectedAddress: address,
-                    })
-                  } />
+                  <ContractDeployment
+                    {...props}
+                    service={this.state.service}
+                    onDeploy={selection =>
+                      this.setState({
+                        deploymentSelection: selection,
+                      })
+                    }
+                  />
                 )}
                 service={this.state.service}
               />
@@ -172,7 +180,11 @@ class HomeComponent extends Component {
                 exact
                 path='/:contract/:method'
                 render={props => (
-                  <FunctionDetails {...props} service={this.state.service} selectedAddress={this.state.selectedAddress} />
+                  <FunctionDetails
+                    {...props}
+                    service={this.state.service}
+                    selectedAddress={this.state.deploymentSelection.address}
+                  />
                 )}
                 service={this.state.service}
               />
