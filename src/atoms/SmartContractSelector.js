@@ -7,16 +7,15 @@ import './css/SmartContractSelector.css'
 
 class SmartContractSelector extends Component {
   state = {
-    contracts: this.props.contracts,
     selected: null,
-    contractsChanged: undefined,
   }
 
-  _onSelect = contract => {
-    if (!this.state.selected || this.state.selected.label !== contract.label) {
-      this.setState({ selected: contract })
+  _onSelect = selection => {
+    if (!this.state.selected || this.state.selected.label !== selection.label) {
+      this.setState({ selected: selection })
     }
-    this.props.history.push(`/${contract.label}`)
+    this.props.history.push(`/${selection.label}`)
+    this.props.onSelect(selection)
   }
 
   render() {
@@ -36,24 +35,18 @@ class SmartContractSelector extends Component {
     })
 
     return (
-      <Div
-        css={{
-          margin: 10,
-          height: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          textAlign: 'left',
-        }}
-      >
+      <Div css={{
+        marginTop: 25,
+      }}>
         <Dropdown
           css={{
             height: 60,
-            fontFamily: 'PT Sans',
+            fontFamily: `PT Sans`,
           }}
           options={options}
           onChange={this._onSelect}
           value={selected}
-          placeholder="Nothing Selected"
+          placeholder='Nothing Selected'
         />
       </Div>
     )

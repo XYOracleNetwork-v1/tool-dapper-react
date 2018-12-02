@@ -1,13 +1,13 @@
-const IPFS = require(`ipfs-api`)
+const IPFS = require(`ipfs-http-client`)
 
-// const ipfs = new IPFS({
-//   host: `ipfs.xyo.network`,
-//   port: 5002,
-//   protocol: `https`,
-// })
-const ipfs = new IPFS(`ipfs.infura.io`, 5001, {
+const ipfs = new IPFS({
+  host: `ipfs.xyo.network`,
+  port: 5002,
   protocol: `https`,
 })
+// const ipfs = new IPFS(`ipfs.infura.io`, 5001, {
+//   protocol: `https`,
+// })
 // const ipfs = new IPFS(`localhost`, 5001, {
 //   protocol: `http`,
 // })

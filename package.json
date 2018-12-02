@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/XYOracleNetwork/tool-dapper-react.git"
   },
-  "homepage": "http://dapperbeta.layerone.co/",
+  "homepage": "https://dapper.layerone.co/",
   "keywords": [
     "xyo",
     "dapploy",
@@ -27,9 +27,8 @@
     "glamor": "^2.20.40",
     "glamorous": "^4.13.1",
     "history": "^4.7.2",
-    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^27.0.0",
     "json-loader": "^0.5.7",
-    "nodemon": "^1.18.6",
     "portis": "^1.2.12",
     "react": "^16.6.1",
     "react-cookie": "^3.0.4",
