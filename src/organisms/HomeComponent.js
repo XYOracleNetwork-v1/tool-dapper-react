@@ -56,7 +56,7 @@ class HomeComponent extends Component {
     service: new SmartContractService(this.props),
     serviceError: undefined,
     currentUser: undefined,
-    deploymentSelection: undefined,
+    deploymentSelection: {},
   }
 
   componentWillMount() {
@@ -110,7 +110,7 @@ class HomeComponent extends Component {
               <SmartContractSelector
                 onSelect={selection => {
                   this.setState({
-                    deploymentSelection: undefined,
+                    deploymentSelection: {},
                   })
                 }}
                 contracts={this.state.service.getSmartContracts()}
@@ -129,8 +129,8 @@ class HomeComponent extends Component {
                       }}
                       fetchObjects={() => this.fetchContractObjects(contract)}
                       service={this.state.service}
-                      selectedAddress={this.state.deploymentSelection ? this.state.deploymentSelection.address : undefined}
-                      selectedNotes={this.state.deploymentSelection ? this.state.deploymentSelection.notes : undefined}
+                      selectedAddress={this.state.deploymentSelection.address}
+                      selectedNotes={this.state.deploymentSelection.notes}
                     />
                   )
                 }}

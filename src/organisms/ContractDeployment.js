@@ -13,8 +13,8 @@ import {
   FunctionParamList,
   InputBar,
   ParamInputDiv,
-  Horizontal, 
-  FormattedProgressButton
+  Horizontal,
+  FormattedProgressButton,
 } from "../molecules/FunctionDetailsComponents"
 
 class ContractDeployment extends Component {
@@ -77,6 +77,7 @@ class ContractDeployment extends Component {
   handleLibChange = e => {
     let libs = this.state.libraries
     libs[e.target.name] = e.target.value
+    console.log(`SETTING LIBRARY STATE`, this.state)
     this.setState({ libraries: libs })
   }
 
@@ -130,7 +131,7 @@ class ContractDeployment extends Component {
     let contract = this.state.service.createContract(contractObj.abi)
 
     let libraries = Object.entries(this.state.libraries)
-    if (libraries.count > 0) {
+    if (libraries.length > 0) {
       libraries.forEach(lib => {
         bytecode = this.linkLibrary(bytecode, lib[0], lib[1])
       })
@@ -145,7 +146,7 @@ class ContractDeployment extends Component {
         {
           value: this.state.value,
           from: user,
-          gas: 4712388 
+          gas: 4712388,
         },
         function(error, transactionHash) {
           console.log(`Finished Deploy Call`, error, transactionHash)
@@ -168,7 +169,10 @@ class ContractDeployment extends Component {
           contractObj.abi,
           this.state.notes,
         )
-        this.props.onDeploy({notes: this.state.notes, address: newContractInstance._address})
+        this.props.onDeploy({
+          notes: this.state.notes,
+          address: newContractInstance._address,
+        })
         console.log(
           `Created New Instance`,
           contractObj.ipfs,
@@ -230,14 +234,14 @@ class ContractDeployment extends Component {
       let libraries = this.findLibraryNames(contractObj.bytecode)
       libraries.map((lib, index) => {
         results.push(
-          <ParamInputDiv key={lib}>
+          <ParamInputDiv key={index}>
             {lib}
             <InputBar
               type='text'
               name={lib}
               placeholder='Library Address (0x...)'
               onChange={this.handleLibChange}
-              value={this.state.libraries[lib]}
+              value={this.state.libraries[lib] || ``}
             />
           </ParamInputDiv>,
         )
