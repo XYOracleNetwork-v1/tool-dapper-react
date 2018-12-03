@@ -108,22 +108,22 @@ class FunctionDetails extends Component {
         stateMutability === `view` ||
         stateMutability === `pure`)
     ) {
-      console.log(
-        `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
-          inputParams,
-        )}`,
-      )
+      // console.log(
+      //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+      //     inputParams,
+      //   )}`,
+      // )
       const result = await contract.methods[methodName](...inputParams).call()
       this.setState({
         transactionResult: result,
         executeBtnState: STATE.SUCCESS,
       })
     } else {
-      console.log(
-        `Calling ${contract} ${methodName} with params ${JSON.stringify(
-          inputParams,
-        )}`,
-      )
+      // console.log(
+      //   `Calling ${contract} ${methodName} with params ${JSON.stringify(
+      //     inputParams,
+      //   )}`,
+      // )
       // For debugging purposes if you need to examine the call to web3 provider:
       // contract.methods
       //   .mint(...inputParams)
@@ -167,7 +167,7 @@ class FunctionDetails extends Component {
           `No contract address selected, contract must be deployed at address.`,
         )
       }
-      console.log(`SNUCK PAST SELECTED ADDRESS`, selectedAddress, this.props)
+
       let contract = this.state.service.createContract(
         this.state.contractAbi,
         selectedAddress,

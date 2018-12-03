@@ -20,9 +20,7 @@ class ContractAddressDropdown extends Component {
     console.log(`Detected Selection`)
     let contractObjects = this.props.fetchObjects()
     contractObjects.forEach(obj => {
-      if (obj.address == selection.value || obj.notes == selection.value) {
-        console.log(`Found Selected Object`, obj)
-
+      if (obj.address === selection.value || obj.notes === selection.value) {
         this.props.onSelect({ notes: obj.notes, address: obj.address })
         return
       }
