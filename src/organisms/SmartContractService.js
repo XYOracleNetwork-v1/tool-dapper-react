@@ -3,13 +3,10 @@ import Web3 from "web3"
 import { PortisProvider } from "portis"
 import { fetchABI } from "./ABIReader"
 
+const localProviderUrl = "http://localhost:8545"
+
 class SmartContractService {
   constructor(props) {
-    console.log("WHAT PROPS? ", props)
-    const { cookies } = props
-    this.cookies = {
-      portisNetwork: cookies.get("portisNetwork") || "mainnet",
-    }
     console.log("Init SmartContractService")
     this.smartContracts = []
     this.loadLocalStoreObjects()
@@ -66,24 +63,39 @@ class SmartContractService {
     return addComma(iterator, word)
   }
 
-  portisProvider = () => {
-    let network = this.cookies.portisNetwork
-    if (network && network !== "development") {
+  portisProvider = portisNetwork => {
+    console.log("Initializing portis network", portisNetwork, localProviderUrl)
+    if (portisNetwork && portisNetwork !== "development") {
       return new Web3(
         new PortisProvider({
           apiKey: "3b1ca5fed7f439bf72771e64e9442d74",
-          network: network,
+          network: portisNetwork,
         }),
       )
     } else {
+      console.log("Using localhost")
       return new Web3(
         new PortisProvider({
-          providerNodeUrl: "http://localhost:8545",
+          network: 'development',
+          providerNodeUrl: localProviderUrl,
         }),
       )
     }
   }
 
+  changeNetwork = async newNetwork => {
+    if (this.web3.currentProvider.changeNetwork) {
+      if (newNetwork === "development") {
+        this.web3.currentProvider.changeNetwork({
+          providerNodeUrl: localProviderUrl,
+        })
+      } else {
+        this.web3.currentProvider.changeNetwork({ network: newNetwork })
+      }
+      console.log("Changing Portis Network", newNetwork)
+      this.currentNetwork = await this.refreshNetwork()
+    }
+  }
   contractObject = name =>
     this.smartContracts.find(contract => contract.name === name)
 
@@ -235,10 +247,16 @@ class SmartContractService {
   }
 
   refreshContracts = async cookies => {
-    let { abi } = await fetchABI(cookies)
-    await abi.forEach(this.storeABI)
-    await abi.forEach(this.storeDeployments)
-    await this.validateDeployedOnNetwork(this.getCurrentNetworkId)
+    let ipfs = cookies.get(`ipfs`)
+
+    if (ipfs) {
+      let { abi } = await fetchABI(settings)
+      await abi.forEach(this.storeABI)
+      await abi.forEach(this.storeDeployments)
+      return this.validateDeployedOnNetwork(this.getCurrentNetworkId)
+    } else {
+      console.log("No ipfs file loaded, please add in settings")
+    }
   }
 
   createContract = (abi, address) => {
@@ -286,15 +304,16 @@ class SmartContractService {
     } else if (typeof window.web3 !== "undefined") {
       this.web3 = new Web3(window.web3.currentProvider)
     } else {
-      this.web3 = this.portisProvider()
+      let network = cookies.get("portisProvider")
+      this.web3 = this.portisProvider(network)
     }
     console.log("Refreshing User")
 
     await this.refreshUser()
-    this.currentNetwork = await this.refreshNetwork()
-    await this.refreshContracts(cookies)
+    console.log("Refreshing User")
 
-    return true
+    this.currentNetwork = await this.refreshNetwork()
+    return this.refreshContracts(cookies)
   }
 }
 

@@ -74,18 +74,16 @@ class HomeComponent extends Component {
     })
   }
 
-  reloadWeb3 = async (shouldThrow = false) => {
+  reloadWeb3 = async () => {
+    console.log(`Reloading web3`)
     return this.state.service
       .reloadWeb3(this.props.cookies)
       .then(() => {
-        this.setState({ loaded: true })
+        console.log(`Forcing update with new params`, this.state.service.getCurrentNetwork)
+        this.forceUpdate()
       })
       .catch(err => {
-        if (shouldThrow) {
-          console.log(`Caught error while injecting`, err)
-
-          throw err
-        }
+        console.log(`Caught error while injecting`, err)
       })
   }
 
@@ -156,6 +154,11 @@ class HomeComponent extends Component {
                   {...props}
                   service={this.state.service}
                   onSave={this.reloadWeb3}
+                  portisNetworkChange={async (network) => {
+                    await this.state.service.changeNetwork(network)
+                    this.forceUpdate()
+                  }
+                  }
                 />
               )}
             />

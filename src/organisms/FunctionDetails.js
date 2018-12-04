@@ -4,7 +4,7 @@ import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import ProgressButton, { STATE } from "react-progress-button"
+import { STATE } from "react-progress-button"
 import {
   MainDiv,
   FunctionParamLayout,

@@ -54,7 +54,7 @@ class Settings extends Component {
 
     this.state = {
       ...readSettings(props.cookies),
-      updateBtnState: STATE.NOTHING
+      updateBtnState: STATE.NOTHING,
     }
   }
 
@@ -79,8 +79,10 @@ class Settings extends Component {
   handleOptionChange = changeEvent =>
     this.stateChange(`currentSource`, changeEvent.target.value)
 
-  handleNetworkChange = changeEvent =>
+  handleNetworkChange = changeEvent => {
     this.stateChange(`portisNetwork`, changeEvent.target.value)
+    this.props.portisNetworkChange(changeEvent.target.value)
+  }
 
   handleFormSubmit = formSubmitEvent => {
     formSubmitEvent.preventDefault()
