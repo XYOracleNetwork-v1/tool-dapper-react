@@ -11,6 +11,7 @@ import cog from "../assets/cog.svg"
 import { withCookies } from "react-cookie"
 import PageHeader from "../molecules/PageHeader"
 import ContractDeployment from "./ContractDeployment"
+import { withRouter } from "react-router-dom"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -53,44 +54,39 @@ const MainLayoutDiv = glam.div({
 
 class HomeComponent extends Component {
   state = {
-    service: new SmartContractService(this.props),
+    service: new SmartContractService(
+      () => this.forceUpdate(),
+      this.props.cookies,
+    ),
+    selectedContractName: undefined,
     serviceError: undefined,
     currentUser: undefined,
     deploymentSelection: {},
   }
 
-  componentWillMount() {
-    this.reloadWeb3().then(() => {
-      // Will refresh local store when new user is chosen:
-      if (this.state.service.getCurrentConfigStore()) {
-        this.state.service.getCurrentConfigStore().on(`update`, this.reloadUser)
+  currentBaseRoute = () => {
+    if (this.props.history && this.props.history.location.pathname) {
+      let { pathname } = this.props.history.location
+      if (pathname.lastIndexOf(`/`) > 0) {
+        return pathname.slice(1).substring(0, pathname.lastIndexOf(`/`) - 1)
       }
-    })
+      return pathname.slice(1)
+    }
   }
 
-  reloadUser = () => {
-    return this.state.service.refreshUser().then(user => {
-      this.setState({ currentUser: user })
-    })
+  componentDidMount() {
+    this.state.service.loadLocalStoreObjects()
+    this.state.service.loadIPFSContracts(this.props.cookies)
   }
 
-  reloadWeb3 = async () => {
-    console.log(`Reloading web3`)
-    return this.state.service
-      .reloadWeb3(this.props.cookies)
-      .then(() => {
-        console.log(`Forcing update with new params`, this.state.service.getCurrentNetwork)
-        this.forceUpdate()
-      })
-      .catch(err => {
-        console.log(`Caught error while injecting`, err)
-      })
+  fetchContractObjects = () => {
+    console.log(`HISTORY`, this.props)
+    let baseRoute = this.currentBaseRoute()
+    if (baseRoute !==`settings`) {
+      return this.state.service.deployedContractObjects(baseRoute)
+    }
+    return []
   }
-
-  fetchContractObjects = contractName =>
-    this.state.service.currentDeployedContractObjects(contractName)
-
-  // validateNetwork
 
   render() {
     return (
@@ -108,30 +104,23 @@ class HomeComponent extends Component {
               <SmartContractSelector
                 onSelect={selection => {
                   this.setState({
+                    selectedContractName: selection,
                     deploymentSelection: {},
                   })
                 }}
                 contracts={this.state.service.getSmartContracts()}
               />
-              <Route
-                path='/:contract'
-                render={props => {
-                  const { contract } = props.match.params
-                  return (
-                    <ContractAddressDropdown
-                      onSelect={selection => {
-                        console.log(`Setting to selection`, selection)
-                        this.setState({
-                          deploymentSelection: selection,
-                        })
-                      }}
-                      fetchObjects={() => this.fetchContractObjects(contract)}
-                      service={this.state.service}
-                      selectedAddress={this.state.deploymentSelection.address}
-                      selectedNotes={this.state.deploymentSelection.notes}
-                    />
-                  )
+              <ContractAddressDropdown
+                onSelect={selection => {
+                  console.log(`Setting to selection`, selection)
+                  this.setState({
+                    deploymentSelection: selection,
+                  })
                 }}
+                contractObjects={this.fetchContractObjects()}
+                service={this.state.service}
+                selectedAddress={this.state.deploymentSelection.address}
+                selectedNotes={this.state.deploymentSelection.notes}
               />
             </SelectContractLayout>
             <Route
@@ -153,12 +142,10 @@ class HomeComponent extends Component {
                 <Settings
                   {...props}
                   service={this.state.service}
-                  onSave={this.reloadWeb3}
-                  portisNetworkChange={async (network) => {
+                  portisNetworkChange={async network => {
                     await this.state.service.changeNetwork(network)
                     this.forceUpdate()
-                  }
-                  }
+                  }}
                 />
               )}
             />
@@ -198,4 +185,4 @@ class HomeComponent extends Component {
     )
   }
 }
-export default withCookies(HomeComponent)
+export default withRouter(withCookies(HomeComponent))

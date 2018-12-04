@@ -103,7 +103,7 @@ class FolderDropzone extends React.Component {
           onDrop={this.onDrop}
           >
           <h2>
-              Drop ABI Folder here
+              Drop ABI Folder here (JSON files)
           </h2>
           <p> ie. [solidity_project]/build/contracts</p>
         </Dropzone>

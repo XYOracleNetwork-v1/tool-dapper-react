@@ -158,7 +158,7 @@ class FunctionDetails extends Component {
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
+        throw new Error(`Please connect a wallet`)
       }
 
       const { selectedAddress } = this.props

@@ -14,6 +14,7 @@ const HeaderDiv = glam.div({
 })
 
 class PageHeader extends React.Component {
+
   render() {
     return (
       <HeaderDiv>

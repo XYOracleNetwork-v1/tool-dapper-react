@@ -1,14 +1,23 @@
 import React from "react"
-import { Div } from "glamorous"
+import { Div, Button } from "glamorous"
+
+const WalletDiv = (account) => {
+  if (account) {
+    return (
+      <Div key='account' className='account-right'>
+        Wallet: {account}
+      </Div>
+    )
+  }
+  return <Div key='account' className='account-right'>
+    No Wallet Connected
+  </Div>
+}
 
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
 
-  returnDivs.push(
-    <Div key='account' className='account-right'>
-      Wallet: {account ? account : `None Found`}
-    </Div>,
-  )
+  returnDivs.push(WalletDiv(account))
   if (network) {
     returnDivs.push(
       <Div key='network' className='network-right'>

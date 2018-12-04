@@ -20,26 +20,26 @@ const SettingsInput = glam.input({
   border: `1px solid #E0E0E0`,
   borderRadius: `6px`,
   backgroundColor: `#F6F6F6`,
-  width: 500,
+  width: 360,
   height: 40,
 })
 
 const RowLayout = glam.div({
   display: `flex`,
   flexDirection: `row`,
-  paddingRight: 30,
+  paddingRight: 20,
   marginBottom: 40,
-  marginLeft: 50,
+  marginLeft: 40,
 })
 const LeftColumn = glam.div({
-  minWidth: 170,
-  width: 170,
+  minWidth: 145,
+  width: 145,
   marginTop: 10,
 })
 const CenterColumn = glam.div({
   lineHeight: 1,
   flex: 1,
-  maxWidth: 500,
+  maxWidth: 360,
 })
 const SettingsLayout = glam.div({
   color: `#4D4D5C`,
@@ -87,24 +87,15 @@ class Settings extends Component {
   handleFormSubmit = formSubmitEvent => {
     formSubmitEvent.preventDefault()
     this.setState({ updateBtnState: STATE.LOADING })
-    this.props
-      .onSave(true)
-      .then(wtf => {
+    this.props.service
+      .loadIPFSContracts(this.props.cookies)
+      .then(_ => {
         this.setState({ updateBtnState: STATE.SUCCESS })
       })
       .catch(err => {
         this.setState({ updateBtnState: STATE.ERROR })
         console.log(`Could not save`, err)
       })
-  }
-
-  refreshABI = async () => {
-    if (!this.props.cookies) {
-      return true
-    }
-    return fetchABI(this.props.cookies).then(() => {
-      return this.props.onSave()
-    })
   }
 
   radioInput = (value, checked, onChange) => (
@@ -177,7 +168,8 @@ class Settings extends Component {
           <FolderDropzone
             onSave={async ipfsHash => {
               this.stateChange(`ipfs`, ipfsHash)
-              return this.refreshABI()
+              await this.props.service
+                .loadIPFSContracts(this.props.cookies)
             }}
           />
         </Div>
@@ -188,8 +180,9 @@ class Settings extends Component {
             this.state.ipfs,
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
-          <Div style={{ width: 200, marginLeft: 20 }}>
+          <Div>
             <ProgressButton
+              style={{ width: 200, height: 40,  marginLeft: 20 }}
               state={this.state.updateBtnState}
               onClick={this.handleFormSubmit}
             >

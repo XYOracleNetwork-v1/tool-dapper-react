@@ -1,11 +1,10 @@
 import React, { Component } from "react"
 import { Div } from "glamorous"
-import { isHexString } from "ethers/utils/bytes"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import ProgressButton, { STATE } from "react-progress-button"
+import { STATE } from "react-progress-button"
 import {
   MainDiv,
   FunctionParamLayout,
@@ -203,7 +202,7 @@ class ContractDeployment extends Component {
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
+        throw new Error(`Please connect a wallet`)
       }
 
       await this.deployContract(user)
