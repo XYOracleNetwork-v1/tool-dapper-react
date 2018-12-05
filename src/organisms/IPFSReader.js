@@ -16,30 +16,32 @@ const ipfs = new IPFS({
 //   port: 9001,
 //   protocol: `http`,
 // })
+
+let parseFiles = (files, resolve) => {
+  let abi = []
+  files.forEach(file => {
+    if (file.content) {
+      abi.push({
+        data: JSON.parse(String(file.content)),
+        ipfs: file.path,
+      })
+    }
+  })
+  resolve(abi)
+}
+
 export const downloadFiles = async ipfsHash => {
   return new Promise((resolve, reject) => {
     ipfs.get(ipfsHash, (err, files) => {
       if (err) {
-        reject(err)
-        return
+        return reject(err)
       }
       try {
-        let abi = []
-
-        files.forEach(file => {
-          if (file.content) {
-            abi.push({ 
-              data: JSON.parse(String(file.content)),
-              ipfs: file.path })
-          }
-        })
-        resolve(abi)
-
+        parseFiles(files, resolve)
       } catch (err) {
         console.log(`IPFS MUST BE JSON FILES!`)
         reject(err)
       }
-
     })
   })
 }
