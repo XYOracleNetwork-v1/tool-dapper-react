@@ -62,7 +62,8 @@ class SmartContractService {
     return addComma(iterator, word)
   }
 
-  portisProvider = portisNetwork => {
+  portisProvider = cookies => {
+    let portisNetwork = cookies.get('portisNetwork')
     let portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
 
     if (portisNetwork && portisNetwork !== "development") {
@@ -73,7 +74,12 @@ class SmartContractService {
         }),
       )
     } else {
-      console.log("Using localhost")
+      console.log("Using Portis Network Development (localhost)")
+      if (!portisNetwork) {
+        cookies.set('portisNetwork', 'development', {
+          path: `/`,
+        })
+      }
       return new Web3(
         new PortisProvider({
           apiKey: portisAPI,
@@ -81,6 +87,7 @@ class SmartContractService {
           providerNodeUrl: localProviderUrl,
         }),
       )
+
     }
   }
 
@@ -300,7 +307,7 @@ class SmartContractService {
       this.web3 = new Web3(window.web3.currentProvider)
       this.listenForUpdates()
     } else {
-      this.web3 = this.portisProvider(cookies.get("portisProvider"))
+      this.web3 = this.portisProvider(cookies)
       this.web3.currentProvider.on('login', this.refreshUser)
     }
     console.log("Refreshing User")
