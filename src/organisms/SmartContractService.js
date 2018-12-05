@@ -63,10 +63,12 @@ class SmartContractService {
   }
 
   portisProvider = portisNetwork => {
+    let portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
+
     if (portisNetwork && portisNetwork !== "development") {
       return new Web3(
         new PortisProvider({
-          apiKey: "3b1ca5fed7f439bf72771e64e9442d74",
+          apiKey: portisAPI,
           network: portisNetwork,
         }),
       )
@@ -74,6 +76,7 @@ class SmartContractService {
       console.log("Using localhost")
       return new Web3(
         new PortisProvider({
+          apiKey: portisAPI,
           network: "development",
           providerNodeUrl: localProviderUrl,
         }),
