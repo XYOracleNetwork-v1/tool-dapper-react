@@ -3,16 +3,12 @@ import Web3 from "web3"
 import { PortisProvider } from "portis"
 import { fetchABI } from "./ABIReader"
 
+const localProviderUrl = "http://localhost:8545"
+
 class SmartContractService {
-  constructor(props) {
-    console.log("WHAT PROPS? ", props)
-    const { cookies } = props
-    this.cookies = {
-      portisNetwork: cookies.get("portisNetwork") || "mainnet",
-    }
-    console.log("Init SmartContractService")
+  constructor(refreshUI, cookies) {
+    this.refreshUI = refreshUI
     this.smartContracts = []
-    this.loadLocalStoreObjects()
     this.currentUser = undefined
   }
 
@@ -66,24 +62,47 @@ class SmartContractService {
     return addComma(iterator, word)
   }
 
-  portisProvider = () => {
-    let network = this.cookies.portisNetwork
-    if (network && network !== "development") {
+  portisProvider = cookies => {
+    let portisNetwork = cookies.get("portisNetwork")
+    let portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
+
+    if (portisNetwork && portisNetwork !== "development") {
       return new Web3(
         new PortisProvider({
-          apiKey: "3b1ca5fed7f439bf72771e64e9442d74",
-          network: network,
+          apiKey: portisAPI,
+          network: portisNetwork,
         }),
       )
     } else {
+      console.log("Using Portis Network Development (localhost)")
+      if (!portisNetwork) {
+        cookies.set("portisNetwork", "development", {
+          path: `/`,
+        })
+      }
       return new Web3(
         new PortisProvider({
-          providerNodeUrl: "http://localhost:8545",
+          apiKey: portisAPI,
+          network: "development",
+          providerNodeUrl: localProviderUrl,
         }),
       )
     }
   }
 
+  changeNetwork = async newNetwork => {
+    if (this.web3 && this.web3.currentProvider.changeNetwork) {
+      if (newNetwork === "development") {
+        this.web3.currentProvider.changeNetwork({
+          providerNodeUrl: localProviderUrl,
+        })
+      } else {
+        this.web3.currentProvider.changeNetwork({ network: newNetwork })
+      }
+      console.log("Changing Portis Network", newNetwork)
+      this.currentNetwork = await this.refreshNetwork()
+    }
+  }
   contractObject = name =>
     this.smartContracts.find(contract => contract.name === name)
 
@@ -92,57 +111,36 @@ class SmartContractService {
     return contractObj ? contractObj.address : undefined
   }
 
-  validateContracts = async => {
-    return Promise.all(
-      this.smartContracts.map(contract => this.validContract(contract.name)),
-    ).then(results => {
-      if (results.length == 0) {
-        throw new Error("No contracts found on this network")
-      } else {
-        return results.reduce((result, next) => result && next)
-      }
-    })
-  }
-
   validContract = async address => {
-    return new Promise((resolve, reject) => {
-      this.web3.eth
-        .getCode(address)
-        .then(code =>
-          code === "0x0" || code === "0x"
-            ? resolve({ valid: false, address })
-            : resolve({ valid: true, address }),
-        )
-        .catch(err => {
-          console.log("Exception caught, invalid contract")
-          resolve({ valid: false, address })
-        })
-    })
+    try {
+      let code = await this.web3.eth.getCode(address)
+      if (code === "0x0" || code === "0x") {
+        return { valid: false, address }
+      }
+      return { valid: true, address }
+    } catch (err) {
+      console.log("Exception caught, invalid contract", address, err)
+      return { valid: false, address }
+    }
   }
 
   deployedContractObjects = (name, netId) => {
+    console.log("Fetching deployed contract", name)
+    if (!this.deployedContracts) {
+      return []
+    }
+    let currNet = netId || this.getCurrentNetworkId()
     let contractsOnNet = []
     Object.entries(this.deployedContracts).map(deployed => {
-      if (
-        deployed[1] &&
-        deployed[1].name === name &&
-        deployed[1].netId == netId
-      ) {
-        contractsOnNet.push({ address: deployed[0], ...deployed[1] })
+      if (deployed[1] && deployed[1].name === name) {
+        if (!currNet) {
+          contractsOnNet.push({ address: deployed[0], ...deployed[1] })
+        } else if (deployed[1].netId == currNet) {
+          contractsOnNet.push({ address: deployed[0], ...deployed[1] })
+        }
       }
     })
     return contractsOnNet
-  }
-
-  currentDeployedContractObjects = name => {
-    return this.deployedContractObjects(name, this.getCurrentNetworkId())
-  }
-
-  loadLocalStoreObjects = async () => {
-    let objects = JSON.parse(localStorage.getItem("deployedContracts"))
-    this.deployedContracts = objects || {}
-    // clean out invalid contracts for current network
-    await this.validateDeployedOnNetwork(this.getCurrentNetworkId)
   }
 
   validateDeployedOnNetwork = async netId => {
@@ -150,7 +148,7 @@ class SmartContractService {
 
     let previouslyDeployed = this.deployedContracts
     Object.entries(previouslyDeployed).forEach(deployed => {
-      if (deployed[1] && deployed[1].netId == this.getCurrentNetworkId()) {
+      if (deployed[1] && deployed[1].netId == netId) {
         promises.push(this.validContract(deployed[0]))
       }
     })
@@ -163,14 +161,25 @@ class SmartContractService {
       }
     })
     this.deployedContracts = previouslyDeployed
+    this.refreshUI()
   }
 
   updateLocalStorage = () => {
-    let objects = JSON.parse(localStorage.getItem("deployedContracts"))
+    console.log("Updating deployments in local storage")
     localStorage.setItem(
       "deployedContracts",
       JSON.stringify(this.deployedContracts),
     )
+  }
+
+  addSmartContract(abiObject) {
+    let existingABI = this.smartContracts.filter(
+      abi => abi.name === abiObject.name,
+    )
+
+    if (existingABI.length === 0) {
+      this.smartContracts.push(abiObject)
+    }
   }
 
   storeABI = abiData => {
@@ -183,12 +192,7 @@ class SmartContractService {
         bytecode: json.bytecode,
         abi: json.abi,
       }
-
-      let existingABI = this.smartContracts.filter(abi => abi.name === name)
-
-      if (existingABI.length === 0) {
-        this.smartContracts.push(abiObject)
-      }
+      this.addSmartContract(abiObject)
     }
   }
 
@@ -234,25 +238,40 @@ class SmartContractService {
     }
   }
 
-  refreshContracts = async cookies => {
-    let { abi } = await fetchABI(cookies)
-    await abi.forEach(this.storeABI)
-    await abi.forEach(this.storeDeployments)
-    await this.validateDeployedOnNetwork(this.getCurrentNetworkId)
+  loadLocalStoreObjects = async () => {
+    let objects = JSON.parse(localStorage.getItem("deployedContracts")) || {}
+    Object.entries(objects).forEach(o => {
+      this.addSmartContract(o[1])
+    })
+    this.deployedContracts = objects
+    this.refreshUI()
+  }
+
+  loadIPFSContracts = async cookies => {
+    let ipfs = cookies.get(`ipfs`)
+
+    if (ipfs) {
+      let { abi } = await fetchABI(cookies)
+      await abi.forEach(this.storeABI)
+      await abi.forEach(this.storeDeployments)
+      this.refreshUI()
+    } else {
+      console.log("No ipfs file loaded, please add in settings")
+    }
   }
 
   createContract = (abi, address) => {
-    if (abi) {
-      return new this.web3.eth.Contract(abi, address)
+    if (!abi) {
+      throw new Error("Contract must have abi passed")
     }
-
-    return undefined
+    return new this.web3.eth.Contract(abi, address)
   }
 
   refreshUser = async () => {
     let accounts = await this.web3.eth.getAccounts()
     console.log(`Updating USER from ${this.currentUser} to ${accounts[0]}`)
     this.currentUser = accounts[0]
+    this.refreshUI()
     return this.currentUser
   }
 
@@ -262,39 +281,34 @@ class SmartContractService {
       network: this.getNetworkString(0, String(netId)),
       netId,
     }
-    console.log("Updating current network", netId, net)
+    console.log("Updating current network", net)
+    this.refreshUI()
     return net
   }
 
-  reloadWeb3 = async cookies => {
+  listenForUpdates = () => {
+    this.getCurrentConfigStore().on(`update`, this.refreshUser)
+  }
+
+  loadWeb3 = async cookies => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
-      try {
-        console.log("Enabling web3")
-        // Request account access if needed
-        await window.ethereum.enable()
-        console.log("web3 Enabled")
-
-        // Acccounts now exposed
-      } catch (error) {
-        console.log("SmartContractService reloadWeb3 error", error)
-        // User denied account access...
-
-        throw Promise.reject(error)
-      }
+      // Request account access if needed
+      await window.ethereum.enable()
     } else if (typeof window.web3 !== "undefined") {
       this.web3 = new Web3(window.web3.currentProvider)
+      this.listenForUpdates()
     } else {
-      this.web3 = this.portisProvider()
+      this.web3 = this.portisProvider(cookies)
+      this.web3.currentProvider.on("login", this.refreshUser)
     }
-    console.log("Refreshing User")
 
     await this.refreshUser()
-    this.currentNetwork = await this.refreshNetwork()
-    await this.refreshContracts(cookies)
 
-    return true
+    this.currentNetwork = await this.refreshNetwork()
+
+    await this.validateDeployedOnNetwork(this.getCurrentNetworkId())
   }
 }
 

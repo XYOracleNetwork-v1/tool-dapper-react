@@ -1,43 +1,37 @@
-// import IPFS from 'ipfs-mini'
 import IPFS from "ipfs-http-client"
+import {ipfsConfigFromCookies} from './IPFSUploader'
 
-// const ipfs = new IPFS({
-//   host: `ipfs.xyo.network`,
-//   port: 5002,
-//   protocol: `https`,
-// })
-// const ipfs = new IPFS({
-//   host: `ipfs.infura.io`,
-//   port: 5001,
-//   protocol: `https`,
-// })
-const ipfs = new IPFS({
-  host: `127.0.0.1`,
-  port: 9001,
-  protocol: `http`,
-})
-export const downloadFiles = async ipfsHash => {
+let parseFiles = (files, resolve) => {
+  let abi = []
+  files.forEach(file => {
+    if (file.content) {
+      abi.push({
+        data: JSON.parse(String(file.content)),
+        ipfs: file.path,
+      })
+    }
+  })
+  resolve(abi)
+}
+
+export const downloadFiles = async (cookies, ipfsHash) => {
+  let ipfsConfig = ipfsConfigFromCookies(cookies)
+  const ipfs = new IPFS({
+    host: ipfsConfig.ipfshost,
+    port: ipfsConfig.ipfsport,
+    protocol: ipfsConfig.ipfsprotocol,
+  })
   return new Promise((resolve, reject) => {
-    let abi = []
     ipfs.get(ipfsHash, (err, files) => {
       if (err) {
-        reject(err)
-        return
+        return reject(err)
       }
       try {
-        files.forEach(file => {
-          if (file.content) {
-            abi.push({ 
-              data: JSON.parse(String(file.content)),
-              ipfs: file.path })
-          }
-        })
+        parseFiles(files, resolve)
       } catch (err) {
+        console.log(`IPFS MUST BE JSON FILES!`)
         reject(err)
-        return
       }
-
-      resolve(abi)
     })
   })
 }
