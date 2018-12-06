@@ -152,7 +152,7 @@ class HomeComponent extends Component {
             <Switch>
               <Route
                 exact
-                path='/:contract/deploy'
+                path='/:contractName/deploy'
                 render={props => (
                   <ContractDeployment
                     {...props}

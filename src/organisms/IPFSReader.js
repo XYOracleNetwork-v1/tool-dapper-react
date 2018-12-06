@@ -1,21 +1,5 @@
-// import IPFS from 'ipfs-mini'
 import IPFS from "ipfs-http-client"
-
-const ipfs = new IPFS({
-  host: `ipfs.xyo.network`,
-  port: 5002,
-  protocol: `https`,
-})
-// const ipfs = new IPFS({
-//   host: `ipfs.infura.io`,
-//   port: 5001,
-//   protocol: `https`,
-// })
-// const ipfs = new IPFS({
-//   host: `127.0.0.1`,
-//   port: 9001,
-//   protocol: `http`,
-// })
+import {ipfsConfigFromCookies} from './IPFSUploader'
 
 let parseFiles = (files, resolve) => {
   let abi = []
@@ -30,7 +14,13 @@ let parseFiles = (files, resolve) => {
   resolve(abi)
 }
 
-export const downloadFiles = async ipfsHash => {
+export const downloadFiles = async (cookies, ipfsHash) => {
+  let ipfsConfig = ipfsConfigFromCookies(cookies)
+  const ipfs = new IPFS({
+    host: ipfsConfig.ipfshost,
+    port: ipfsConfig.ipfsport,
+    protocol: ipfsConfig.ipfsprotocol,
+  })
   return new Promise((resolve, reject) => {
     ipfs.get(ipfsHash, (err, files) => {
       if (err) {

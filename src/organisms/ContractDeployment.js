@@ -44,7 +44,7 @@ class ContractDeployment extends Component {
 
   updateInputs = () => {
     const { match } = this.props
-    const contractName = match.params.contract
+    const {contractName} = match.params
     let contract = this.state.service.contractObject(contractName)
     if (contract && this.state.method.executeBtnState == STATE.LOADING) {
       const { abi, notes } = contract
@@ -124,7 +124,7 @@ class ContractDeployment extends Component {
       ? this.state.inputs.map(i => i.value)
       : []
     let contractObj = this.state.service.contractObject(
-      this.props.match.params.contract,
+      this.props.match.params.contractName,
     )
     let bytecode = contractObj.bytecode
     let contract = this.state.service.createContract(contractObj.abi)
@@ -209,8 +209,8 @@ class ContractDeployment extends Component {
     } catch (e) {
       this.setState({
         transactionError: e,
-        executeBtnState: STATE.ERROR,
       })
+      throw e
     }
   }
 
@@ -225,7 +225,7 @@ class ContractDeployment extends Component {
 
   getInputs = method => {
     let contractObj = this.state.service.contractObject(
-      this.props.match.params.contract,
+      this.props.match.params.contractName,
     )
     const results = []
 
@@ -306,7 +306,7 @@ class ContractDeployment extends Component {
     const { method, transactionResult, transactionReceipt } = this.state
     return (
       <MainDiv>
-        <DetailsHeader>{this.props.match.params.contract}</DetailsHeader>
+        <DetailsHeader>{this.props.match.params.contractName}</DetailsHeader>
         <FunctionParamLayout>
           <Horizontal>
             <FunctionPropertiesDiv>

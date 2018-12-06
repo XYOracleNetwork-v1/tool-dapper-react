@@ -176,8 +176,8 @@ class FunctionDetails extends Component {
     } catch (e) {
       this.setState({
         transactionError: e,
-        executeBtnState: STATE.ERROR,
       })
+      throw e
     }
   }
 

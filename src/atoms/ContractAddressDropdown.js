@@ -47,12 +47,11 @@ class ContractAddressDropdown extends Component {
     return null
   }
 
-  connectProvider = async () => {
+  connectProvider = async () => 
     this.props.service
       .loadWeb3(this.props.cookies)
       .then(this.setState({ connectButtonState: STATE.SUCCESS }))
-      .catch(this.setState({ connectButtonState: STATE.ERROR }))
-  }
+  
 
   dropdownDiv = () => {
     // let contractObjects = this.props.fetchObjects()
