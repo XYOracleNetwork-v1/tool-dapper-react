@@ -1,13 +1,13 @@
 import React, { Component } from "react"
-import glam, { Div, Input } from "glamorous"
+import { Div, Input } from "glamorous"
 import { withRouter } from "react-router-dom"
 import { withCookies } from "react-cookie"
-import { DetailsHeader } from "../atoms/DetailsHeader"
-import fetchABI from "./ABIReader"
+import { DetailsHeader, DetailsHeader2 } from "../atoms/DetailsHeader"
+import {SettingsInput, RowLayout, InputText, CenterColumn, SettingsLayout} from "../molecules/SettingsComponenets"
 import FolderDropzone from "./FolderDropzone"
 import { readSettings } from "../atoms/CookieReader"
 import ProgressButton, { STATE } from "react-progress-button"
-
+import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
 const networkDescriptions = [
   { network: `development`, description: `Development (local)` },
   { network: `kovan`, description: `Kovan` },
@@ -15,38 +15,8 @@ const networkDescriptions = [
   { network: `rinkeby`, description: `Rinkeby` },
   { network: `mainnet`, description: `Main Net` },
 ]
-const SettingsInput = glam.input({
-  paddingLeft: 12,
-  border: `1px solid #E0E0E0`,
-  borderRadius: `6px`,
-  backgroundColor: `#F6F6F6`,
-  width: 500,
-  height: 40,
-})
 
-const RowLayout = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  paddingRight: 30,
-  marginBottom: 40,
-  marginLeft: 50,
-})
-const LeftColumn = glam.div({
-  minWidth: 170,
-  width: 170,
-  marginTop: 10,
-})
-const CenterColumn = glam.div({
-  lineHeight: 1,
-  flex: 1,
-  maxWidth: 500,
-})
-const SettingsLayout = glam.div({
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
-  flex: 1,
-  marginRight: 60,
-})
+
 
 class Settings extends Component {
   constructor(props) {
@@ -54,7 +24,7 @@ class Settings extends Component {
 
     this.state = {
       ...readSettings(props.cookies),
-      updateBtnState: STATE.NOTHING
+      updateBtnState: STATE.NOTHING,
     }
   }
 
@@ -79,41 +49,38 @@ class Settings extends Component {
   handleOptionChange = changeEvent =>
     this.stateChange(`currentSource`, changeEvent.target.value)
 
-  handleNetworkChange = changeEvent =>
+  handleNetworkChange = changeEvent => {
     this.stateChange(`portisNetwork`, changeEvent.target.value)
-
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault()
-    this.setState({ updateBtnState: STATE.LOADING })
-    this.props
-      .onSave(true)
-      .then(wtf => {
-        this.setState({ updateBtnState: STATE.SUCCESS })
-      })
-      .catch(err => {
-        this.setState({ updateBtnState: STATE.ERROR })
-        console.log(`Could not save`, err)
-      })
+    this.props.portisNetworkChange(changeEvent.target.value)
   }
 
-  refreshABI = async () => {
-    if (!this.props.cookies) {
-      return true
-    }
-    return fetchABI(this.props.cookies).then(() => {
-      return this.props.onSave()
-    })
+  handleFormSubmit = () => {
+    this.setState({ updateBtnState: STATE.LOADING })
+    return this.props.service
+      .loadIPFSContracts(this.props.cookies)
+      .then(_ => {
+        this.setState({ updateBtnState: STATE.SUCCESS })
+      })
   }
 
   radioInput = (value, checked, onChange) => (
-    <Input type={`radio`} value={value} checked={checked} onChange={onChange} />
+    <Input
+      style={{ display: `inline`, minWidth: `fit-content` }}
+      type={`radio`}
+      value={value}
+      checked={checked}
+      onChange={onChange}
+    />
   )
 
   networkRadioInputs = () => {
     const inputs = []
     networkDescriptions.forEach(({ network, description }) => {
       inputs.push(
-        <Div key={description}>
+        <Div
+          style={{ display: `inline`, minWidth: `fit-content` }}
+          key={description}
+        >
           {this.radioInput(
             network,
             this.state.portisNetwork === network,
@@ -127,19 +94,20 @@ class Settings extends Component {
   }
 
   leftColumnDiv = (source, description) => (
-    <LeftColumn>
+    <InputText>
       {this.radioInput(
         source,
         this.state.currentSource === source,
         this.handleOptionChange,
       )}
       {description}
-    </LeftColumn>
+    </InputText>
   )
 
   centerColumnDiv = (source, value, placeholder) => (
     <CenterColumn css={{ display: `flex`, flexDirection: `row` }}>
       <SettingsInput
+        css={{ minWidth: 320 }}
         type='text'
         value={value}
         name={source}
@@ -154,15 +122,13 @@ class Settings extends Component {
     return (
       <SettingsLayout>
         <DetailsHeader>Settings</DetailsHeader>
-        <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
-          Portis Network
-        </DetailsHeader>
+        <DetailsHeader2>IPFS Config</DetailsHeader2>
+        <IPFSConfigDiv />
+        <DetailsHeader2>Portis Network</DetailsHeader2>
         <RowLayout css={{ justifyContent: `space-between` }}>
           {this.networkRadioInputs()}
         </RowLayout>
-        <DetailsHeader css={{ fontSize: 19, marginLeft: 10 }}>
-          ABI Source
-        </DetailsHeader>
+        <DetailsHeader2>ABI Source</DetailsHeader2>
         <Div
           style={{
             margin: 40,
@@ -175,7 +141,7 @@ class Settings extends Component {
           <FolderDropzone
             onSave={async ipfsHash => {
               this.stateChange(`ipfs`, ipfsHash)
-              return this.refreshABI()
+              await this.props.service.loadIPFSContracts(this.props.cookies)
             }}
           />
         </Div>
@@ -186,8 +152,12 @@ class Settings extends Component {
             this.state.ipfs,
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
-          <Div style={{ width: 200, marginLeft: 20 }}>
+          <Div>
             <ProgressButton
+              style={{
+                width: 200,
+                marginLeft: 20,
+              }}
               state={this.state.updateBtnState}
               onClick={this.handleFormSubmit}
             >

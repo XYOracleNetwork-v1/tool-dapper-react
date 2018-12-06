@@ -7,7 +7,7 @@ export const fetchABI = async cookies => {
 
   switch (settings.currentSource) {
     default: {
-      return IPFSReader.downloadFiles(settings.ipfs)
+      return IPFSReader.downloadFiles(cookies, settings.ipfs)
         .then(files => {
           return { abi: files }
         })

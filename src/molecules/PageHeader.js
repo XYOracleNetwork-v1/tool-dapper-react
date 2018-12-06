@@ -2,6 +2,7 @@ import React from "react"
 import glam, { Div, Img } from "glamorous"
 import CurNetwork from "../atoms/CurNetwork"
 import logo from "../assets/dapper-logo.svg"
+const version = require(`../../package.json`).version
 
 const HeaderDiv = glam.div({
   display: `flex`,
@@ -25,7 +26,7 @@ class PageHeader extends React.Component {
             target='_blank'
             rel='noopener noreferrer'
           >
-            View on Github
+            View on Github - {version}
           </a>
           <CurNetwork
             account={this.props.service.getCurrentUser()}

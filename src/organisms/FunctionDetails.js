@@ -4,7 +4,7 @@ import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import ProgressButton, { STATE } from "react-progress-button"
+import { STATE } from "react-progress-button"
 import {
   MainDiv,
   FunctionParamLayout,
@@ -158,7 +158,7 @@ class FunctionDetails extends Component {
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
+        throw new Error(`Please connect a wallet`)
       }
 
       const { selectedAddress } = this.props
@@ -176,8 +176,8 @@ class FunctionDetails extends Component {
     } catch (e) {
       this.setState({
         transactionError: e,
-        executeBtnState: STATE.ERROR,
       })
+      throw e
     }
   }
 

@@ -1,11 +1,10 @@
 import React, { Component } from "react"
 import { Div } from "glamorous"
-import { isHexString } from "ethers/utils/bytes"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
-import ProgressButton, { STATE } from "react-progress-button"
+import { STATE } from "react-progress-button"
 import {
   MainDiv,
   FunctionParamLayout,
@@ -45,9 +44,9 @@ class ContractDeployment extends Component {
 
   updateInputs = () => {
     const { match } = this.props
-    const contractName = match.params.contract
+    const {contractName} = match.params
     let contract = this.state.service.contractObject(contractName)
-    if (contract && this.state.method.executeBtnState == STATE.LOADING) {
+    if (contract && this.state.method.executeBtnState === STATE.LOADING) {
       const { abi, notes } = contract
 
       const newMethod = this.methodObject(abi)
@@ -125,7 +124,7 @@ class ContractDeployment extends Component {
       ? this.state.inputs.map(i => i.value)
       : []
     let contractObj = this.state.service.contractObject(
-      this.props.match.params.contract,
+      this.props.match.params.contractName,
     )
     let bytecode = contractObj.bytecode
     let contract = this.state.service.createContract(contractObj.abi)
@@ -203,15 +202,15 @@ class ContractDeployment extends Component {
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error(`No Current User, Refresh Page, or Login Metamask`)
+        throw new Error(`Please connect a wallet`)
       }
 
       await this.deployContract(user)
     } catch (e) {
       this.setState({
         transactionError: e,
-        executeBtnState: STATE.ERROR,
       })
+      throw e
     }
   }
 
@@ -226,13 +225,13 @@ class ContractDeployment extends Component {
 
   getInputs = method => {
     let contractObj = this.state.service.contractObject(
-      this.props.match.params.contract,
+      this.props.match.params.contractName,
     )
     const results = []
 
     if (contractObj) {
       let libraries = this.findLibraryNames(contractObj.bytecode)
-      libraries.map((lib, index) => {
+      libraries.forEach((lib, index) => {
         results.push(
           <ParamInputDiv key={index}>
             {lib}
@@ -260,7 +259,7 @@ class ContractDeployment extends Component {
         />
       </ParamInputDiv>,
     )
-    method.inputs.map((input, index) => {
+    method.inputs.forEach((input, index) => {
       if (input.name === ``) {
         input.name = `param${index}`
       }
@@ -307,7 +306,7 @@ class ContractDeployment extends Component {
     const { method, transactionResult, transactionReceipt } = this.state
     return (
       <MainDiv>
-        <DetailsHeader>{this.props.match.params.contract}</DetailsHeader>
+        <DetailsHeader>{this.props.match.params.contractName}</DetailsHeader>
         <FunctionParamLayout>
           <Horizontal>
             <FunctionPropertiesDiv>
