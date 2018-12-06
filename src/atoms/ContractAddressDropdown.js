@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import glam, { Div, Button } from "glamorous"
+import glam, { Div } from "glamorous"
 import { withRouter } from "react-router-dom"
 import Dropdown from "react-dropdown"
 import "react-dropdown/style.css"

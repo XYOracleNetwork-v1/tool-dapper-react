@@ -46,7 +46,7 @@ class ContractDeployment extends Component {
     const { match } = this.props
     const {contractName} = match.params
     let contract = this.state.service.contractObject(contractName)
-    if (contract && this.state.method.executeBtnState == STATE.LOADING) {
+    if (contract && this.state.method.executeBtnState === STATE.LOADING) {
       const { abi, notes } = contract
 
       const newMethod = this.methodObject(abi)
@@ -231,7 +231,7 @@ class ContractDeployment extends Component {
 
     if (contractObj) {
       let libraries = this.findLibraryNames(contractObj.bytecode)
-      libraries.map((lib, index) => {
+      libraries.forEach((lib, index) => {
         results.push(
           <ParamInputDiv key={index}>
             {lib}
@@ -259,7 +259,7 @@ class ContractDeployment extends Component {
         />
       </ParamInputDiv>,
     )
-    method.inputs.map((input, index) => {
+    method.inputs.forEach((input, index) => {
       if (input.name === ``) {
         input.name = `param${index}`
       }

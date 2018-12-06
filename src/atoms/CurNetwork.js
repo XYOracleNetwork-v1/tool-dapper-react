@@ -1,5 +1,5 @@
 import React from "react"
-import { Div, Button } from "glamorous"
+import { Div } from "glamorous"
 
 const WalletDiv = (account) => {
   if (account) {

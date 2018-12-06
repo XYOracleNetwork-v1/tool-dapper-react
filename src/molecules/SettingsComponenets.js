@@ -1,4 +1,3 @@
-import React from "react"
 import glam from "glamorous"
 
 export const SettingsInput = glam.input({

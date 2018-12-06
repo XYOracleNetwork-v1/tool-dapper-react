@@ -4,8 +4,9 @@ import { withCookies } from "react-cookie"
 import { ipfsConfigFromCookies } from "../organisms/IPFSUploader"
 
 class IPFSConfigDiv extends Component {
-  componentWillMount() {
-    this.state = ipfsConfigFromCookies(this.props.cookies)
+  constructor(props) {
+    super(props)
+    this.state = ipfsConfigFromCookies(props.cookies)
   }
   handleChange = changeEvent => {
     this.stateChange(changeEvent.target.name, changeEvent.target.value)

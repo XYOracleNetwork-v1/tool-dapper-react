@@ -17,7 +17,7 @@ const parseResponse = (res, resolve, reject) => {
   res.forEach(fileObj => {
     console.log(` $ Storing contract`, fileObj.path)
 
-    if (fileObj.path === folder || fileObj.path === `` || res.length == 1) {
+    if (fileObj.path === folder || fileObj.path === `` || res.length === 1) {
       console.log(` $ Contracts stored to IPFS`, fileObj.hash)
       console.log(
         ` $ View contracts at https://ipfs.xyo.network/ipfs/${
