@@ -63,7 +63,7 @@ class SmartContractService {
   }
 
   portisProvider = cookies => {
-    let portisNetwork = cookies.get('portisNetwork')
+    let portisNetwork = cookies.get("portisNetwork")
     let portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
 
     if (portisNetwork && portisNetwork !== "development") {
@@ -76,7 +76,7 @@ class SmartContractService {
     } else {
       console.log("Using Portis Network Development (localhost)")
       if (!portisNetwork) {
-        cookies.set('portisNetwork', 'development', {
+        cookies.set("portisNetwork", "development", {
           path: `/`,
         })
       }
@@ -87,7 +87,6 @@ class SmartContractService {
           providerNodeUrl: localProviderUrl,
         }),
       )
-
     }
   }
 
@@ -174,7 +173,9 @@ class SmartContractService {
   }
 
   addSmartContract(abiObject) {
-    let existingABI = this.smartContracts.filter(abi => abi.name === abiObject.name)
+    let existingABI = this.smartContracts.filter(
+      abi => abi.name === abiObject.name,
+    )
 
     if (existingABI.length === 0) {
       this.smartContracts.push(abiObject)
@@ -238,15 +239,11 @@ class SmartContractService {
   }
 
   loadLocalStoreObjects = async () => {
-    let objects = JSON.parse(localStorage.getItem("deployedContracts"))
-    this.deployedContracts = objects || {}
-    Object.entries(objects).forEach(
-      o => {
-        this.addSmartContract(o[1])
-      }
-    )
-
-    console.log("Local Storage Loaded", this.deployedContracts, this.smartContracts)
+    let objects = JSON.parse(localStorage.getItem("deployedContracts")) || {}
+    Object.entries(objects).forEach(o => {
+      this.addSmartContract(o[1])
+    })
+    this.deployedContracts = objects
     this.refreshUI()
   }
 
@@ -257,8 +254,6 @@ class SmartContractService {
       let { abi } = await fetchABI(cookies)
       await abi.forEach(this.storeABI)
       await abi.forEach(this.storeDeployments)
-      console.log("IPFS Storage Loaded", this.deployedContracts)
-
       this.refreshUI()
     } else {
       console.log("No ipfs file loaded, please add in settings")
@@ -276,7 +271,6 @@ class SmartContractService {
     let accounts = await this.web3.eth.getAccounts()
     console.log(`Updating USER from ${this.currentUser} to ${accounts[0]}`)
     this.currentUser = accounts[0]
-    console.log("onrefresh user", this.refreshUI)
     this.refreshUI()
     return this.currentUser
   }
@@ -300,7 +294,6 @@ class SmartContractService {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
-      console.log("Enabling web3")
       // Request account access if needed
       await window.ethereum.enable()
     } else if (typeof window.web3 !== "undefined") {
@@ -308,12 +301,10 @@ class SmartContractService {
       this.listenForUpdates()
     } else {
       this.web3 = this.portisProvider(cookies)
-      this.web3.currentProvider.on('login', this.refreshUser)
+      this.web3.currentProvider.on("login", this.refreshUser)
     }
-    console.log("Refreshing User")
 
     await this.refreshUser()
-    console.log("Refreshing User")
 
     this.currentNetwork = await this.refreshNetwork()
 
