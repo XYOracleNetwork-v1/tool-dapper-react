@@ -16,6 +16,7 @@ const HeaderDiv = glam.div({
 
 class PageHeader extends React.Component {
   render() {
+    let network = this.props.service.getCurrentNetwork() ? this.props.service.getCurrentNetwork().name : ``
     return (
       <HeaderDiv>
         <Img className='image-header-logo' src={logo} />
@@ -30,7 +31,7 @@ class PageHeader extends React.Component {
           </a>
           <CurNetwork
             account={this.props.service.getCurrentUser()}
-            network={this.props.service.getCurrentNetwork()}
+            network={network}
           />
         </Div>
       </HeaderDiv>

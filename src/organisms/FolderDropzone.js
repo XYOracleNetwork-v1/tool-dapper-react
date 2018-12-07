@@ -10,7 +10,7 @@ const parentStyle = {
   alignSelf: `center`,
   padding: 20,
   width: 400,
-  height: 200,
+  height: 180,
   border: `2px dashed #888`,
 }
 
@@ -28,7 +28,7 @@ class FolderDropzone extends React.Component {
 
   render() {
     return (
-      <Div>
+      <Div style={{maxWidth: 500}}>
         <Dropzone
           style={parentStyle}
           getDataTransferItems={evt => fromEvent(evt)}

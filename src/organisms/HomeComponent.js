@@ -134,6 +134,7 @@ class HomeComponent extends Component {
             css={{
               display: `flex`,
               flexDirection: `column`,
+              width: `100%`
             }}
           >
             <Route
@@ -143,7 +144,7 @@ class HomeComponent extends Component {
                   {...props}
                   service={this.state.service}
                   portisNetworkChange={async network => {
-                    await this.state.service.changeNetwork(network)
+                    await this.state.service.changePortisNetwork(network)
                     this.forceUpdate()
                   }}
                 />

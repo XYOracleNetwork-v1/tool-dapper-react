@@ -5,6 +5,15 @@ import { fetchABI } from "./ABIReader"
 
 const localProviderUrl = "http://localhost:8545"
 
+const web3Networks = [
+  { id: 0, name: 'dummy', description: "whatever"},
+  { id: 5777, name: `development`, description: `Development (local)` },
+  { id: 42, name: `kovan`, description: `Kovan` },
+  { id: 3, name: `ropsten`, description: `Ropsten` },
+  { id: 4, name: `rinkeby`, description: `Rinkeby` },
+  { id: 1, name: `mainnet`, description: `Main Net` },
+]
+
 class SmartContractService {
   constructor(refreshUI, cookies) {
     this.refreshUI = refreshUI
@@ -13,60 +22,34 @@ class SmartContractService {
   }
 
   getCurrentUser = () => this.currentUser
-
-  getCurrentNetwork = () =>
-    this.currentNetwork ? this.currentNetwork.network : undefined
-
-  getCurrentNetworkId = () =>
-    this.currentNetwork ? this.currentNetwork.netId : undefined
-
+  getCurrentNetwork = () => this.currentNetwork
   getSmartContracts = () => this.smartContracts
+  getWeb3Networks = () => web3Networks
 
-  getCurrentConfigStore = () =>
-    this.web3
-      ? this.web3.currentProvider
-        ? this.web3.currentProvider.publicConfigStore
-        : undefined
-      : undefined
-
-  getNetworksString = networks => {
-    let networkString = ""
-    let iterator = 0
-    Object.entries(networks).forEach(net => {
-      networkString += this.getNetworkString(iterator, net[0])
-      iterator++
-    })
-    return networkString
+  getNetworkId = netString => {
+    let found = element => {
+      return (element.name = netString)
+    }
+    return web3Networks.find(found)
   }
 
-  getNetworkString = (iterator, netId) => {
-    let addComma = (iterator, word) => (iterator > 0 ? `, ${word}` : word)
-    let word = "localhost"
-    switch (netId) {
-      case "1":
-        word = "mainnet"
-        break
-      case "3":
-        word = "roptsten"
-        break
-      case "4":
-        word = "rinkeby"
-        break
-      case "42":
-        word = "kovan"
-        break
-      case "5777":
-        word = "localhost"
-        break
+  getNetworkString = netId => {
+    let found = element => {
+      return element.id == netId
     }
-    return addComma(iterator, word)
+    return web3Networks.find(found)
   }
 
   portisProvider = cookies => {
-    let portisNetwork = cookies.get("portisNetwork")
-    let portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
+    console.log("Creating Portis connection", cookies)
 
-    if (portisNetwork && portisNetwork !== "development") {
+    const portisNetwork = cookies.get("portisNetwork")
+    const portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
+    this.currentNetwork = this.getNetworkId(portisNetwork)
+
+    console.log("Creating Portis Privider", portisNetwork)
+
+    if (portisNetwork !== "development") {
       return new Web3(
         new PortisProvider({
           apiKey: portisAPI,
@@ -74,33 +57,29 @@ class SmartContractService {
         }),
       )
     } else {
-      console.log("Using Portis Network Development (localhost)")
-      if (!portisNetwork) {
-        cookies.set("portisNetwork", "development", {
-          path: `/`,
-        })
-      }
       return new Web3(
         new PortisProvider({
-          apiKey: portisAPI,
-          network: "development",
+          network: portisNetwork,
           providerNodeUrl: localProviderUrl,
         }),
       )
     }
   }
 
-  changeNetwork = async newNetwork => {
-    if (this.web3 && this.web3.currentProvider.changeNetwork) {
+  changePortisNetwork = async newNetwork => {
+    if (this.web3 && this.web3.currentProvider.isPortis) {
       if (newNetwork === "development") {
         this.web3.currentProvider.changeNetwork({
+          network: newNetwork,
           providerNodeUrl: localProviderUrl,
         })
       } else {
-        this.web3.currentProvider.changeNetwork({ network: newNetwork })
+        this.web3.currentProvider.changeNetwork({
+          network: newNetwork,
+        })
       }
       console.log("Changing Portis Network", newNetwork)
-      this.currentNetwork = await this.refreshNetwork()
+      await this.refreshNetwork()
     }
   }
   contractObject = name =>
@@ -129,7 +108,7 @@ class SmartContractService {
     if (!this.deployedContracts) {
       return []
     }
-    let currNet = netId || this.getCurrentNetworkId()
+    let currNet = netId || this.getCurrentNetwork() ? this.getCurrentNetwork().id : undefined
     let contractsOnNet = []
     Object.entries(this.deployedContracts).map(deployed => {
       if (deployed[1] && deployed[1].name === name) {
@@ -222,7 +201,7 @@ class SmartContractService {
     bytecode,
     abi,
     notes = "",
-    netId = this.getCurrentNetworkId(),
+    netId = this.getCurrentNetwork().id,
   ) => {
     if (address) {
       this.deployedContracts[address] = {
@@ -277,20 +256,44 @@ class SmartContractService {
 
   refreshNetwork = async () => {
     let netId = await this.web3.eth.net.getId()
-    let net = {
-      network: this.getNetworkString(0, String(netId)),
-      netId,
-    }
-    console.log("Updating current network", net)
+    console.log(`Updating Network To`, netId)
+
+    this.currentNetwork = this.getNetworkString(netId)
     this.refreshUI()
-    return net
+    return this.currentNetwork
   }
+
+  getCurrentConfigStore = () =>
+    this.web3
+      ? this.web3.currentProvider
+        ? this.web3.currentProvider.publicConfigStore
+        : undefined
+      : undefined
 
   listenForUpdates = () => {
     this.getCurrentConfigStore().on(`update`, this.refreshUser)
   }
 
+  setupPortis = async cookies => {
+    console.log("Setting up Portis")
+
+    this.web3 = this.portisProvider(cookies)
+    let promise = new Promise((resolve, reject) => {
+      this.web3.currentProvider.on("login", async stuff => {
+        console.log("Portis Logged in", stuff)
+        await this.refreshUser()
+        await this.validateDeployedOnNetwork(this.getCurrentNetwork().id)
+        resolve()
+      })
+    })
+    await this.refreshUser() // forces login
+    console.log("Done initializing web3 Portis", this.currentNetwork)
+
+    return promise
+  }
+
   loadWeb3 = async cookies => {
+    console.log("LOADING WEB 3")
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
@@ -298,17 +301,15 @@ class SmartContractService {
       await window.ethereum.enable()
     } else if (typeof window.web3 !== "undefined") {
       this.web3 = new Web3(window.web3.currentProvider)
-      this.listenForUpdates()
     } else {
-      this.web3 = this.portisProvider(cookies)
-      this.web3.currentProvider.on("login", this.refreshUser)
+      return this.setupPortis(cookies)
     }
 
     await this.refreshUser()
+    await this.refreshNetwork()
+    await this.validateDeployedOnNetwork(this.getCurrentNetwork().id)
 
-    this.currentNetwork = await this.refreshNetwork()
-
-    await this.validateDeployedOnNetwork(this.getCurrentNetworkId())
+    this.listenForUpdates()
   }
 }
 
