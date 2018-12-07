@@ -16,7 +16,7 @@ const WalletDiv = (account) => {
 
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
-
+  console.log(`ABAZABA`, network)
   returnDivs.push(WalletDiv(account))
   if (network) {
     returnDivs.push(

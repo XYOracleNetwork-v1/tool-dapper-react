@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Div } from "glamorous"
-import TransactionResult from "../atoms/TransactionResult"
+import DeploymentResult from "../atoms/DeploymentResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
 import { DetailsHeader } from "../atoms/DetailsHeader"
@@ -44,7 +44,7 @@ class ContractDeployment extends Component {
 
   updateInputs = () => {
     const { match } = this.props
-    const {contractName} = match.params
+    const { contractName } = match.params
     let contract = this.state.service.contractObject(contractName)
     if (contract && this.state.method.executeBtnState === STATE.LOADING) {
       const { abi, notes } = contract
@@ -135,7 +135,13 @@ class ContractDeployment extends Component {
         bytecode = this.linkLibrary(bytecode, lib[0], lib[1])
       })
     }
-
+    console.log(
+      `DEPLOYING WITH bytecode`,
+      contract,
+      bytecode,
+      inputParams,
+      user,
+    )
     contract
       .deploy({
         data: bytecode,
@@ -155,9 +161,10 @@ class ContractDeployment extends Component {
         this.setState({
           executeBtnState: STATE.SUCCESS,
           transactionResult: {
-            "Deployed To Address": newContractInstance._address,
-            IPFS: contractObj.ipfs,
-            Name: contractObj.name,
+            address: newContractInstance._address,
+            ipfs: contractObj.ipfs,
+            name: contractObj.name,
+            notes: this.state.notes,
           },
         })
         this.props.service.addDeployedContract(
@@ -191,8 +198,7 @@ class ContractDeployment extends Component {
       })
   }
 
-  handleExecute = async e => {
-    e.preventDefault()
+  handleExecute = () => {
     this.setState({
       transactionResult: undefined,
       transactionError: undefined,
@@ -202,15 +208,20 @@ class ContractDeployment extends Component {
     try {
       const user = this.state.service.getCurrentUser()
       if (!user) {
-        throw new Error(`Please connect a wallet`)
+        let e = new Error(`Please connect a wallet`)
+        this.setState({
+          executeBtnState: STATE.ERROR,
+          transactionError: e,
+        })
+        return
       }
 
-      await this.deployContract(user)
+      this.deployContract(user)
     } catch (e) {
       this.setState({
+        executeBtnState: STATE.ERROR,
         transactionError: e,
       })
-      throw e
     }
   }
 
@@ -325,10 +336,9 @@ class ContractDeployment extends Component {
         <Div
           css={{
             width: `100%`,
-            borderBottom: `1px solid #979797`,
           }}
         />
-        <TransactionResult result={transactionResult} />
+        <DeploymentResult {...transactionResult} />
         <TransactionError error={this.state.transactionError} />
         <TransactionReceipt {...transactionReceipt} />
       </MainDiv>

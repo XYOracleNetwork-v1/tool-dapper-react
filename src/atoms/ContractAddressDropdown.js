@@ -47,10 +47,14 @@ class ContractAddressDropdown extends Component {
     return null
   }
 
-  connectProvider = async () => 
+  connectProvider = async () => {
     this.props.service
-      .loadWeb3(this.props.cookies)
-      .then(this.setState({ connectButtonState: STATE.SUCCESS }))
+      .loadWeb3(this.props.cookies).then(() => {
+        console.log(`Dropdown finish connectg`, this.props.service.getWeb3Networks())
+      })
+      // .then(this.setState({ connectButtonState: STATE.SUCCESS }))
+  }
+    
   
 
   dropdownDiv = () => {
@@ -74,7 +78,7 @@ class ContractAddressDropdown extends Component {
       )
     }
     if (!contractObjects || contractObjects.length === 0) {
-      return <GreyTopped>Not deployed on {network}</GreyTopped>
+      return <GreyTopped>Not deployed on {network.name}</GreyTopped>
     }
     return (
       <Div>
