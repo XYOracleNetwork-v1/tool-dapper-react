@@ -1,57 +1,54 @@
 import React from "react"
-import glam from "glamorous"
+import { Div } from "glamorous"
 
-const ResultDiv = glam.div({
-  display: `flex`,
-  flexDirection: `column`,
-  width: `70%`,
-  minWidth: `650`,
-  paddingLeft: 35,
-  paddingTop: 30,
-  fontSize: `25px`,
-  fontFamily: `PT Sans`,
-  color: `#4D4D5C`,
-})
+import ResultTable from "../atoms/ResultTable"
+import { HeaderStyle2 } from "../atoms/HeaderStyle"
 
-const RowDiv = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  justifyContent: `space-between`,
-  height: 35,
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
-  fontSize: 15,
-})
-const LeftColumn = glam.div({
-  textAlign: `left`,
-})
-const RightColumn = glam.div({
-  textAlign: `right`,
-})
 const DeploymentResult = ({ address, ipfs, name, notes }) => {
   if (!name) {
     return null
   }
+  const header = {
+    name: `Deployed Contract`,
+    color: `6025AE`,
+    value: name,
+  }
+  const rows = [
+    {
+      name: `IPFS`,
+      url: `https://ipfs.xyo.network/ipfs/${ipfs}`,
+      value: ipfs,
+    },
+    {
+      name: `Address`,
+      value: address,
+    },
+  ]
+  if (notes) {
+    rows.push({
+      name: `Notes`,
+      value: notes,
+    })
+  }
   return (
-
-    <ResultDiv>
-      <RowDiv>
-        <LeftColumn>Contract</LeftColumn>
-        <RightColumn>{name}</RightColumn>
-      </RowDiv>
-      <RowDiv>
-        <LeftColumn>IPFS Address</LeftColumn>
-        <RightColumn>{ipfs}</RightColumn>
-      </RowDiv>
-      <RowDiv>
-        <LeftColumn>Address</LeftColumn>
-        <RightColumn>{address}</RightColumn>
-      </RowDiv>
-      <RowDiv>
-        <LeftColumn>Notes</LeftColumn>
-        <RightColumn>{notes}</RightColumn>
-      </RowDiv>
-    </ResultDiv>
+    <Div
+      css={{
+        display: `flex`,
+        flexDirection: `row`,
+        justifyContent: `center`,
+      }}
+    >
+      <Div
+        css={{
+          display: `flex`,
+          flexDirection: `column`,
+          justifyContent: `center`,
+        }}
+      >
+        <HeaderStyle2>Successfully Deployed {name}</HeaderStyle2>
+        <ResultTable header={header} rows={rows} />
+      </Div>
+    </Div>
   )
 }
 export default DeploymentResult

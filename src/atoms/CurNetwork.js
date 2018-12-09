@@ -1,7 +1,7 @@
 import React from "react"
 import { Div } from "glamorous"
 
-const WalletDiv = (account) => {
+const WalletDiv = account => {
   if (account) {
     return (
       <Div key='account' className='account-right'>
@@ -9,14 +9,15 @@ const WalletDiv = (account) => {
       </Div>
     )
   }
-  return <Div key='account' className='account-right'>
-    No Wallet Connected
-  </Div>
+  return (
+    <Div key='account' className='account-right'>
+      No Wallet Connected
+    </Div>
+  )
 }
 
 const CurNetwork = ({ account, network }) => {
   let returnDivs = []
-  console.log(`ABAZABA`, network)
   returnDivs.push(WalletDiv(account))
   if (network) {
     returnDivs.push(

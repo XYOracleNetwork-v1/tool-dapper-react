@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Div, Input } from "glamorous"
 import { withRouter } from "react-router-dom"
 import { withCookies } from "react-cookie"
-import { DetailsHeader, DetailsHeader2 } from "../atoms/DetailsHeader"
+import { HeaderStyle, HeaderStyle2 } from "../atoms/HeaderStyle"
 import {
   SettingsInput,
   RowLayout,
@@ -70,13 +70,13 @@ class Settings extends Component {
       networks.forEach((network) => {
         let { id, name, description } = network
         if (id !== 0) {
-          console.log(
-            `Updating radio buttons`,
-            id,
-            name,
-            curNetwork,
-            curNetwork === network,
-          )
+          // console.log(
+          //   `Updating radio buttons`,
+          //   id,
+          //   name,
+          //   curNetwork,
+          //   curNetwork === network,
+          // )
           inputs.push(
             <Div style={{ display: `inline`, margin: 10 }} key={id}>
               {this.radioInput(
@@ -109,7 +109,7 @@ class Settings extends Component {
   centerColumnDiv = (source, value, placeholder) => (
     <CenterColumn css={{}}>
       <SettingsInput
-        css={{ minWidth: 320 }}
+        style={{ minWidth: 350 }}
         type='text'
         value={value}
         name={source}
@@ -121,22 +121,22 @@ class Settings extends Component {
   )
 
   render() {
-    console.log(`RENDER SETTINGS`, this.props.service.getWeb3Networks())
     return (
       <SettingsLayout>
-        <DetailsHeader>Settings</DetailsHeader>
-        <DetailsHeader2>IPFS Config</DetailsHeader2>
+        <HeaderStyle>Settings</HeaderStyle>
+        <HeaderStyle2>IPFS Config</HeaderStyle2>
         <IPFSConfigDiv />
-        <DetailsHeader2>Portis Network</DetailsHeader2>
+        <HeaderStyle2>Portis Network</HeaderStyle2>
         <RowLayout css={{ justifyContent: `space-between`, maxWidth: 700 }}>
           {this.networkRadioInputs()}
         </RowLayout>
-        <DetailsHeader2>ABI Source</DetailsHeader2>
+        <HeaderStyle2>ABI Source</HeaderStyle2>
         <Div
           style={{
             marginBottom: 40,
+            marginLeft: 100,
             display: `flex`,
-            justifyContent: `center`,
+            justifyContent: `left`,
             align: `center`,
             textAlign: `center`,
           }}

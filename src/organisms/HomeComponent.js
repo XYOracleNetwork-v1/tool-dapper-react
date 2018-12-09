@@ -12,6 +12,7 @@ import { withCookies } from "react-cookie"
 import PageHeader from "../molecules/PageHeader"
 import ContractDeployment from "./ContractDeployment"
 import { withRouter } from "react-router-dom"
+import SelectedContractDiv from "../molecules/SelectedContractDiv"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -82,7 +83,7 @@ class HomeComponent extends Component {
   fetchContractObjects = () => {
     console.log(`HISTORY`, this.props)
     let baseRoute = this.currentBaseRoute()
-    if (baseRoute !==`settings`) {
+    if (baseRoute !== `settings`) {
       return this.state.service.deployedContractObjects(baseRoute)
     }
     return []
@@ -134,7 +135,7 @@ class HomeComponent extends Component {
             css={{
               display: `flex`,
               flexDirection: `column`,
-              width: `100%`
+              width: `100%`,
             }}
           >
             <Route
@@ -180,6 +181,18 @@ class HomeComponent extends Component {
                 service={this.state.service}
               />
             </Switch>
+            <Route
+              exact
+              path='/:contract'
+              render={props => (
+                <SelectedContractDiv
+                  {...props}
+                  service={this.state.service}
+                  selectedAddress={this.state.deploymentSelection.address}
+                />
+              )}
+              service={this.state.service}
+            />
           </Div>
         </MainLayoutDiv>
       </Div>

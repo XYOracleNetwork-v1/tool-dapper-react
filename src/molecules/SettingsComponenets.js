@@ -25,7 +25,7 @@ export const InputText = glam.div({
 export const CenterColumn = glam.div({
   lineHeight: 1,
   flex: 1,
-  maxWidth: 360,
+  maxWidth: 390,
 })
 export const SettingsLayout = glam.div({
   color: `#4D4D5C`,

@@ -1,15 +1,17 @@
 import glam from "glamorous"
 
-export const DetailsHeader = glam.div({
+export const HeaderStyle = glam.div({
   display: `flex`,
   flexDirection: `column`,
   justifyContent: `center`,
   height: 78,
   paddingLeft: 24,
   fontSize: `25px`,
+  fontFamily: `PT Sans`,
+
 })
 
-export const DetailsHeader2 = glam.div({
+export const HeaderStyle2 = glam.div({
   display: `flex`,
   flexDirection: `column`,
   justifyContent: `center`,
@@ -17,4 +19,6 @@ export const DetailsHeader2 = glam.div({
   paddingLeft: 24,
   fontSize: 19,
   marginLeft: 10,
+  fontFamily: `PT Sans`,
+
 })

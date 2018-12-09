@@ -1,6 +1,6 @@
 {
   "name": "@xyo-network/tool-dapper-react",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "An automated smart contract web viewer. Run on any ABI folder",
   "repository": {
     "type": "git",
