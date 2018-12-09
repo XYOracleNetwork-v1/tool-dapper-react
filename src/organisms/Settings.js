@@ -109,7 +109,7 @@ class Settings extends Component {
   centerColumnDiv = (source, value, placeholder) => (
     <CenterColumn css={{}}>
       <SettingsInput
-        css={{ minWidth: 320 }}
+        style={{ minWidth: 350 }}
         type='text'
         value={value}
         name={source}
@@ -121,7 +121,6 @@ class Settings extends Component {
   )
 
   render() {
-    console.log(`RENDER SETTINGS`, this.props.service.getWeb3Networks())
     return (
       <SettingsLayout>
         <HeaderStyle>Settings</HeaderStyle>
@@ -135,8 +134,9 @@ class Settings extends Component {
         <Div
           style={{
             marginBottom: 40,
+            marginLeft: 100,
             display: `flex`,
-            justifyContent: `center`,
+            justifyContent: `left`,
             align: `center`,
             textAlign: `center`,
           }}

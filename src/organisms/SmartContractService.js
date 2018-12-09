@@ -277,14 +277,12 @@ class SmartContractService {
 
   setupPortis = async cookies => {
     console.log("Setting up Portis")
-
     this.web3 = this.portisProvider(cookies)
     let promise = new Promise((resolve, reject) => {
       this.web3.currentProvider.on("login", async stuff => {
-        console.log("Portis Logged in", stuff)
         await this.refreshUser()
         await this.refreshNetwork()
-
+        console.log("Portis Logged in", this.currentNetwork, this.currentUser)
         await this.validateDeployedOnNetwork(this.getCurrentNetwork().id)
         resolve()
       })

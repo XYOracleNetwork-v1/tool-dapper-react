@@ -5,7 +5,7 @@ import { HeaderStyle2 } from "../atoms/HeaderStyle"
 
 class SelectedContractDiv extends Component {
   deploymentsTable = deployments => {
-    if (!deployments || deployments.length == 0) {
+    if (!deployments || deployments.length === 0) {
       return null
     }
     let rows = []

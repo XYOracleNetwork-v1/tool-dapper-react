@@ -16,13 +16,13 @@ const WalletDiv = account => {
   )
 }
 
-const CurNetwork = ({ account, name }) => {
+const CurNetwork = ({ account, network }) => {
   let returnDivs = []
   returnDivs.push(WalletDiv(account))
-  if (name) {
+  if (network) {
     returnDivs.push(
       <Div key='network' className='network-right'>
-        Network: {name}
+        Network: {network}
       </Div>,
     )
   }
