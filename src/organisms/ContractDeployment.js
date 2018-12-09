@@ -3,7 +3,7 @@ import { Div } from "glamorous"
 import DeploymentResult from "../atoms/DeploymentResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
-import { DetailsHeader } from "../atoms/DetailsHeader"
+import { HeaderStyle } from "../atoms/HeaderStyle"
 import { STATE } from "react-progress-button"
 import {
   MainDiv,
@@ -317,7 +317,7 @@ class ContractDeployment extends Component {
     const { method, transactionResult, transactionReceipt } = this.state
     return (
       <MainDiv>
-        <DetailsHeader>{this.props.match.params.contractName}</DetailsHeader>
+        <HeaderStyle>{this.props.match.params.contractName}</HeaderStyle>
         <FunctionParamLayout>
           <Horizontal>
             <FunctionPropertiesDiv>

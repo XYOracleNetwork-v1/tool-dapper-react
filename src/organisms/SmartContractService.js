@@ -26,14 +26,14 @@ class SmartContractService {
   getSmartContracts = () => this.smartContracts
   getWeb3Networks = () => web3Networks
 
-  getNetworkId = netString => {
+  getNetworkWithId = netString => {
     let found = element => {
       return (element.name = netString)
     }
     return web3Networks.find(found)
   }
 
-  getNetworkString = netId => {
+  getNetworkNamed = netId => {
     let found = element => {
       return element.id == netId
     }
@@ -45,7 +45,7 @@ class SmartContractService {
 
     const portisNetwork = cookies.get("portisNetwork")
     const portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
-    this.currentNetwork = this.getNetworkId(portisNetwork)
+    this.currentNetwork = this.getNetworkWithId(portisNetwork)
 
     console.log("Creating Portis Privider", portisNetwork)
 
@@ -59,6 +59,7 @@ class SmartContractService {
     } else {
       return new Web3(
         new PortisProvider({
+          apiKey: portisAPI,
           network: portisNetwork,
           providerNodeUrl: localProviderUrl,
         }),
@@ -258,7 +259,7 @@ class SmartContractService {
     let netId = await this.web3.eth.net.getId()
     console.log(`Updating Network To`, netId)
 
-    this.currentNetwork = this.getNetworkString(netId)
+    this.currentNetwork = this.getNetworkNamed(netId)
     this.refreshUI()
     return this.currentNetwork
   }
@@ -282,11 +283,14 @@ class SmartContractService {
       this.web3.currentProvider.on("login", async stuff => {
         console.log("Portis Logged in", stuff)
         await this.refreshUser()
+        await this.refreshNetwork()
+
         await this.validateDeployedOnNetwork(this.getCurrentNetwork().id)
         resolve()
       })
     })
     await this.refreshUser() // forces login
+
     console.log("Done initializing web3 Portis", this.currentNetwork)
 
     return promise

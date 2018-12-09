@@ -36,17 +36,6 @@ class ContractAddressDropdown extends Component {
     return val.length > 20 ? `${val.substring(0, 20)}...` : val
   }
 
-  showSelectedDiv = () => {
-    if (this.props.selectedAddress) {
-      return (
-        <GreyTopped>
-          <Div>{this.props.selectedAddress}</Div>
-        </GreyTopped>
-      )
-    }
-    return null
-  }
-
   connectProvider = async () => {
     this.props.service
       .loadWeb3(this.props.cookies).then(() => {
@@ -98,7 +87,6 @@ class ContractAddressDropdown extends Component {
           }
           placeholder='Nothing Selected'
         />
-        {this.showSelectedDiv()}
       </Div>
     )
   }
