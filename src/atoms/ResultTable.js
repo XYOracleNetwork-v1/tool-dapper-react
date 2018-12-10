@@ -1,28 +1,19 @@
-import React, { Component } from 'react'
-import glam, { Div } from 'glamorous'
-import './css/ResultTable.css'
-import Seperator from './Seperator'
-
-const ReceiptRow = glam.div({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  height: 35,
-  color: '#4D4D5C',
-  fontFamily: 'PT Sans',
-  fontSize: 15,
-})
-const LeftColumn = glam.div({
-  textAlign: 'left',
-})
-const RightColumn = glam.div({
-  textAlign: 'right',
-})
+import React, { Component } from "react"
+import { Div } from "glamorous"
+import "./css/ResultTable.css"
+import Seperator from "./Seperator"
+import {Link} from 'react-router-dom'
+import {
+  TableStyle,
+  FlexSpacingRow,
+  LeftColumn,
+  RightColumn,
+} from "../atoms/SharedStyles"
 
 const HeaderRow = ({ header }) => {
   const { name, value, color } = header
   return (
-    <ReceiptRow
+    <FlexSpacingRow
       css={{
         color: color,
         fontSize: 18,
@@ -31,23 +22,31 @@ const HeaderRow = ({ header }) => {
     >
       <LeftColumn>{name}</LeftColumn>
       <RightColumn>{value}</RightColumn>
-    </ReceiptRow>
+    </FlexSpacingRow>
   )
 }
 
 export const RowDivs = ({ rows }) => {
   const rowDivs = []
-  rows.forEach(({ name, value }, index) => {
+  rows.forEach(({ name, value, linkTo, url }, index) => {
     let seperator = undefined
     if (index < rows.length - 1) {
       seperator = <Seperator />
     }
+    let rightColumn = value => {
+      if (linkTo) {
+        return <RightColumn>{<Link to={linkTo}>{value}</Link>}</RightColumn>
+      } else if (url) {
+        return <RightColumn>{<a href={url} target='blank'>{value}</a>}</RightColumn>
+      }
+      return <RightColumn>{value}</RightColumn>
+    }
     rowDivs.push(
       <Div key={name}>
-        <ReceiptRow>
+        <FlexSpacingRow>
           <LeftColumn>{name}</LeftColumn>
-          <RightColumn>{value}</RightColumn>
-        </ReceiptRow>
+          {rightColumn(value)}
+        </FlexSpacingRow>
         {seperator}
       </Div>,
     )
@@ -57,19 +56,13 @@ export const RowDivs = ({ rows }) => {
 }
 
 class ResultTable extends Component {
-  constructor({ header, rows }) {
-    super()
-    this.state = {
-      header,
-      rows,
-    }
-  }
   render() {
+    const { header, rows } = this.props
     return (
-      <Div className="result-table">
-        <HeaderRow header={this.state.header} />
-        <RowDivs rows={this.state.rows} />
-      </Div>
+      <TableStyle>
+        <HeaderRow header={header} />
+        <RowDivs rows={rows} />
+      </TableStyle>
     )
   }
 }

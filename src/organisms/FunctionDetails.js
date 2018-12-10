@@ -3,7 +3,7 @@ import { Div } from "glamorous"
 import TransactionResult from "../atoms/TransactionResult"
 import TransactionError from "../atoms/TransactionError"
 import { TransactionReceipt } from "../atoms/TransactionReceipt"
-import { DetailsHeader } from "../atoms/DetailsHeader"
+import { HeaderStyle } from "../atoms/HeaderStyle"
 import { STATE } from "react-progress-button"
 import {
   MainDiv,
@@ -253,7 +253,7 @@ class FunctionDetails extends Component {
 
     return (
       <MainDiv>
-        <DetailsHeader>{method.name}()</DetailsHeader>
+        <HeaderStyle>{method.name}()</HeaderStyle>
         <FunctionParamLayout>
           <Horizontal>
             <FunctionPropertiesDiv>

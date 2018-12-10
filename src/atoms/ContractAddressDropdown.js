@@ -20,7 +20,6 @@ class ContractAddressDropdown extends Component {
   }
 
   _onSelect = selection => {
-    console.log(`Detected Selection`)
     let {contractObjects} = this.props
     // let contractObjects = this.props.fetchObjects()
     contractObjects.forEach(obj => {
@@ -36,27 +35,16 @@ class ContractAddressDropdown extends Component {
     return val.length > 20 ? `${val.substring(0, 20)}...` : val
   }
 
-  showSelectedDiv = () => {
-    if (this.props.selectedAddress) {
-      return (
-        <GreyTopped>
-          <Div>{this.props.selectedAddress}</Div>
-        </GreyTopped>
-      )
-    }
-    return null
-  }
-
-  connectProvider = async () => 
+  connectProvider = async () => {
     this.props.service
       .loadWeb3(this.props.cookies)
-      .then(this.setState({ connectButtonState: STATE.SUCCESS }))
+  }
+    
   
 
   dropdownDiv = () => {
     // let contractObjects = this.props.fetchObjects()
     let { contractObjects } = this.props
-    console.log(`RENDERING ADDRESS DROPDOWN WITH OBJ`, contractObjects)
     let network = this.props.service.getCurrentNetwork()
     if (!network) {
       return (
@@ -74,7 +62,7 @@ class ContractAddressDropdown extends Component {
       )
     }
     if (!contractObjects || contractObjects.length === 0) {
-      return <GreyTopped>Not deployed on {network}</GreyTopped>
+      return <GreyTopped>Not deployed on {network.name}</GreyTopped>
     }
     return (
       <Div>
@@ -94,7 +82,6 @@ class ContractAddressDropdown extends Component {
           }
           placeholder='Nothing Selected'
         />
-        {this.showSelectedDiv()}
       </Div>
     )
   }

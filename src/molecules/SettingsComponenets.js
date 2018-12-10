@@ -1,10 +1,10 @@
 import glam from "glamorous"
 
 export const SettingsInput = glam.input({
+  display: `flex`, flexDirection: `row`,
   marginLeft: 10,
   marginRight: 10,
   paddingLeft: 12,
-  border: `1px solid #E0E0E0`,
   borderRadius: `6px`,
   backgroundColor: `#F6F6F6`,
   height: 30,
@@ -25,7 +25,7 @@ export const InputText = glam.div({
 export const CenterColumn = glam.div({
   lineHeight: 1,
   flex: 1,
-  maxWidth: 360,
+  maxWidth: 390,
 })
 export const SettingsLayout = glam.div({
   color: `#4D4D5C`,

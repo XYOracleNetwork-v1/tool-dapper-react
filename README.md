@@ -22,6 +22,8 @@
 </h3>
 <p align="center">Made with  ❤️  by [<b>XY - The Persistent Company</b>] (https://xy.company)</p>
 
+Check out Dapper at https://dapper.layerone.co to start playing with your smart contracts.  
+
 # Pt. I. - Let's Get Dapper
 
 

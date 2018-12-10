@@ -11,9 +11,6 @@ export const fetchABI = async cookies => {
         .then(files => {
           return { abi: files }
         })
-        .catch(err => {
-          throw err
-        })
     }
   }
 }

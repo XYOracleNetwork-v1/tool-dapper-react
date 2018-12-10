@@ -12,6 +12,8 @@ import { withCookies } from "react-cookie"
 import PageHeader from "../molecules/PageHeader"
 import ContractDeployment from "./ContractDeployment"
 import { withRouter } from "react-router-dom"
+import SelectedContractDiv from "../molecules/SelectedContractDiv"
+import SettingsIPFSDownload from "../molecules/SettingsIPFSDownload"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -75,14 +77,16 @@ class HomeComponent extends Component {
   }
 
   componentDidMount() {
+
     this.state.service.loadLocalStoreObjects()
-    this.state.service.loadIPFSContracts(this.props.cookies)
+    this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
+      console.log(`Cannot load invalid ipfs contracts`)
+    })
   }
 
   fetchContractObjects = () => {
-    console.log(`HISTORY`, this.props)
     let baseRoute = this.currentBaseRoute()
-    if (baseRoute !==`settings`) {
+    if (baseRoute !== `settings`) {
       return this.state.service.deployedContractObjects(baseRoute)
     }
     return []
@@ -112,7 +116,6 @@ class HomeComponent extends Component {
               />
               <ContractAddressDropdown
                 onSelect={selection => {
-                  console.log(`Setting to selection`, selection)
                   this.setState({
                     deploymentSelection: selection,
                   })
@@ -134,22 +137,22 @@ class HomeComponent extends Component {
             css={{
               display: `flex`,
               flexDirection: `column`,
+              width: `100%`,
             }}
           >
-            <Route
-              path='/settings'
-              render={props => (
-                <Settings
-                  {...props}
-                  service={this.state.service}
-                  portisNetworkChange={async network => {
-                    await this.state.service.changeNetwork(network)
-                    this.forceUpdate()
-                  }}
-                />
-              )}
-            />
+
             <Switch>
+              <Route
+                exact
+                path='/settings/:ipfs'
+                render={props => (
+                  <SettingsIPFSDownload
+                    {...props}
+                    service={this.state.service}
+                  />
+                )}
+                service={this.state.service}
+              />
               <Route
                 exact
                 path='/:contractName/deploy'
@@ -179,6 +182,31 @@ class HomeComponent extends Component {
                 service={this.state.service}
               />
             </Switch>
+            <Route
+              path='/settings'
+              render={props => (
+                <Settings
+                  {...props}
+                  service={this.state.service}
+                  portisNetworkChange={async network => {
+                    await this.state.service.changePortisNetwork(network)
+                    this.forceUpdate()
+                  }}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/:contract'
+              render={props => (
+                <SelectedContractDiv
+                  {...props}
+                  service={this.state.service}
+                  selectedAddress={this.state.deploymentSelection.address}
+                />
+              )}
+              service={this.state.service}
+            />
           </Div>
         </MainLayoutDiv>
       </Div>
