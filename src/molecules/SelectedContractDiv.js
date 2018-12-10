@@ -41,7 +41,7 @@ class SelectedContractDiv extends Component {
     }
     const rows = [
       {
-        name: `IPFS`,
+        name: `ABI`,
         url: `https://ipfs.xyo.network/ipfs/${contractObj.ipfs}`,
         value: contractObj.ipfs,
       },
@@ -52,7 +52,6 @@ class SelectedContractDiv extends Component {
         value: selectedAddress,
       })
     }
-    console.log(`RENDERING ROWS`, deployments)
     return (
       <Div
         css={{

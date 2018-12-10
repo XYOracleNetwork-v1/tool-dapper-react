@@ -9,7 +9,7 @@ class SettingsIPFSDownload extends Component {
     error: undefined,
   }
   componentDidMount() {
-    let {ipfs} = this.props.match.params
+    let { ipfs } = this.props.match.params
     this.props.cookies.set(`ipfs`, ipfs, {
       path: `/`,
     })
@@ -20,16 +20,18 @@ class SettingsIPFSDownload extends Component {
         history.push(`/settings`)
       })
       .catch(e => {
-        console.log(`CATCHING ERROR IN SETTINGS IPFS`)
         this.setState({
-          error: `Cannot Load IPFS, "${ipfs}", ${e.toString()}` })
+          error: `Cannot Load IPFS, "${ipfs}", ${e.toString()}`,
+        })
       })
   }
   render() {
     if (this.state.error) {
       return (
         <Div>
-          <HeaderStyle2 style={{color: `red`}}>{this.state.error}</HeaderStyle2>
+          <HeaderStyle2 style={{ color: `red` }}>
+            {this.state.error}
+          </HeaderStyle2>
         </Div>
       )
     }
