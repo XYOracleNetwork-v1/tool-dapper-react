@@ -12,7 +12,6 @@ class IPFSConfigDiv extends Component {
     this.stateChange(changeEvent.target.name, changeEvent.target.value)
   }
   stateChange = (stateKey, stateValue) => {
-    console.log(`attempting State Change`, stateKey, stateValue)
     this.props.cookies.set(stateKey, stateValue, {
       path: `/`,
     })

@@ -85,7 +85,6 @@ class HomeComponent extends Component {
   }
 
   fetchContractObjects = () => {
-    console.log(`HISTORY`, this.props)
     let baseRoute = this.currentBaseRoute()
     if (baseRoute !== `settings`) {
       return this.state.service.deployedContractObjects(baseRoute)
@@ -117,7 +116,6 @@ class HomeComponent extends Component {
               />
               <ContractAddressDropdown
                 onSelect={selection => {
-                  console.log(`Setting to selection`, selection)
                   this.setState({
                     deploymentSelection: selection,
                   })

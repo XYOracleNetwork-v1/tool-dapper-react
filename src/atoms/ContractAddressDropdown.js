@@ -20,7 +20,6 @@ class ContractAddressDropdown extends Component {
   }
 
   _onSelect = selection => {
-    console.log(`Detected Selection`)
     let {contractObjects} = this.props
     // let contractObjects = this.props.fetchObjects()
     contractObjects.forEach(obj => {
@@ -38,10 +37,7 @@ class ContractAddressDropdown extends Component {
 
   connectProvider = async () => {
     this.props.service
-      .loadWeb3(this.props.cookies).then(() => {
-        console.log(`Dropdown finish connectg`, this.props.service.getWeb3Networks())
-      })
-      // .then(this.setState({ connectButtonState: STATE.SUCCESS }))
+      .loadWeb3(this.props.cookies)
   }
     
   
@@ -49,7 +45,6 @@ class ContractAddressDropdown extends Component {
   dropdownDiv = () => {
     // let contractObjects = this.props.fetchObjects()
     let { contractObjects } = this.props
-    console.log(`RENDERING ADDRESS DROPDOWN WITH OBJ`, contractObjects)
     let network = this.props.service.getCurrentNetwork()
     if (!network) {
       return (

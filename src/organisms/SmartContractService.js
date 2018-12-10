@@ -105,7 +105,6 @@ class SmartContractService {
   }
 
   deployedContractObjects = (name, netId) => {
-    console.log("Fetching deployed contract", name)
     if (!this.deployedContracts) {
       return []
     }
@@ -145,7 +144,7 @@ class SmartContractService {
   }
 
   updateLocalStorage = () => {
-    console.log("Updating deployments in local storage")
+    // console.log("Updating deployments in local storage")
     localStorage.setItem(
       "deployedContracts",
       JSON.stringify(this.deployedContracts),

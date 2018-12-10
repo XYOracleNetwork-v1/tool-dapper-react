@@ -103,11 +103,11 @@ class Settings extends Component {
 
   leftColumnDiv = (source, description) => (
     <InputText>
-      {this.radioInput(
+      {/* {this.radioInput(
         source,
         this.state.currentSource === source,
         this.handleOptionChange,
-      )}
+      )} */}
       {description}
     </InputText>
   )
@@ -158,7 +158,7 @@ class Settings extends Component {
           {this.leftColumnDiv(`ipfs`, `IPFS Address`)}
           {this.centerColumnDiv(
             `ipfs`,
-            this.state.ipfs,
+            this.props.cookies.get(`ipfs`),
             `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
           )}
           <Div>
@@ -170,7 +170,7 @@ class Settings extends Component {
               state={this.state.updateBtnState}
               onClick={this.handleFormSubmit}
             >
-              Update IPFS
+              Add ABI
             </ProgressButton>
             {this.state.ipfsError}
           </Div>
