@@ -13,6 +13,7 @@ import PageHeader from "../molecules/PageHeader"
 import ContractDeployment from "./ContractDeployment"
 import { withRouter } from "react-router-dom"
 import SelectedContractDiv from "../molecules/SelectedContractDiv"
+import SettingsIPFSDownload from "../molecules/SettingsIPFSDownload"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -76,8 +77,11 @@ class HomeComponent extends Component {
   }
 
   componentDidMount() {
+
     this.state.service.loadLocalStoreObjects()
-    this.state.service.loadIPFSContracts(this.props.cookies)
+    this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
+      console.log(`Cannot load invalid ipfs contracts`)
+    })
   }
 
   fetchContractObjects = () => {
@@ -138,20 +142,19 @@ class HomeComponent extends Component {
               width: `100%`,
             }}
           >
-            <Route
-              path='/settings'
-              render={props => (
-                <Settings
-                  {...props}
-                  service={this.state.service}
-                  portisNetworkChange={async network => {
-                    await this.state.service.changePortisNetwork(network)
-                    this.forceUpdate()
-                  }}
-                />
-              )}
-            />
+
             <Switch>
+              <Route
+                exact
+                path='/settings/:ipfs'
+                render={props => (
+                  <SettingsIPFSDownload
+                    {...props}
+                    service={this.state.service}
+                  />
+                )}
+                service={this.state.service}
+              />
               <Route
                 exact
                 path='/:contractName/deploy'
@@ -181,6 +184,19 @@ class HomeComponent extends Component {
                 service={this.state.service}
               />
             </Switch>
+            <Route
+              path='/settings'
+              render={props => (
+                <Settings
+                  {...props}
+                  service={this.state.service}
+                  portisNetworkChange={async network => {
+                    await this.state.service.changePortisNetwork(network)
+                    this.forceUpdate()
+                  }}
+                />
+              )}
+            />
             <Route
               exact
               path='/:contract'

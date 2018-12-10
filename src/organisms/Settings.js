@@ -22,6 +22,7 @@ class Settings extends Component {
     this.state = {
       ...readSettings(props.cookies),
       updateBtnState: STATE.NOTHING,
+      ipfsError: undefined,
     }
   }
 
@@ -53,9 +54,15 @@ class Settings extends Component {
 
   handleFormSubmit = () => {
     this.setState({ updateBtnState: STATE.LOADING })
-    return this.props.service.loadIPFSContracts(this.props.cookies).then(_ => {
-      this.setState({ updateBtnState: STATE.SUCCESS })
-    })
+    this.props.service
+      .loadIPFSContracts(this.props.cookies)
+      .then(_ => {
+        this.setState({ updateBtnState: STATE.SUCCESS })
+      })
+      .catch(e => {
+        this.setState({ ipfsError: e.toString(),
+          updateBtnState: STATE.ERROR })
+      })
   }
 
   radioInput = (value, checked, onChange) => (
@@ -67,7 +74,7 @@ class Settings extends Component {
     let curNetwork = this.state.portisNetwork
     if (curNetwork) {
       const networks = this.props.service.getWeb3Networks()
-      networks.forEach((network) => {
+      networks.forEach(network => {
         let { id, name, description } = network
         if (id !== 0) {
           // console.log(
@@ -88,7 +95,6 @@ class Settings extends Component {
             </Div>,
           )
         }
-        
       })
     }
 
@@ -166,6 +172,7 @@ class Settings extends Component {
             >
               Update IPFS
             </ProgressButton>
+            {this.state.ipfsError}
           </Div>
         </RowLayout>
       </SettingsLayout>
