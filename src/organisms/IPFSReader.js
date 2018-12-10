@@ -22,16 +22,11 @@ export const downloadFiles = async (cookies, ipfsHash) => {
     protocol: ipfsConfig.ipfsprotocol,
   })
   return new Promise((resolve, reject) => {
-    ipfs.get(ipfsHash, (err, files) => {
-      if (err) {
-        return reject(err)
-      }
-      try {
+      ipfs.get(ipfsHash, (err, files) => {
+        if (err) {
+          return reject(err)
+        }
         parseFiles(files, resolve)
-      } catch (err) {
-        console.log(`IPFS MUST BE JSON FILES!`)
-        reject(err)
-      }
-    })
+      })
   })
 }

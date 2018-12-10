@@ -230,14 +230,16 @@ class SmartContractService {
   loadIPFSContracts = async cookies => {
     let ipfs = cookies.get(`ipfs`)
 
-    if (ipfs) {
-      let { abi } = await fetchABI(cookies)
-      await abi.forEach(this.storeABI)
-      await abi.forEach(this.storeDeployments)
-      this.refreshUI()
-    } else {
-      console.log("No ipfs file loaded, please add in settings")
-    }
+      if (ipfs) {
+        let { abi } = await fetchABI(cookies)
+        await abi.forEach(this.storeABI)
+        await abi.forEach(this.storeDeployments)
+        this.refreshUI()
+      } else {
+        console.log("No ipfs file loaded, please add in settings")
+      }
+
+    
   }
 
   createContract = (abi, address) => {
