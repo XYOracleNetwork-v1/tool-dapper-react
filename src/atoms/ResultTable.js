@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Div } from "glamorous"
 import "./css/ResultTable.css"
 import Seperator from "./Seperator"
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom"
 import {
   TableStyle,
   FlexSpacingRow,
@@ -37,12 +37,20 @@ export const RowDivs = ({ rows }) => {
       if (linkTo) {
         return <RightColumn>{<Link to={linkTo}>{value}</Link>}</RightColumn>
       } else if (url) {
-        return <RightColumn>{<a href={url} target='blank'>{value}</a>}</RightColumn>
+        return (
+          <RightColumn>
+            {
+              <a href={url} target='blank'>
+                {value}
+              </a>
+            }
+          </RightColumn>
+        )
       }
       return <RightColumn>{value}</RightColumn>
     }
     rowDivs.push(
-      <Div key={name}>
+      <Div key={index}>
         <FlexSpacingRow>
           <LeftColumn>{name}</LeftColumn>
           {rightColumn(value)}

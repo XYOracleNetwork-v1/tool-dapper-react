@@ -23,7 +23,7 @@ class ContractDeployment extends Component {
       outputs: [],
       name: `loading...`,
       type: ``,
-      executeBtnState: STATE.LOADING,
+      executeBtnState: STATE.NOTHING,
     },
     service: this.props.service,
     transactionResult: undefined,
@@ -38,15 +38,23 @@ class ContractDeployment extends Component {
     this.updateInputs()
   }
 
-  componentWillUpdate() {
-    this.updateInputs()
+  componentDidUnmount() {
+    this.setState({
+      method: {
+        inputs: [],
+        outputs: [],
+        name: `loading...`,
+        type: ``,
+        executeBtnState: STATE.NOTHING,
+      },
+    })
   }
 
   updateInputs = () => {
     const { match } = this.props
     const { contractName } = match.params
     let contract = this.state.service.contractObject(contractName)
-    if (contract && this.state.method.executeBtnState === STATE.LOADING) {
+    if (contract && this.state.method.executeBtnState === STATE.NOTHING) {
       const { abi, notes } = contract
 
       const newMethod = this.methodObject(abi)
@@ -141,61 +149,71 @@ class ContractDeployment extends Component {
       bytecode,
       inputParams,
       user,
+      this.state.value,
     )
-    contract
-      .deploy({
-        data: bytecode,
-        arguments: inputParams,
-      })
-      .send(
-        {
-          value: this.state.value,
-          from: user,
-          gas: 4712388,
-        },
-        function(error, transactionHash) {
-          console.log(`Finished Deploy Call`, error, transactionHash)
-        },
-      )
-      .then(newContractInstance => {
-        this.setState({
-          executeBtnState: STATE.SUCCESS,
-          transactionResult: {
-            address: newContractInstance._address,
-            ipfs: contractObj.ipfs,
-            name: contractObj.name,
-            notes: this.state.notes,
+    console.log(`THE VALUE IS `, this.state.value)
+    try {
+      contract
+        .deploy({
+          data: bytecode,
+          arguments: inputParams,
+        })
+        .send(
+          {
+            value: this.state.value,
+            from: user,
+            gas: 4712388,
           },
-        })
-        this.props.service.addDeployedContract(
-          contractObj.ipfs,
-          contractObj.name,
-          newContractInstance._address,
-          bytecode,
-          contractObj.abi,
-          this.state.notes,
+          function(error, transactionHash) {
+            console.log(`Finished Deploy Call`, error, transactionHash)
+          },
         )
-        this.props.onDeploy({
-          notes: this.state.notes,
-          address: newContractInstance._address,
+        .then(newContractInstance => {
+          this.setState({
+            executeBtnState: STATE.SUCCESS,
+            transactionResult: {
+              address: newContractInstance._address,
+              ipfs: contractObj.ipfs,
+              name: contractObj.name,
+              notes: this.state.notes,
+            },
+          })
+          this.props.service.addDeployedContract(
+            contractObj.ipfs,
+            contractObj.name,
+            newContractInstance._address,
+            bytecode,
+            contractObj.abi,
+            this.state.notes,
+          )
+          this.props.onDeploy({
+            notes: this.state.notes,
+            address: newContractInstance._address,
+          })
+          console.log(
+            `Created New Instance`,
+            contractObj.ipfs,
+            contractObj.name,
+            newContractInstance._address,
+            bytecode,
+            contractObj.abi,
+            this.state.notes,
+          )
         })
-        console.log(
-          `Created New Instance`,
-          contractObj.ipfs,
-          contractObj.name,
-          newContractInstance._address,
-          bytecode,
-          contractObj.abi,
-          this.state.notes,
-        )
-      })
-      .catch(error => {
-        console.log(`error`, error)
-        this.setState({
-          executeBtnState: STATE.ERROR,
-          transactionError: error,
+        .catch(error => {
+          console.log(`error`, error)
+          this.setState({
+            executeBtnState: STATE.ERROR,
+            transactionError: error,
+          })
         })
+    } catch (error) {
+      console.log(`error`, error)
+      this.setState({
+        executeBtnState: STATE.ERROR,
+        transactionError: error,
       })
+    }
   }
 
   handleExecute = () => {
@@ -333,11 +351,11 @@ class ContractDeployment extends Component {
             Deploy Contract
           </FormattedProgressButton>
         </FunctionParamLayout>
-        <Div
+        {/* <Div
           css={{
             width: `100%`,
           }}
-        />
+        /> */}
         <DeploymentResult {...transactionResult} />
         <TransactionError error={this.state.transactionError} />
         <TransactionReceipt {...transactionReceipt} />

@@ -8,7 +8,6 @@ export const FlexSpacingRow = glam.div({
   color: `#4D4D5C`,
   fontFamily: `PT Sans`,
   fontSize: 15,
-  width: 600
 })
 
 export const LeftColumn = glam.div({
