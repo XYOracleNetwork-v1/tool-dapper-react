@@ -20,7 +20,7 @@
 <h3 align="center">
   "Simulate your Smart Contracts"
 </h3>
-<p align="center">Made with  ❤️  by [<b>XY - The Persistent Company</b>] (https://xy.company)</p>
+<p align="center">Made with  ❤️  by <b><a href="https://xy.company">XY - The Persistent Company</a></b></p>
 
 Check out Dapper at https://dapper.layerone.co to start playing with your smart contracts.  
 
