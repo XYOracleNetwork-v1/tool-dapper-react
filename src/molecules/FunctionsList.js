@@ -88,6 +88,19 @@ export const FunctionsList = props => {
       </FunctionsHeaderDiv>
 
       <FunctionsListDiv>{sortedMethods}</FunctionsListDiv>
+      <FunctionsHeaderDiv>
+        <Link style={{ textDecoration: `none` }} to={`/dappHelpers`}>
+          <Div
+            css={{
+              display: `flex`,
+              justifyContent: `space-between`,
+              paddingRight: `20px`,
+            }}
+          >
+            <header className='header-functions'>Dapp Helpers</header>
+            <Img src={deploy} />
+          </Div>
+        </Link>      </FunctionsHeaderDiv>
     </FunctionsDiv>
   )
 }

@@ -5,6 +5,7 @@ body,
   width: auto;
   min-width: fit-content;
   margin: 0;
+  /* background-image: linear-gradient(338deg, #8d8fc6, #190e24); */
 }
 
 .image-header-logo {

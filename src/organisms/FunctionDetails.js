@@ -24,7 +24,7 @@ class FunctionDetails extends Component {
       outputs: [],
       name: `loading...`,
       type: ``,
-      executeBtnState: STATE.LOADING,
+      executeBtnState: STATE.NOTHING,
     },
     service: this.props.service,
     transactionResult: undefined,
@@ -41,6 +41,19 @@ class FunctionDetails extends Component {
   componentDidUpdate() {
     this.updateInputs()
   }
+
+  componentDidUnmount() {
+    this.setState({
+      method: {
+        inputs: [],
+        outputs: [],
+        name: `loading...`,
+        type: ``,
+        executeBtnState: STATE.NOTHING,
+      },
+    })
+  }
+
 
   updateInputs = () => {
     const { match } = this.props

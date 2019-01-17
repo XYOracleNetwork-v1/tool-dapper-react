@@ -14,6 +14,7 @@ import ContractDeployment from "./ContractDeployment"
 import { withRouter } from "react-router-dom"
 import SelectedContractDiv from "../molecules/SelectedContractDiv"
 import SettingsIPFSDownload from "../molecules/SettingsIPFSDownload"
+import DappHelperComponent from "./DappHelperComponent"
 
 const Sidebar = glam.div({
   display: `flex`,
@@ -77,7 +78,6 @@ class HomeComponent extends Component {
   }
 
   componentDidMount() {
-
     this.state.service.loadLocalStoreObjects()
     this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
       console.log(`Cannot load invalid ipfs contracts`)
@@ -112,6 +112,7 @@ class HomeComponent extends Component {
                     deploymentSelection: {},
                   })
                 }}
+                selectedContractName
                 contracts={this.state.service.getSmartContracts()}
               />
               <ContractAddressDropdown
@@ -140,7 +141,6 @@ class HomeComponent extends Component {
               width: `100%`,
             }}
           >
-
             <Switch>
               <Route
                 exact
@@ -170,6 +170,17 @@ class HomeComponent extends Component {
                 service={this.state.service}
               />
               <Route
+                path='/dappHelpers'
+                render={props => (
+                  <DappHelperComponent
+                    {...props}
+                    service={this.state.service}
+                    selectedAddress={this.state.deploymentSelection.address}
+                  />
+                )}
+                service={this.state.service}
+              />
+              <Route
                 exact
                 path='/:contract/:method'
                 render={props => (
@@ -181,20 +192,22 @@ class HomeComponent extends Component {
                 )}
                 service={this.state.service}
               />
+
+              <Route
+                path='/settings'
+                render={props => (
+                  <Settings
+                    {...props}
+                    service={this.state.service}
+                    portisNetworkChange={async network => {
+                      await this.state.service.changePortisNetwork(network)
+                      this.forceUpdate()
+                    }}
+                  />
+                )}
+              />
             </Switch>
-            <Route
-              path='/settings'
-              render={props => (
-                <Settings
-                  {...props}
-                  service={this.state.service}
-                  portisNetworkChange={async network => {
-                    await this.state.service.changePortisNetwork(network)
-                    this.forceUpdate()
-                  }}
-                />
-              )}
-            />
+
             <Route
               exact
               path='/:contract'

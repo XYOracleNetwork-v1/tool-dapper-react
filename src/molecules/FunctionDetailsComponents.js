@@ -16,6 +16,11 @@ export const Horizontal = glam.div({
   flexDirection: `row`,
 })
 
+export const Vertical = glam.div({
+  display: `flex`,
+  flexDirection: `vertical`,
+})
+
 export const FunctionPropertiesDiv = glam.div({
   display: `flex`,
   flexDirection: `column`,
