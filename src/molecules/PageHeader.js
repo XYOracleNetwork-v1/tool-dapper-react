@@ -9,10 +9,8 @@ const HeaderDiv = glam.div({
   display: `flex`,
   flexDirection: `row`,
   justifyContent: `space-between`,
-  // backgroundColor: `#3c3e51`,
   backgroundColor: `#000`,
   paddingRight: 54,
-  height: 113,
   textAlign: `right`,
   gridArea: 'header',
 })

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { Route, Link, Switch, withRouter } from 'react-router-dom'
 import { withCookies } from 'react-cookie'
+import PerfectScrollbar from 'perfect-scrollbar'
+import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
 import SmartContractService from './SmartContractService'
 import SmartContractSelector from '../atoms/SmartContractSelector'
@@ -16,7 +18,7 @@ import SelectedContractDiv from '../molecules/SelectedContractDiv'
 import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
 import DappHelperComponent from './DappHelperComponent'
 
-const Sidebar = glam.div({
+const Sidebar = glam.div('sidebar', {
   display: `flex`,
   flexDirection: `column`,
   // width: 413,
@@ -25,6 +27,11 @@ const Sidebar = glam.div({
   // borderRight: `1px solid #979797`,
   // backgroundColor: `#F8F8F8`,
   gridArea: 'sidebar',
+  maxHeight: '100%',
+  // height: 'auto',
+  // width: 'auto',
+  overflow: 'hidden',
+  position: 'relative',
 })
 
 const SelectContractLayout = glam.div({
@@ -78,10 +85,15 @@ class HomeComponent extends Component {
   }
 
   componentDidMount() {
+    this.scrolly = new PerfectScrollbar('.sidebar')
     this.state.service.loadLocalStoreObjects()
     this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
       console.log(`Cannot load invalid ipfs contracts`)
     })
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    this.scrolly.update()
   }
 
   fetchContractObjects = () => {

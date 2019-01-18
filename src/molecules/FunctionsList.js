@@ -1,13 +1,13 @@
-import React from "react"
-import glam, { Div, Img } from "glamorous"
-import { NavLink as Link } from "react-router-dom"
-import deploy from "../assets/deploy.svg"
+import React from 'react'
+import glam, { Div, Img } from 'glamorous'
+import { NavLink as Link } from 'react-router-dom'
+import deploy from '../assets/deploy.svg'
 
-import "./css/FunctionsList.css"
+import './css/FunctionsList.css'
 
 const FunctionsDiv = glam.div({
   flex: 1,
-  overflow: `auto`,
+  // overflow: `auto`,
 })
 const FunctionsHeaderDiv = glam.div({
   display: `flex`,
@@ -17,7 +17,7 @@ const FunctionsHeaderDiv = glam.div({
   paddingLeft: 27,
   paddingTop: 10,
   borderBottom: `1px solid #979797`,
-  width: `auto`,
+  // width: `auto`,
 })
 
 const FunctionsListDiv = glam.div({
@@ -57,11 +57,11 @@ export const FunctionsList = props => {
   /* eslint no-underscore-dangle: */
   const sortedMethods = []
   contract.abi
-    // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
+  // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
     .forEach((method, index) => {
       if (method.name && method.type === `function`) {
         sortedMethods.push(
-          <MethodLink key={index} match={match} method={method} />,
+          <MethodLink key={index} match={match} method={method}/>,
         )
       }
       return sortedMethods
@@ -79,7 +79,7 @@ export const FunctionsList = props => {
             }}
           >
             <header className='header-functions'>Deploy Contract</header>
-            <Img src={deploy} />
+            <Img src={deploy}/>
           </Div>
         </Link>
       </FunctionsHeaderDiv>
@@ -98,9 +98,9 @@ export const FunctionsList = props => {
             }}
           >
             <header className='header-functions'>Dapp Helpers</header>
-            <Img src={deploy} />
+            <Img src={deploy}/>
           </Div>
-        </Link>      </FunctionsHeaderDiv>
+        </Link> </FunctionsHeaderDiv>
     </FunctionsDiv>
   )
 }
