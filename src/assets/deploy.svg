@@ -7,12 +7,12 @@
             <path d="M18,2 v-1" stroke="#000" stroke-width="7" stroke-linecap="square"/>
         </mask>
     </defs>
-    <g stroke="#979797" stroke-linecap="square" stroke-width="1" fill="none" fill-rule="evenodd"
+    <g stroke="currentColor" stroke-linecap="square" stroke-width="1" fill="none" fill-rule="evenodd"
        transform="translate(2, 2)"
        mask="url(#sq)"
     >
         <path d="M28,3.39285714 L23,9.94671641" stroke-width="4"/>
-        <rect stroke="#979797" stroke-width="4" x="1" y="1" width="31" height="31" rx="2"/>
+        <rect stroke-width="4" x="1" y="1" width="31" height="31" rx="2"/>
         <path d="M6.5,14 L20.5,14"/>
         <path d="M6.5,19 L20.5,19"/>
         <path d="M6.5,24 L20.5,24"/>

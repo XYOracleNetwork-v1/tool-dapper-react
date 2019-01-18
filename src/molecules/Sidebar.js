@@ -2,7 +2,7 @@ import React from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { Link, Route } from 'react-router-dom'
 
-import cog, { ReactComponent as Cog } from '../assets/cog.svg'
+import { ReactComponent as Cog } from '../assets/cog.svg'
 import { ReactComponent as Registry } from '../assets/registry-icon.svg'
 import { ReactComponent as Upload } from '../assets/upload.svg'
 import { ReactComponent as W3 } from '../assets/w3.svg'
@@ -10,6 +10,7 @@ import { ReactComponent as Simulator } from '../assets/simulator.svg'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
+import { lightPurple } from '../theme'
 
 const SidebarRoot = glam.div('sidebar', {
   display: `flex`,
@@ -40,16 +41,53 @@ const SpaceBetweenRow = glam.div({
   justifyContent: `space-between`,
 })
 
+const StyledLink = glam(Link)(
+  {
+    textDecoration: 'none',
+    color: 'inherit',
+    fontSize: 24,
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    padding: '20px 0',
+    display: 'flex',
+    alignItems: 'center',
+    '& svg': {
+      marginRight: 22,
+      width: 22,
+      fill: 'currentColor',
+      stroke: 'currentColor',
+    },
+  },
+  ({ active }) =>
+    active && {
+      color: lightPurple,
+    },
+)
+
+const SidebarLink = ({ to, children, ...props }) => (
+  <Route
+    path={to}
+    exact
+    children={({ match }) => (
+      <StyledLink active={match} to={to} {...props}>
+        {children}
+      </StyledLink>
+    )}
+  />
+)
+
 const SidebarItem = glam.div({
   fontSize: 24,
   fontWeight: 'bold',
   cursor: 'pointer',
   padding: '20px 0',
   display: 'flex',
-  alignItems:'center',
+  alignItems: 'center',
   '& svg': {
     marginRight: 22,
     width: 22,
+    fill: 'currentColor',
+    stroke: 'currentColor',
   },
 })
 
@@ -62,32 +100,25 @@ const Sidebar = ({
                    deploymentSelection,
                  }) => (
   <SidebarRoot>
-    <SidebarItem>
+    <SidebarLink to="/">
       <Registry/>
       ABI Search
-    </SidebarItem>
-    <SidebarItem>
+    </SidebarLink>
+    <SidebarLink to="/upload">
       <Upload/>
       IPFS Uploader
-    </SidebarItem>
-    <SidebarItem>
+    </SidebarLink>
+    <SidebarLink to="/helpers">
       <W3/>
       Web3 Helpers
-    </SidebarItem>
-    <SidebarItem>
+    </SidebarLink>
+    <SidebarLink to="/simulator">
       <Simulator/>
       Contract Simulator
-    </SidebarItem>
-    <SidebarItem>
-      <Cog/>
-      Settings
-    </SidebarItem>
+    </SidebarLink>
     <SelectContractLayout>
       <SpaceBetweenRow>
         <SelectContractHeader>Select Contract</SelectContractHeader>
-        <Link to={`/settings`}>
-          <Img src={cog}/>
-        </Link>
       </SpaceBetweenRow>
       <SmartContractSelector
         onSelect={updateContract}
@@ -106,6 +137,10 @@ const Sidebar = ({
       path="/:contract"
       render={props => <FunctionsList {...props} service={service}/>}
     />
+    <SidebarLink to="/settings" css={{ position: 'absolute', bottom: 0 }}>
+      <Cog/>
+      Settings
+    </SidebarLink>
   </SidebarRoot>
 )
 
