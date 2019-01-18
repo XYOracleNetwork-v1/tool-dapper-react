@@ -41,6 +41,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.1",
     "s3": "^4.4.0",
+    "typeface-pt-sans": "^0.0.54",
     "untildify": "^3.0.3",
     "web3": "^1.0.0-beta.35"
   },
@@ -58,7 +59,8 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "prettier": "^1.15.3"
   },
   "scripts": {
     "start": "yarn dev",

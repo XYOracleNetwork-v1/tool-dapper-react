@@ -10136,7 +10136,7 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
-prettier@^1.14.2:
+prettier@^1.14.2, prettier@^1.15.3:
   version "1.15.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
   integrity sha512-gAU9AGAPMaKb3NNSUUuhhFAS7SCO4ALTN4nRIn6PJ075Qd28Yn2Ig2ahEJWdJwJmlEBTUfC7mMUSFy8MwsOCfg==
@@ -12551,6 +12551,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typeface-pt-sans@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-pt-sans/-/typeface-pt-sans-0.0.54.tgz#b6d5a409b2ee618b961f1116b86c421a18a7efd0"
+  integrity sha512-uvf3OIiTRXBly8iXD09iNZcLndJ89iGCyzWh4YzxdL+OMXPZxROupW8OR4JYo1RRfhzCdvebE6W/KrKDnAbdmw==
 
 ua-parser-js@^0.7.18:
   version "0.7.19"

@@ -6,61 +6,14 @@ import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
 import SmartContractService from './SmartContractService'
-import SmartContractSelector from '../atoms/SmartContractSelector'
-import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
-import { FunctionsList } from '../molecules/FunctionsList'
 import FunctionDetails from './FunctionDetails'
 import Settings from './Settings'
-import cog from '../assets/cog.svg'
 import PageHeader from '../molecules/PageHeader'
 import ContractDeployment from './ContractDeployment'
 import SelectedContractDiv from '../molecules/SelectedContractDiv'
 import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
 import DappHelperComponent from './DappHelperComponent'
-
-const Sidebar = glam.div('sidebar', {
-  display: `flex`,
-  flexDirection: `column`,
-  // width: 413,
-  // minWidth: 413,
-  // height: `100%`,
-  // borderRight: `1px solid #979797`,
-  // backgroundColor: `#F8F8F8`,
-  gridArea: 'sidebar',
-  maxHeight: '100%',
-  // height: 'auto',
-  // width: 'auto',
-  overflow: 'hidden',
-  position: 'relative',
-})
-
-const SelectContractLayout = glam.div({
-  display: `flex`,
-  // height: 250,
-  flexDirection: `column`,
-  // backgroundColor: `#5B5C6D`,
-  fontFamily: `PT Sans`,
-  padding: 30,
-})
-
-const SelectContractHeader = glam.div({
-  color: `white`,
-  fontSize: 23,
-})
-
-const SpaceBetweenRow = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  justifyContent: `space-between`,
-})
-
-const MainLayoutDiv = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  justifyContent: `flex-start`,
-  flex: 1,
-  height: `100%`,
-})
+import Sidebar from '../molecules/Sidebar'
 
 class HomeComponent extends Component {
   state = {
@@ -105,59 +58,39 @@ class HomeComponent extends Component {
   }
 
   render() {
+    const { deploymentSelection, service } = this.state
     return (
-      <Div css={{
-        minWidth: '100vw',
-        minHeight: '100vh',
-        // height: `100%`,
-        // width: `100%`,
-        backgroundImage: `linear-gradient(338deg, #8d8fc6, #190e24)`,
-        display: 'grid',
-        gridTemplateRows: '125px 1fr',
-        gridTemplateColumns: '420px 1fr',
-        gridTemplateAreas: `
+      <Div
+        css={{
+          minWidth: '100vw',
+          minHeight: '100vh',
+          // height: `100%`,
+          // width: `100%`,
+          backgroundImage: `linear-gradient(338deg, #8d8fc6, #190e24)`,
+          display: 'grid',
+          gridTemplateRows: '125px 1fr',
+          gridTemplateColumns: '420px 1fr',
+          gridTemplateAreas: `
           'header header'
           'sidebar body'
         `,
-      }}>
-        <PageHeader service={this.state.service}/>
-        <Sidebar>
-          <SelectContractLayout>
-            <SpaceBetweenRow>
-              <SelectContractHeader>Select Contract</SelectContractHeader>
-              <Link to={`/settings`}>
-                <Img src={cog}/>
-              </Link>
-            </SpaceBetweenRow>
-            <SmartContractSelector
-              onSelect={selection => {
-                this.setState({
-                  selectedContractName: selection,
-                  deploymentSelection: {},
-                })
-              }}
-              selectedContractName
-              contracts={this.state.service.getSmartContracts()}
-            />
-            <ContractAddressDropdown
-              onSelect={selection => {
-                this.setState({
-                  deploymentSelection: selection,
-                })
-              }}
-              contractObjects={this.fetchContractObjects()}
-              service={this.state.service}
-              selectedAddress={this.state.deploymentSelection.address}
-              selectedNotes={this.state.deploymentSelection.notes}
-            />
-          </SelectContractLayout>
-          <Route
-            path='/:contract'
-            render={props => (
-              <FunctionsList {...props} service={this.state.service}/>
-            )}
-          />
-        </Sidebar>
+        }}
+      >
+        <PageHeader service={service} />
+        <Sidebar
+          deploymentSelection={deploymentSelection}
+          service={service}
+          updateContract={selectedContractName =>
+            this.setState({
+              selectedContractName,
+              deploymentSelection: {},
+            })
+          }
+          contractObjects={this.fetchContractObjects()}
+          updateDeploymentSelection={deploymentSelection =>
+            this.setState({ deploymentSelection })
+          }
+        />
         <Div
           css={{
             display: `flex`,
@@ -169,22 +102,18 @@ class HomeComponent extends Component {
           <Switch>
             <Route
               exact
-              path='/settings/:ipfs'
+              path="/settings/:ipfs"
               render={props => (
-                <SettingsIPFSDownload
-                  {...props}
-                  service={this.state.service}
-                />
+                <SettingsIPFSDownload {...props} service={service} />
               )}
-              service={this.state.service}
             />
             <Route
               exact
-              path='/:contractName/deploy'
+              path="/:contractName/deploy"
               render={props => (
                 <ContractDeployment
                   {...props}
-                  service={this.state.service}
+                  service={service}
                   onDeploy={selection =>
                     this.setState({
                       deploymentSelection: selection,
@@ -192,40 +121,37 @@ class HomeComponent extends Component {
                   }
                 />
               )}
-              service={this.state.service}
             />
             <Route
-              path='/dappHelpers'
+              path="/dappHelpers"
               render={props => (
                 <DappHelperComponent
                   {...props}
-                  service={this.state.service}
-                  selectedAddress={this.state.deploymentSelection.address}
+                  service={service}
+                  selectedAddress={deploymentSelection.address}
                 />
               )}
-              service={this.state.service}
+              service={service}
             />
             <Route
               exact
-              path='/:contract/:method'
+              path="/:contract/:method"
               render={props => (
                 <FunctionDetails
                   {...props}
-                  service={this.state.service}
-                  selectedAddress={this.state.deploymentSelection.address}
+                  service={service}
+                  selectedAddress={deploymentSelection.address}
                 />
               )}
-              service={this.state.service}
             />
-
             <Route
-              path='/settings'
+              path="/settings"
               render={props => (
                 <Settings
                   {...props}
-                  service={this.state.service}
+                  service={service}
                   portisNetworkChange={async network => {
-                    await this.state.service.changePortisNetwork(network)
+                    await service.changePortisNetwork(network)
                     this.forceUpdate()
                   }}
                 />
@@ -235,15 +161,15 @@ class HomeComponent extends Component {
 
           <Route
             exact
-            path='/:contract'
+            path="/:contract"
             render={props => (
               <SelectedContractDiv
                 {...props}
-                service={this.state.service}
-                selectedAddress={this.state.deploymentSelection.address}
+                service={service}
+                selectedAddress={deploymentSelection.address}
               />
             )}
-            service={this.state.service}
+            service={service}
           />
         </Div>
       </Div>
