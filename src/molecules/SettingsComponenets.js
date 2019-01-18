@@ -1,13 +1,18 @@
-import glam from "glamorous"
+import glam from 'glamorous'
 
 export const SettingsInput = glam.input({
-  display: `flex`, flexDirection: `row`,
-  marginLeft: 10,
-  marginRight: 10,
-  paddingLeft: 12,
-  borderRadius: `6px`,
+  // display: `flex`,
+  // flexDirection: `row`,
+  // marginLeft: 10,
+  // marginRight: 10,
+  // paddingLeft: 12,
+  borderRadius: 6,
   backgroundColor: `#F6F6F6`,
-  height: 30,
+  height: 40,
+  border: 'none',
+  padding: '10px 20px',
+  fontSize: 14,
+  color: '#9b9b9b',
 })
 
 export const RowLayout = glam.div({

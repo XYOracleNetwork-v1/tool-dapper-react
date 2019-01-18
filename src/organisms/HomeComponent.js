@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import glam, { Div, Img } from 'glamorous'
-import { Route, Link, Switch, withRouter } from 'react-router-dom'
+import { Div } from 'glamorous'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import { withCookies } from 'react-cookie'
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
@@ -14,6 +14,7 @@ import SelectedContractDiv from '../molecules/SelectedContractDiv'
 import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
 import DappHelperComponent from './DappHelperComponent'
 import Sidebar from '../molecules/Sidebar'
+import ABISearch from './ABISearch'
 
 class HomeComponent extends Component {
   state = {
@@ -76,7 +77,7 @@ class HomeComponent extends Component {
         `,
         }}
       >
-        <PageHeader service={service} />
+        <PageHeader service={service}/>
         <Sidebar
           deploymentSelection={deploymentSelection}
           service={service}
@@ -97,15 +98,41 @@ class HomeComponent extends Component {
             flexDirection: `column`,
             width: `100%`,
             gridArea: 'body',
+            padding: '25px 20px',
           }}
         >
           <Switch>
+            <Route path="/search" component={ABISearch}/>
             <Route
               exact
               path="/settings/:ipfs"
               render={props => (
-                <SettingsIPFSDownload {...props} service={service} />
+                <SettingsIPFSDownload {...props} service={service}/>
               )}
+            />
+            <Route
+              path="/settings"
+              render={props => (
+                <Settings
+                  {...props}
+                  service={service}
+                  portisNetworkChange={async network => {
+                    await service.changePortisNetwork(network)
+                    this.forceUpdate()
+                  }}
+                />
+              )}
+            />
+            <Route
+              path="/dappHelpers"
+              render={props => (
+                <DappHelperComponent
+                  {...props}
+                  service={service}
+                  selectedAddress={deploymentSelection.address}
+                />
+              )}
+              service={service}
             />
             <Route
               exact
@@ -123,17 +150,6 @@ class HomeComponent extends Component {
               )}
             />
             <Route
-              path="/dappHelpers"
-              render={props => (
-                <DappHelperComponent
-                  {...props}
-                  service={service}
-                  selectedAddress={deploymentSelection.address}
-                />
-              )}
-              service={service}
-            />
-            <Route
               exact
               path="/:contract/:method"
               render={props => (
@@ -141,19 +157,6 @@ class HomeComponent extends Component {
                   {...props}
                   service={service}
                   selectedAddress={deploymentSelection.address}
-                />
-              )}
-            />
-            <Route
-              path="/settings"
-              render={props => (
-                <Settings
-                  {...props}
-                  service={service}
-                  portisNetworkChange={async network => {
-                    await service.changePortisNetwork(network)
-                    this.forceUpdate()
-                  }}
                 />
               )}
             />

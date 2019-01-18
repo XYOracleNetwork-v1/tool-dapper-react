@@ -100,7 +100,7 @@ const Sidebar = ({
                    deploymentSelection,
                  }) => (
   <SidebarRoot>
-    <SidebarLink to="/">
+    <SidebarLink to="/search">
       <Registry/>
       ABI Search
     </SidebarLink>
