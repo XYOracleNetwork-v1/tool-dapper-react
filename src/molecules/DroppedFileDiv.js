@@ -1,8 +1,8 @@
-import React, { Component } from "react"
-import uploadIPFS from "../organisms/IPFSUploader"
-import ProgressButton, { STATE } from "react-progress-button"
-import { withCookies } from "react-cookie"
-import { Div } from "glamorous"
+import React, { Component } from 'react'
+import uploadIPFS from '../util/IPFSUploader'
+import ProgressButton, { STATE } from 'react-progress-button'
+import { withCookies } from 'react-cookie'
+import { Div } from 'glamorous'
 
 class DroppedFileDiv extends Component {
   state = {
@@ -46,7 +46,7 @@ class DroppedFileDiv extends Component {
         this.setState({ uploadBtnState: STATE.SUCCESS })
       })
   }
-  
+
   render() {
     let { files } = this.props
     if (files.length > 0) {

@@ -20,17 +20,13 @@ const parseResponse = (res, resolve, reject) => {
     if (fileObj.path === folder || fileObj.path === `` || res.length === 1) {
       console.log(` $ Contracts stored to IPFS`, fileObj.hash)
       console.log(
-        ` $ View contracts at https://ipfs.xyo.network/ipfs/${
-        fileObj.hash
-        }`,
+        ` $ View contracts at https://ipfs.xyo.network/ipfs/${fileObj.hash}`,
       )
       return resolve(fileObj.hash)
-    } 
+    }
   })
   reject(
-    new Error(
-      `No folder returned saving the IPFS file, this shouldn't happen`,
-    ),
+    new Error(`No folder returned saving the IPFS file, this shouldn't happen`),
   )
 }
 
@@ -49,10 +45,10 @@ const uploadIPFS = async (cookies, data) => {
         if (err) {
           console.log(`Got IPFS error:`, err)
           return reject(err)
-        } 
+        }
         parseResponse(res, resolve, reject)
       },
-    )
+    ),
   )
 }
 export default uploadIPFS

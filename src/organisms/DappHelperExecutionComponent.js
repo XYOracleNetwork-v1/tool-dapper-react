@@ -1,5 +1,5 @@
-import { withRouter } from "react-router-dom"
-import React, { Component } from "react"
+import { withRouter } from 'react-router-dom'
+import React, { Component } from 'react'
 import {
   FunctionParamLayout,
   FunctionParamList,
@@ -7,9 +7,9 @@ import {
   ParamInputDiv,
   Horizontal,
   FormattedProgressButton,
-} from "../molecules/FunctionDetailsComponents"
-import { Div } from "glamorous"
-import { defaultHelpers } from "./DappHelperComponent"
+} from '../molecules/FunctionDetailsComponents'
+import { Div } from 'glamorous'
+import { defaultHelpers } from './DappHelperComponent'
 
 class DappHelperExecutionComponent extends Component {
   getFunc = () =>
@@ -67,7 +67,7 @@ class DappHelperExecutionComponent extends Component {
       results.push(
         <ParamInputDiv key={i2}>
           <InputBar
-            type='text'
+            type="text"
             name={input.name}
             placeholder={input.placeholder}
             onChange={this.handleChange}

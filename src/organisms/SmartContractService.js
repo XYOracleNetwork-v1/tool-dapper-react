@@ -1,12 +1,12 @@
 /* eslint-disable */
-import Web3 from "web3"
-import { PortisProvider } from "portis"
-import { fetchABI } from "./ABIReader"
+import Web3 from 'web3'
+import { PortisProvider } from 'portis'
+import { fetchABI } from '../util/ABIReader'
 
-const localProviderUrl = "http://localhost:8545"
+const localProviderUrl = 'http://localhost:8545'
 
 const web3Networks = [
-  { id: 0, name: 'dummy', description: "whatever"},
+  { id: 0, name: 'dummy', description: 'whatever' },
   { id: 5777, name: `development`, description: `Development (local)` },
   { id: 42, name: `kovan`, description: `Kovan` },
   { id: 3, name: `ropsten`, description: `Ropsten` },
@@ -41,15 +41,15 @@ class SmartContractService {
   }
 
   portisProvider = cookies => {
-    console.log("Creating Portis connection", cookies)
+    console.log('Creating Portis connection', cookies)
 
-    const portisNetwork = cookies.get("portisNetwork")
-    const portisAPI = "3b1ca5fed7f439bf72771e64e9442d74"
+    const portisNetwork = cookies.get('portisNetwork')
+    const portisAPI = '3b1ca5fed7f439bf72771e64e9442d74'
     this.currentNetwork = this.getNetworkWithId(portisNetwork)
 
-    console.log("Creating Portis Privider", portisNetwork)
+    console.log('Creating Portis Privider', portisNetwork)
 
-    if (portisNetwork !== "development") {
+    if (portisNetwork !== 'development') {
       return new Web3(
         new PortisProvider({
           apiKey: portisAPI,
@@ -69,7 +69,7 @@ class SmartContractService {
 
   changePortisNetwork = async newNetwork => {
     if (this.web3 && this.web3.currentProvider.isPortis) {
-      if (newNetwork === "development") {
+      if (newNetwork === 'development') {
         this.web3.currentProvider.changeNetwork({
           network: newNetwork,
           providerNodeUrl: localProviderUrl,
@@ -79,7 +79,7 @@ class SmartContractService {
           network: newNetwork,
         })
       }
-      console.log("Changing Portis Network", newNetwork)
+      console.log('Changing Portis Network', newNetwork)
       await this.refreshNetwork()
     }
   }
@@ -94,12 +94,12 @@ class SmartContractService {
   validContract = async address => {
     try {
       let code = await this.web3.eth.getCode(address)
-      if (code === "0x0" || code === "0x") {
+      if (code === '0x0' || code === '0x') {
         return { valid: false, address }
       }
       return { valid: true, address }
     } catch (err) {
-      console.log("Exception caught, invalid contract", address, err)
+      console.log('Exception caught, invalid contract', address, err)
       return { valid: false, address }
     }
   }
@@ -108,7 +108,10 @@ class SmartContractService {
     if (!this.deployedContracts) {
       return []
     }
-    let currNet = netId || this.getCurrentNetwork() ? this.getCurrentNetwork().id : undefined
+    let currNet =
+      netId || this.getCurrentNetwork()
+        ? this.getCurrentNetwork().id
+        : undefined
     let contractsOnNet = []
     Object.entries(this.deployedContracts).map(deployed => {
       if (deployed[1] && deployed[1].name === name) {
@@ -135,7 +138,7 @@ class SmartContractService {
     let results = await Promise.all(promises)
     results.forEach(result => {
       if (!result.valid) {
-        console.log("DELETING INVALID CONTRACT", result)
+        console.log('DELETING INVALID CONTRACT', result)
         delete previouslyDeployed[result.address]
       }
     })
@@ -146,7 +149,7 @@ class SmartContractService {
   updateLocalStorage = () => {
     // console.log("Updating deployments in local storage")
     localStorage.setItem(
-      "deployedContracts",
+      'deployedContracts',
       JSON.stringify(this.deployedContracts),
     )
   }
@@ -164,7 +167,7 @@ class SmartContractService {
   storeABI = abiData => {
     let json = abiData.data
 
-    if (json.bytecode !== "0x") {
+    if (json.bytecode !== '0x') {
       let abiObject = {
         ipfs: abiData.ipfs,
         name: json.contractName,
@@ -187,7 +190,7 @@ class SmartContractService {
           address,
           json.bytecode,
           json.abi,
-          "",
+          '',
           deployed[0], // net id
         )
       })
@@ -200,7 +203,7 @@ class SmartContractService {
     address,
     bytecode,
     abi,
-    notes = "",
+    notes = '',
     netId = this.getCurrentNetwork().id,
   ) => {
     if (address) {
@@ -218,7 +221,7 @@ class SmartContractService {
   }
 
   loadLocalStoreObjects = async () => {
-    let objects = JSON.parse(localStorage.getItem("deployedContracts")) || {}
+    let objects = JSON.parse(localStorage.getItem('deployedContracts')) || {}
     Object.entries(objects).forEach(o => {
       this.addSmartContract(o[1])
     })
@@ -229,21 +232,19 @@ class SmartContractService {
   loadIPFSContracts = async cookies => {
     let ipfs = cookies.get(`ipfs`)
 
-      if (ipfs) {
-        let { abi } = await fetchABI(cookies)
-        await abi.forEach(this.storeABI)
-        await abi.forEach(this.storeDeployments)
-        this.refreshUI()
-      } else {
-        console.log("No ipfs file loaded, please add in settings")
-      }
-
-    
+    if (ipfs) {
+      let { abi } = await fetchABI(cookies)
+      await abi.forEach(this.storeABI)
+      await abi.forEach(this.storeDeployments)
+      this.refreshUI()
+    } else {
+      console.log('No ipfs file loaded, please add in settings')
+    }
   }
 
   createContract = (abi, address) => {
     if (!abi) {
-      throw new Error("Contract must have abi passed")
+      throw new Error('Contract must have abi passed')
     }
     return new this.web3.eth.Contract(abi, address)
   }
@@ -277,32 +278,32 @@ class SmartContractService {
   }
 
   setupPortis = async cookies => {
-    console.log("Setting up Portis")
+    console.log('Setting up Portis')
     this.web3 = this.portisProvider(cookies)
     let promise = new Promise((resolve, reject) => {
-      this.web3.currentProvider.on("login", async stuff => {
+      this.web3.currentProvider.on('login', async stuff => {
         await this.refreshUser()
         await this.refreshNetwork()
-        console.log("Portis Logged in", this.currentNetwork, this.currentUser)
+        console.log('Portis Logged in', this.currentNetwork, this.currentUser)
         await this.validateDeployedOnNetwork(this.getCurrentNetwork().id)
         resolve()
       })
     })
     await this.refreshUser() // forces login
 
-    console.log("Done initializing web3 Portis", this.currentNetwork)
+    console.log('Done initializing web3 Portis', this.currentNetwork)
 
     return promise
   }
 
   loadWeb3 = async cookies => {
-    console.log("LOADING WEB 3")
+    console.log('LOADING WEB 3')
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       this.web3 = window.web3
       // Request account access if needed
       await window.ethereum.enable()
-    } else if (typeof window.web3 !== "undefined") {
+    } else if (typeof window.web3 !== 'undefined') {
       this.web3 = new Web3(window.web3.currentProvider)
     } else {
       return this.setupPortis(cookies)

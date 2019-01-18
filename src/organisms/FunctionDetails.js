@@ -1,10 +1,10 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import TransactionResult from "../atoms/TransactionResult"
-import TransactionError from "../atoms/TransactionError"
-import { TransactionReceipt } from "../atoms/TransactionReceipt"
-import { HeaderStyle } from "../atoms/HeaderStyle"
-import { STATE } from "react-progress-button"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import TransactionResult from '../atoms/TransactionResult'
+import TransactionError from '../atoms/TransactionError'
+import { TransactionReceipt } from '../atoms/TransactionReceipt'
+import { HeaderStyle } from '../atoms/HeaderStyle'
+import { STATE } from 'react-progress-button'
 import {
   MainDiv,
   FunctionParamLayout,
@@ -12,10 +12,10 @@ import {
   FunctionParamList,
   InputBar,
   ParamInputDiv,
-  Horizontal, 
-  FormattedProgressButton
-} from "../molecules/FunctionDetailsComponents"
-import { getMethodSig } from "../molecules/FunctionsList"
+  Horizontal,
+  FormattedProgressButton,
+} from '../molecules/FunctionDetailsComponents'
+import { getMethodSig } from '../molecules/FunctionsList'
 
 class FunctionDetails extends Component {
   state = {
@@ -53,7 +53,6 @@ class FunctionDetails extends Component {
       },
     })
   }
-
 
   updateInputs = () => {
     const { match } = this.props
@@ -212,7 +211,7 @@ class FunctionDetails extends Component {
         <ParamInputDiv key={input.name}>
           {input.name}
           <InputBar
-            type='text'
+            type="text"
             name={input.name}
             placeholder={input.type}
             onChange={this.handleChange}
@@ -224,12 +223,12 @@ class FunctionDetails extends Component {
 
     if (method.stateMutability === `payable`) {
       results.push(
-        <ParamInputDiv key='Value'>
+        <ParamInputDiv key="Value">
           Value To Transfer
           <InputBar
-            type='text'
-            name='Value'
-            placeholder='ETH (wei)'
+            type="text"
+            name="Value"
+            placeholder="ETH (wei)"
             onChange={this.handleChange}
             value={this.state.value}
           />

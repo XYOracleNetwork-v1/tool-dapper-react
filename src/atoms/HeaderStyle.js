@@ -1,4 +1,4 @@
-import glam from "glamorous"
+import glam from 'glamorous'
 
 export const HeaderStyle = glam.div({
   display: `flex`,
@@ -8,7 +8,6 @@ export const HeaderStyle = glam.div({
   paddingLeft: 24,
   fontSize: `25px`,
   fontFamily: `PT Sans`,
-
 })
 
 export const HeaderStyle2 = glam.div({
@@ -20,5 +19,4 @@ export const HeaderStyle2 = glam.div({
   fontSize: 19,
   marginLeft: 10,
   fontFamily: `PT Sans`,
-
 })

@@ -1,8 +1,8 @@
-import React from "react"
-import Dropzone from "react-dropzone"
-import { Div } from "glamorous"
-import DroppedFileDiv from "../molecules/DroppedFileDiv"
-import "./css/FolderDropzone.css"
+import React from 'react'
+import Dropzone from 'react-dropzone'
+import { Div } from 'glamorous'
+import DroppedFileDiv from '../molecules/DroppedFileDiv'
+import './css/FolderDropzone.css'
 
 const { fromEvent } = require(`file-selector`)
 
@@ -28,7 +28,7 @@ class FolderDropzone extends React.Component {
 
   render() {
     return (
-      <Div style={{maxWidth: 500}}>
+      <Div style={{ maxWidth: 500 }}>
         <Dropzone
           style={parentStyle}
           getDataTransferItems={evt => fromEvent(evt)}

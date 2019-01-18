@@ -1,9 +1,9 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import { withRouter } from "react-router-dom"
-import Dropdown from "react-dropdown"
-import "react-dropdown/style.css"
-import "./css/SmartContractSelector.css"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import { withRouter } from 'react-router-dom'
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
+import './css/SmartContractSelector.css'
 
 class SmartContractSelector extends Component {
   state = {
@@ -52,7 +52,7 @@ class SmartContractSelector extends Component {
         options={options}
         onChange={this._onSelect}
         value={selected}
-        placeholder='Nothing Selected'
+        placeholder="Nothing Selected"
       />
     )
   }

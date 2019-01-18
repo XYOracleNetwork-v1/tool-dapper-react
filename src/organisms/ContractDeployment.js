@@ -1,10 +1,10 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import DeploymentResult from "../atoms/DeploymentResult"
-import TransactionError from "../atoms/TransactionError"
-import { TransactionReceipt } from "../atoms/TransactionReceipt"
-import { HeaderStyle } from "../atoms/HeaderStyle"
-import { STATE } from "react-progress-button"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import DeploymentResult from '../atoms/DeploymentResult'
+import TransactionError from '../atoms/TransactionError'
+import { TransactionReceipt } from '../atoms/TransactionReceipt'
+import { HeaderStyle } from '../atoms/HeaderStyle'
+import { STATE } from 'react-progress-button'
 import {
   MainDiv,
   FunctionParamLayout,
@@ -14,7 +14,7 @@ import {
   ParamInputDiv,
   Horizontal,
   FormattedProgressButton,
-} from "../molecules/FunctionDetailsComponents"
+} from '../molecules/FunctionDetailsComponents'
 
 class ContractDeployment extends Component {
   state = {
@@ -265,9 +265,9 @@ class ContractDeployment extends Component {
           <ParamInputDiv key={index}>
             {lib}
             <InputBar
-              type='text'
+              type="text"
               name={lib}
-              placeholder='Library Address (0x...)'
+              placeholder="Library Address (0x...)"
               onChange={this.handleLibChange}
               value={this.state.libraries[lib] || ``}
             />
@@ -277,12 +277,12 @@ class ContractDeployment extends Component {
     }
 
     results.push(
-      <ParamInputDiv key='Notes'>
+      <ParamInputDiv key="Notes">
         Deployment Notes
         <InputBar
-          type='text'
-          name='Notes'
-          placeholder='Optional Notes or Description'
+          type="text"
+          name="Notes"
+          placeholder="Optional Notes or Description"
           onChange={this.handleChange}
           value={this.state.notes || ``}
         />
@@ -296,7 +296,7 @@ class ContractDeployment extends Component {
         <ParamInputDiv key={input.name}>
           {input.name}
           <InputBar
-            type='text'
+            type="text"
             name={input.name}
             placeholder={input.type}
             onChange={this.handleChange}
@@ -308,12 +308,12 @@ class ContractDeployment extends Component {
 
     if (method.stateMutability === `payable`) {
       results.push(
-        <ParamInputDiv key='Value'>
+        <ParamInputDiv key="Value">
           Value To Transfer
           <InputBar
-            type='text'
-            name='Value'
-            placeholder='ETH (wei)'
+            type="text"
+            name="Value"
+            placeholder="ETH (wei)"
             onChange={this.handleChange}
             value={this.state.value}
           />

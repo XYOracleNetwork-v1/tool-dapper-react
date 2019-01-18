@@ -1,4 +1,3 @@
-
 export const readSettings = cookies => {
   if (!cookies.get(`portisNetwork`)) {
     cookies.set(`portisNetwork`, `mainnet`, {
@@ -13,4 +12,3 @@ export const readSettings = cookies => {
     ipfs: cookies.get(`ipfs`) || ``,
   }
 }
-

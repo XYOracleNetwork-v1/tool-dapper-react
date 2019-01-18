@@ -1,5 +1,5 @@
-import IPFS from "ipfs-http-client"
-import {ipfsConfigFromCookies} from './IPFSUploader'
+import IPFS from 'ipfs-http-client'
+import { ipfsConfigFromCookies } from './IPFSUploader'
 
 let parseFiles = (files, resolve) => {
   let abi = []
@@ -22,11 +22,11 @@ export const downloadFiles = async (cookies, ipfsHash) => {
     protocol: ipfsConfig.ipfsprotocol,
   })
   return new Promise((resolve, reject) => {
-      ipfs.get(ipfsHash, (err, files) => {
-        if (err) {
-          return reject(err)
-        }
-        parseFiles(files, resolve)
-      })
+    ipfs.get(ipfsHash, (err, files) => {
+      if (err) {
+        return reject(err)
+      }
+      parseFiles(files, resolve)
+    })
   })
 }

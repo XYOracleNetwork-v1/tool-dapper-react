@@ -77,7 +77,7 @@ class HomeComponent extends Component {
         `,
         }}
       >
-        <PageHeader service={service}/>
+        <PageHeader service={service} />
         <Sidebar
           deploymentSelection={deploymentSelection}
           service={service}
@@ -102,12 +102,12 @@ class HomeComponent extends Component {
           }}
         >
           <Switch>
-            <Route path="/search" component={ABISearch}/>
+            <Route path="/search" component={ABISearch} />
             <Route
               exact
               path="/settings/:ipfs"
               render={props => (
-                <SettingsIPFSDownload {...props} service={service}/>
+                <SettingsIPFSDownload {...props} service={service} />
               )}
             />
             <Route

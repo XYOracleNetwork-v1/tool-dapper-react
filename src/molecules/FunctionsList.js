@@ -36,8 +36,8 @@ export const MethodLink = ({ match, method }) => (
   <Div css={{}}>
     <Link
       style={{ textDecoration: `none` }}
-      className='method-link'
-      activeClassName='active-method-link'
+      className="method-link"
+      activeClassName="active-method-link"
       to={`${match.url}/${getMethodSig(method)}`}
     >
       {method.name}
@@ -57,11 +57,11 @@ export const FunctionsList = props => {
   /* eslint no-underscore-dangle: */
   const sortedMethods = []
   contract.abi
-  // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
+    // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
     .forEach((method, index) => {
       if (method.name && method.type === `function`) {
         sortedMethods.push(
-          <MethodLink key={index} match={match} method={method}/>,
+          <MethodLink key={index} match={match} method={method} />,
         )
       }
       return sortedMethods
@@ -78,13 +78,13 @@ export const FunctionsList = props => {
               paddingRight: `20px`,
             }}
           >
-            <header className='header-functions'>Deploy Contract</header>
-            <Img src={deploy}/>
+            <header className="header-functions">Deploy Contract</header>
+            <Img src={deploy} />
           </Div>
         </Link>
       </FunctionsHeaderDiv>
       <FunctionsHeaderDiv>
-        <header className='header-functions'>Functions</header>
+        <header className="header-functions">Functions</header>
       </FunctionsHeaderDiv>
 
       <FunctionsListDiv>{sortedMethods}</FunctionsListDiv>
@@ -97,10 +97,11 @@ export const FunctionsList = props => {
               paddingRight: `20px`,
             }}
           >
-            <header className='header-functions'>Dapp Helpers</header>
-            <Img src={deploy}/>
+            <header className="header-functions">Dapp Helpers</header>
+            <Img src={deploy} />
           </Div>
-        </Link> </FunctionsHeaderDiv>
+        </Link>{' '}
+      </FunctionsHeaderDiv>
     </FunctionsDiv>
   )
 }

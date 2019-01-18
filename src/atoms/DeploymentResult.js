@@ -1,8 +1,8 @@
-import React from "react"
-import { Div } from "glamorous"
+import React from 'react'
+import { Div } from 'glamorous'
 
-import ResultTable from "../atoms/ResultTable"
-import { HeaderStyle2 } from "../atoms/HeaderStyle"
+import ResultTable from '../atoms/ResultTable'
+import { HeaderStyle2 } from '../atoms/HeaderStyle'
 
 const DeploymentResult = ({ address, ipfs, name, notes }) => {
   if (!name) {

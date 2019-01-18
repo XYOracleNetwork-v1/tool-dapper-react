@@ -92,28 +92,28 @@ const SidebarItem = glam.div({
 })
 
 const Sidebar = ({
-                   updateContract,
-                   updateDeploymentSelection,
-                   contractObjects,
-                   updateAddress,
-                   service,
-                   deploymentSelection,
-                 }) => (
+  updateContract,
+  updateDeploymentSelection,
+  contractObjects,
+  updateAddress,
+  service,
+  deploymentSelection,
+}) => (
   <SidebarRoot>
     <SidebarLink to="/search">
-      <Registry/>
+      <Registry />
       ABI Search
     </SidebarLink>
     <SidebarLink to="/upload">
-      <Upload/>
+      <Upload />
       IPFS Uploader
     </SidebarLink>
     <SidebarLink to="/helpers">
-      <W3/>
+      <W3 />
       Web3 Helpers
     </SidebarLink>
     <SidebarLink to="/simulator">
-      <Simulator/>
+      <Simulator />
       Contract Simulator
     </SidebarLink>
     <SelectContractLayout>
@@ -135,10 +135,10 @@ const Sidebar = ({
     </SelectContractLayout>
     <Route
       path="/:contract"
-      render={props => <FunctionsList {...props} service={service}/>}
+      render={props => <FunctionsList {...props} service={service} />}
     />
     <SidebarLink to="/settings" css={{ position: 'absolute', bottom: 0 }}>
-      <Cog/>
+      <Cog />
       Settings
     </SidebarLink>
   </SidebarRoot>

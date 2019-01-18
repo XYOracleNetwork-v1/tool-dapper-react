@@ -11,7 +11,7 @@ const App = () => (
     <BrowserRouter createHistory={createBrowserHistory}>
       <HomeComponent />
     </BrowserRouter>
-  </CookiesProvider>  
+  </CookiesProvider>
 )
 
 export default App

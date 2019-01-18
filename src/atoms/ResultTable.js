@@ -1,14 +1,14 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import "./css/ResultTable.css"
-import Seperator from "./Seperator"
-import { Link } from "react-router-dom"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import './css/ResultTable.css'
+import Seperator from './Seperator'
+import { Link } from 'react-router-dom'
 import {
   TableStyle,
   FlexSpacingRow,
   LeftColumn,
   RightColumn,
-} from "../atoms/SharedStyles"
+} from '../atoms/SharedStyles'
 
 const HeaderRow = ({ header }) => {
   const { name, value, color } = header
@@ -40,7 +40,7 @@ export const RowDivs = ({ rows }) => {
         return (
           <RightColumn>
             {
-              <a href={url} target='blank'>
+              <a href={url} target="blank">
                 {value}
               </a>
             }

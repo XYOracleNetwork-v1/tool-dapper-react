@@ -1,11 +1,11 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import { Route, Link } from "react-router-dom"
-import { MainDiv, Vertical } from "../molecules/FunctionDetailsComponents"
-import { STATE } from "react-progress-button"
-import TransactionError from "../atoms/TransactionError"
-import { TransactionReceipt } from "../atoms/TransactionReceipt"
-import DappHelperExecutionComponent from "./DappHelperExecutionComponent"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import { Route, Link } from 'react-router-dom'
+import { MainDiv, Vertical } from '../molecules/FunctionDetailsComponents'
+import { STATE } from 'react-progress-button'
+import TransactionError from '../atoms/TransactionError'
+import { TransactionReceipt } from '../atoms/TransactionReceipt'
+import DappHelperExecutionComponent from './DappHelperExecutionComponent'
 // import  abi  from 'ethereumjs-abi'
 const abi = require(`ethereumjs-abi`)
 
@@ -149,7 +149,7 @@ class DappHelperComponent extends Component {
         <Div>{this.getFunctions()}</Div>
         <Route
           exact
-          path='/dappHelpers/:funcId'
+          path="/dappHelpers/:funcId"
           render={props => (
             <DappHelperExecutionComponent
               {...props}

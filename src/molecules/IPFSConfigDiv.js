@@ -1,7 +1,7 @@
-import React, { Component } from "react"
-import { SettingsInput, RowLayout, InputText } from "./SettingsComponenets"
-import { withCookies } from "react-cookie"
-import { ipfsConfigFromCookies } from "../organisms/IPFSUploader"
+import React, { Component } from 'react'
+import { SettingsInput, RowLayout, InputText } from './SettingsComponenets'
+import { withCookies } from 'react-cookie'
+import { ipfsConfigFromCookies } from '../util/IPFSUploader'
 
 class IPFSConfigDiv extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class IPFSConfigDiv extends Component {
       <RowLayout>
         <InputText>Host</InputText>
         <SettingsInput
-          type='text'
+          type="text"
           value={this.state.ipfshost}
           name={`ipfshost`}
           placeholder={`127.0.0.1`}
@@ -35,7 +35,7 @@ class IPFSConfigDiv extends Component {
         <InputText>Port</InputText>
 
         <SettingsInput
-          type='text'
+          type="text"
           value={this.state.ipfsport}
           name={`ipfsport`}
           placeholder={`5002`}
@@ -45,7 +45,7 @@ class IPFSConfigDiv extends Component {
         <InputText>Protocol</InputText>
 
         <SettingsInput
-          type='text'
+          type="text"
           value={this.state.ipfsprotocol}
           name={`ipfsprotocol`}
           placeholder={`https`}

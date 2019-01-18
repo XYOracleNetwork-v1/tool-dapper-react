@@ -1,16 +1,16 @@
-import React from "react"
-import { Div } from "glamorous"
+import React from 'react'
+import { Div } from 'glamorous'
 
 const WalletDiv = account => {
   if (account) {
     return (
-      <Div key='account' className='account-right'>
+      <Div key="account" className="account-right">
         Wallet: {account}
       </Div>
     )
   }
   return (
-    <Div key='account' className='account-right'>
+    <Div key="account" className="account-right">
       No Wallet Connected
     </Div>
   )
@@ -21,7 +21,7 @@ const CurNetwork = ({ account, network }) => {
   returnDivs.push(WalletDiv(account))
   if (network) {
     returnDivs.push(
-      <Div key='network' className='network-right'>
+      <Div key="network" className="network-right">
         Network: {network}
       </Div>,
     )

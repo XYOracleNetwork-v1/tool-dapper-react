@@ -1,8 +1,7 @@
 import React from 'react'
-import  { Div } from 'glamorous'
+import { Div } from 'glamorous'
 import ResultTable from '../atoms/ResultTable'
-import {FlexSpacingRow, LeftColumn, RightColumn} from '../atoms/SharedStyles'
-
+import { FlexSpacingRow, LeftColumn, RightColumn } from '../atoms/SharedStyles'
 
 const nvc = (name, value, color = undefined) => {
   return { name: name, value: value, color: color }

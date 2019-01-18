@@ -1,7 +1,7 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import ResultTable from "../atoms/ResultTable"
-import { HeaderStyle2 } from "../atoms/HeaderStyle"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import ResultTable from '../atoms/ResultTable'
+import { HeaderStyle2 } from '../atoms/HeaderStyle'
 
 class SelectedContractDiv extends Component {
   deploymentsTable = deployments => {

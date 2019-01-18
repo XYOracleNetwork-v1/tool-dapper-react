@@ -17,16 +17,18 @@ const HeaderDiv = glam.div({
 
 class PageHeader extends React.Component {
   render() {
-    let network = this.props.service.getCurrentNetwork() ? this.props.service.getCurrentNetwork().name : ``
+    let network = this.props.service.getCurrentNetwork()
+      ? this.props.service.getCurrentNetwork().name
+      : ``
     return (
       <HeaderDiv>
-        <Img className='image-header-logo' src={logo}/>
-        <Div className='vertical-center'>
+        <Img className="image-header-logo" src={logo} />
+        <Div className="vertical-center">
           <a
-            href='https://github.com/XYOracleNetwork/tool-dapper-react'
-            className='link-right'
-            target='_blank'
-            rel='noopener noreferrer'
+            href="https://github.com/XYOracleNetwork/tool-dapper-react"
+            className="link-right"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View on Github - {version}
           </a>

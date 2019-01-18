@@ -1,8 +1,8 @@
-import React, { Component } from "react"
-import { Div } from "glamorous"
-import { HeaderStyle, HeaderStyle2 } from "../atoms/HeaderStyle"
-import { withCookies } from "react-cookie"
-import { withRouter } from "react-router-dom"
+import React, { Component } from 'react'
+import { Div } from 'glamorous'
+import { HeaderStyle, HeaderStyle2 } from '../atoms/HeaderStyle'
+import { withCookies } from 'react-cookie'
+import { withRouter } from 'react-router-dom'
 
 class SettingsIPFSDownload extends Component {
   state = {

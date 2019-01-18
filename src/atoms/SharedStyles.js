@@ -1,4 +1,4 @@
-import glam from "glamorous"
+import glam from 'glamorous'
 
 export const FlexSpacingRow = glam.div({
   display: `flex`,

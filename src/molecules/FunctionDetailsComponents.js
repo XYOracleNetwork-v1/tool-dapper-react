@@ -1,6 +1,6 @@
-import glam from "glamorous"
-import ProgressButton from "react-progress-button"
-import React from "react"
+import glam from 'glamorous'
+import ProgressButton from 'react-progress-button'
+import React from 'react'
 
 export const MainDiv = glam.div({
   color: `#4D4D5C`,

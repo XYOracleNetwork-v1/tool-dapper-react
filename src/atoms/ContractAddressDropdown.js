@@ -1,11 +1,11 @@
-import React, { Component } from "react"
-import glam, { Div } from "glamorous"
-import { withRouter } from "react-router-dom"
-import Dropdown from "react-dropdown"
-import "react-dropdown/style.css"
-import "./css/SmartContractSelector.css"
-import ProgressButton, { STATE } from "react-progress-button"
-import { withCookies } from "react-cookie"
+import React, { Component } from 'react'
+import glam, { Div } from 'glamorous'
+import { withRouter } from 'react-router-dom'
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
+import './css/SmartContractSelector.css'
+import ProgressButton, { STATE } from 'react-progress-button'
+import { withCookies } from 'react-cookie'
 
 const GreyTopped = glam.div({
   paddingTop: 10,
@@ -20,7 +20,7 @@ class ContractAddressDropdown extends Component {
   }
 
   _onSelect = selection => {
-    let {contractObjects} = this.props
+    let { contractObjects } = this.props
     // let contractObjects = this.props.fetchObjects()
     contractObjects.forEach(obj => {
       if (obj.address === selection.value || obj.notes === selection.value) {
@@ -36,11 +36,8 @@ class ContractAddressDropdown extends Component {
   }
 
   connectProvider = async () => {
-    this.props.service
-      .loadWeb3(this.props.cookies)
+    this.props.service.loadWeb3(this.props.cookies)
   }
-    
-  
 
   dropdownDiv = () => {
     // let contractObjects = this.props.fetchObjects()
@@ -80,7 +77,7 @@ class ContractAddressDropdown extends Component {
               ? this.props.selectedNotes
               : this.props.selectedAddress
           }
-          placeholder='Nothing Selected'
+          placeholder="Nothing Selected"
         />
       </Div>
     )

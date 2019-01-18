@@ -1,19 +1,19 @@
-import React, { Component } from "react"
-import { Div, Input } from "glamorous"
-import { withRouter } from "react-router-dom"
-import { withCookies } from "react-cookie"
-import { HeaderStyle, HeaderStyle2 } from "../atoms/HeaderStyle"
+import React, { Component } from 'react'
+import { Div, Input } from 'glamorous'
+import { withRouter } from 'react-router-dom'
+import { withCookies } from 'react-cookie'
+import { HeaderStyle, HeaderStyle2 } from '../atoms/HeaderStyle'
 import {
   SettingsInput,
   RowLayout,
   InputText,
   CenterColumn,
   SettingsLayout,
-} from "../molecules/SettingsComponenets"
-import FolderDropzone from "./FolderDropzone"
-import { readSettings } from "../atoms/CookieReader"
-import ProgressButton, { STATE } from "react-progress-button"
-import IPFSConfigDiv from "../molecules/IPFSConfigDiv"
+} from '../molecules/SettingsComponenets'
+import FolderDropzone from './FolderDropzone'
+import { readSettings } from '../util/CookieReader'
+import ProgressButton, { STATE } from 'react-progress-button'
+import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
 
 class Settings extends Component {
   constructor(props) {
@@ -60,8 +60,7 @@ class Settings extends Component {
         this.setState({ updateBtnState: STATE.SUCCESS })
       })
       .catch(e => {
-        this.setState({ ipfsError: e.toString(),
-          updateBtnState: STATE.ERROR })
+        this.setState({ ipfsError: e.toString(), updateBtnState: STATE.ERROR })
       })
   }
 
@@ -116,7 +115,7 @@ class Settings extends Component {
     <CenterColumn css={{}}>
       <SettingsInput
         style={{ minWidth: 350 }}
-        type='text'
+        type="text"
         value={value}
         name={source}
         placeholder={placeholder}
