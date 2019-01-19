@@ -2,15 +2,15 @@ import React from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { Link, Route } from 'react-router-dom'
 
-import { ReactComponent as Cog } from '../assets/cog.svg'
-import { ReactComponent as Registry } from '../assets/registry-icon.svg'
-import { ReactComponent as Upload } from '../assets/upload.svg'
-import { ReactComponent as W3 } from '../assets/w3.svg'
-import { ReactComponent as Simulator } from '../assets/simulator.svg'
+import { ReactComponent as Cog } from '../../assets/cog.svg'
+import { ReactComponent as Registry } from '../../assets/registry-icon.svg'
+import { ReactComponent as Upload } from '../../assets/upload.svg'
+import { ReactComponent as W3 } from '../../assets/w3.svg'
+import { ReactComponent as Simulator } from '../../assets/simulator.svg'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
-import { lightPurple } from '../theme'
+import { lightPurple } from '../../theme'
 
 const SidebarRoot = glam.div('sidebar', {
   display: `flex`,

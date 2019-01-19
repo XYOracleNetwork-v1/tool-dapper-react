@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { SettingsInput, RowLayout, InputText } from './SettingsComponenets'
 import { withCookies } from 'react-cookie'
-import { ipfsConfigFromCookies } from '../util/IPFSUploader'
+import { ipfsConfigFromCookies } from '../../util/IPFSUploader'
 
 class IPFSConfigDiv extends Component {
   constructor(props) {

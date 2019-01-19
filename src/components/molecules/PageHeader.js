@@ -1,9 +1,9 @@
 import React from 'react'
 import glam, { Div, Img } from 'glamorous'
 import CurNetwork from '../atoms/CurNetwork'
-import logo from '../assets/dapper-logo.svg'
+import logo from '../../assets/dapper-logo.svg'
 
-const version = require(`../../package.json`).version
+const version = require(`../../../package.json`).version
 
 const HeaderDiv = glam.div({
   display: `flex`,

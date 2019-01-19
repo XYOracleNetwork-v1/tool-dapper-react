@@ -5,16 +5,17 @@ import { withCookies } from 'react-cookie'
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
-import SmartContractService from './SmartContractService'
-import FunctionDetails from './FunctionDetails'
+import SmartContractService from '../../util/SmartContractService'
+import FunctionDetails from './../organisms/FunctionDetails'
 import Settings from './Settings'
 import PageHeader from '../molecules/PageHeader'
-import ContractDeployment from './ContractDeployment'
+import ContractDeployment from './../organisms/ContractDeployment'
 import SelectedContractDiv from '../molecules/SelectedContractDiv'
 import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
-import DappHelperComponent from './DappHelperComponent'
+import DappHelperComponent from './../organisms/DappHelperComponent'
 import Sidebar from '../molecules/Sidebar'
 import ABISearch from './ABISearch'
+import IPFSUploader from './IPFSUploader'
 
 class HomeComponent extends Component {
   state = {
@@ -103,14 +104,9 @@ class HomeComponent extends Component {
         >
           <Switch>
             <Route path="/search" component={ABISearch} />
+            <Route path="/upload" component={IPFSUploader} />
             <Route
               exact
-              path="/settings/:ipfs"
-              render={props => (
-                <SettingsIPFSDownload {...props} service={service} />
-              )}
-            />
-            <Route
               path="/settings"
               render={props => (
                 <Settings
@@ -121,6 +117,13 @@ class HomeComponent extends Component {
                     this.forceUpdate()
                   }}
                 />
+              )}
+            />
+            <Route
+              exact
+              path="/settings/:ipfs"
+              render={props => (
+                <SettingsIPFSDownload {...props} service={service} />
               )}
             />
             <Route

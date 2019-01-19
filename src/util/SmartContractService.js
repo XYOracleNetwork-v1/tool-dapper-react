@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
-import { fetchABI } from '../util/ABIReader'
+import { fetchABI } from './ABIReader'
 
 const localProviderUrl = 'http://localhost:8545'
 

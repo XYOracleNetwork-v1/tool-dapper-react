@@ -1,7 +1,7 @@
 import React from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { NavLink as Link } from 'react-router-dom'
-import deploy from '../assets/deploy.svg'
+import deploy from '../../assets/deploy.svg'
 
 import './css/FunctionsList.css'
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Div, Form, H2, Label } from 'glamorous'
 
-import Button from './../atoms/Button'
-import Input from './../atoms/Input'
+import Button from '../atoms/Button'
+import Input from '../atoms/Input'
 
 const ABISearch = () => (
   <Div css={{ display: 'flex', flexDirection: 'column' }}>

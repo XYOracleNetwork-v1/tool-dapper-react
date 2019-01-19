@@ -8,7 +8,7 @@ import {
   FlexSpacingRow,
   LeftColumn,
   RightColumn,
-} from '../atoms/SharedStyles'
+} from './/SharedStyles'
 
 const HeaderRow = ({ header }) => {
   const { name, value, color } = header

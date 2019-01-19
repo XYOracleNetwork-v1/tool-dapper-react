@@ -1,7 +1,7 @@
 import { configure } from '@storybook/react'
 
 function loadStories() {
-  require('../src/atoms/stories')
+  require('../src/components/atoms/stories')
 }
 
 configure(loadStories, module)

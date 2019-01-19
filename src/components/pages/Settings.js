@@ -10,8 +10,8 @@ import {
   CenterColumn,
   SettingsLayout,
 } from '../molecules/SettingsComponenets'
-import FolderDropzone from './FolderDropzone'
-import { readSettings } from '../util/CookieReader'
+import FolderDropzone from './../organisms/FolderDropzone'
+import { readSettings } from '../../util/CookieReader'
 import ProgressButton, { STATE } from 'react-progress-button'
 import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
 
