@@ -71,6 +71,8 @@ class Settings extends Component {
   networkRadioInputs = () => {
     const inputs = []
     let curNetwork = this.state.portisNetwork
+    console.log({ curNetwork, props: this.props })
+
     if (curNetwork) {
       const networks = this.props.service.getWeb3Networks()
       networks.forEach(network => {

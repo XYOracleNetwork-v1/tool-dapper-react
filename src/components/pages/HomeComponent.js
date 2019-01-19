@@ -104,7 +104,10 @@ class HomeComponent extends Component {
         >
           <Switch>
             <Route path="/search" component={ABISearch} />
-            <Route path="/upload" component={IPFSUploader} />
+            <Route
+              path="/upload"
+              render={() => <IPFSUploader service={service} />}
+            />
             <Route
               exact
               path="/settings"
