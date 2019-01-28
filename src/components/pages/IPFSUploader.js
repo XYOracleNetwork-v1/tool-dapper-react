@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import glam, { Div, Form, H2 } from 'glamorous'
+import glam, { Div, Form, H2, Textarea } from 'glamorous'
 import { withCookies } from 'react-cookie'
 
 import Button from '../atoms/Button'
@@ -73,22 +73,50 @@ class IPFSUploader extends Component {
           <Button type="submit">Save</Button>
         </Form>
         <Heading>IPFS File</Heading>
+        <Div>
+          <Div
+            css={{
+              marginBottom: 20,
+              // marginLeft: 100,
+              display: `flex`,
+              justifyContent: `left`,
+              align: `center`,
+              textAlign: `center`,
+            }}
+          >
+            <FolderDropzone
+              onSave={async ipfsHash => {
+                this.stateChange(`ipfs`, ipfsHash)
+                await service.loadIPFSContracts(cookies)
+              }}
+            />
+          </Div>
+          <Button>Upload File</Button>
+        </Div>
+        <Heading>Validate and upload JSON</Heading>
         <Div
-          style={{
-            marginBottom: 40,
-            // marginLeft: 100,
-            display: `flex`,
-            justifyContent: `left`,
-            align: `center`,
-            textAlign: `center`,
+          css={{
+            marginRight: 40,
           }}
         >
-          <FolderDropzone
-            onSave={async ipfsHash => {
-              this.stateChange(`ipfs`, ipfsHash)
-              await service.loadIPFSContracts(cookies)
+          <Form
+            id="ipfs-upload-json"
+            onSubmit={e => {
+              e.preventDefault()
+              console.log('foo')
             }}
-          />
+          >
+            <Textarea
+              css={{
+                marginBottom: 20,
+                height: 240,
+                width: '100%',
+                padding: 20,
+              }}
+              placeholder={`{\n\tjsonKeys: values\n}`}
+            />
+            <Button>Upload JSON</Button>
+          </Form>
         </Div>
       </Div>
     )
