@@ -64,7 +64,7 @@ class HomeComponent extends Component {
     return (
       <Div
         css={{
-          minWidth: '100vw',
+          // minWidth: '100vw',
           minHeight: '100vh',
           // height: `100%`,
           // width: `100%`,

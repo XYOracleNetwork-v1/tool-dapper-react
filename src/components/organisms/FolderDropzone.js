@@ -1,17 +1,24 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { Div } from 'glamorous'
+
 import DroppedFileDiv from '../molecules/DroppedFileDiv'
 import './css/FolderDropzone.css'
+import { createBorder } from '../../theme'
 
 const { fromEvent } = require(`file-selector`)
 
 const parentStyle = {
   alignSelf: `center`,
   padding: 20,
-  width: 400,
+  // width: 400,
   height: 180,
-  border: `2px dashed #888`,
+  marginRight: 40,
+  border: `1px dashed #fff`,
+  // borderImage: `url(${borderSmall}) 2 round`,
+  color: 'white',
+  borderImage: createBorder({ color: 'white' }),
+  background: 'rgba(216, 216, 216, 0.22)',
 }
 
 class FolderDropzone extends React.Component {
@@ -28,7 +35,7 @@ class FolderDropzone extends React.Component {
 
   render() {
     return (
-      <Div style={{ maxWidth: 500 }}>
+      <Div style={{ flex: 1 }}>
         <Dropzone
           style={parentStyle}
           getDataTransferItems={evt => fromEvent(evt)}

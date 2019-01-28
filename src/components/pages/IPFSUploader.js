@@ -16,6 +16,7 @@ const FieldGroup = glam.div({
   marginRight: 40,
   display: 'flex',
   flexDirection: 'column',
+  flex: 1,
 })
 
 const FieldLabel = glam.label({
@@ -72,23 +73,23 @@ class IPFSUploader extends Component {
           <Button type="submit">Save</Button>
         </Form>
         <Heading>IPFS File</Heading>
-        {/*<Div*/}
-        {/*style={{*/}
-        {/*marginBottom: 40,*/}
-        {/*// marginLeft: 100,*/}
-        {/*display: `flex`,*/}
-        {/*justifyContent: `left`,*/}
-        {/*align: `center`,*/}
-        {/*textAlign: `center`,*/}
-        {/*}}*/}
-        {/*>*/}
-        {/*<FolderDropzone*/}
-        {/*onSave={async ipfsHash => {*/}
-        {/*this.stateChange(`ipfs`, ipfsHash)*/}
-        {/*await service.loadIPFSContracts(cookies)*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*</Div>*/}
+        <Div
+          style={{
+            marginBottom: 40,
+            // marginLeft: 100,
+            display: `flex`,
+            justifyContent: `left`,
+            align: `center`,
+            textAlign: `center`,
+          }}
+        >
+          <FolderDropzone
+            onSave={async ipfsHash => {
+              this.stateChange(`ipfs`, ipfsHash)
+              await service.loadIPFSContracts(cookies)
+            }}
+          />
+        </Div>
       </Div>
     )
   }
