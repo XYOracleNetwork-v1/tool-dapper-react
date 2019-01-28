@@ -48,7 +48,9 @@ class IPFSUploader extends Component {
   render() {
     const { service, cookies } = this.props
     return (
-      <Div css={{ display: 'flex', flexDirection: 'column' }}>
+      <Div
+        css={{ display: 'flex', flexDirection: 'column', paddingBottom: 25 }}
+      >
         <H2>IPFS Uploader</H2>
         <Div
           css={{

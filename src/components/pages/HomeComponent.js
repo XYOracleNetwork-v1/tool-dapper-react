@@ -30,17 +30,16 @@ class HomeComponent extends Component {
   }
 
   currentBaseRoute = () => {
-    if (this.props.history && this.props.history.location.pathname) {
-      let { pathname } = this.props.history.location
-      if (pathname.lastIndexOf(`/`) > 0) {
-        return pathname.slice(1).substring(0, pathname.lastIndexOf(`/`) - 1)
-      }
-      return pathname.slice(1)
+    const { pathname } = this.props.location
+    if (pathname.lastIndexOf(`/`) > 0) {
+      return pathname.slice(1).substring(0, pathname.lastIndexOf(`/`) - 1)
     }
+    return pathname.slice(1)
   }
 
   componentDidMount() {
-    this.scrolly = new PerfectScrollbar('.sidebar')
+    this.sidebarScroll = new PerfectScrollbar('.sidebar')
+    this.contentScroll = new PerfectScrollbar('.content')
     this.state.service.loadLocalStoreObjects()
     this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
       console.log(`Cannot load invalid ipfs contracts`)
@@ -48,7 +47,8 @@ class HomeComponent extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    this.scrolly.update()
+    this.sidebarScroll.update()
+    this.contentScroll.update()
   }
 
   fetchContractObjects = () => {
@@ -65,8 +65,8 @@ class HomeComponent extends Component {
       <Div
         css={{
           // minWidth: '100vw',
-          minHeight: '100vh',
-          // height: `100%`,
+          // minHeight: '100vh',
+          height: `100%`,
           // width: `100%`,
           backgroundImage: `linear-gradient(338deg, #8d8fc6, #190e24)`,
           display: 'grid',
@@ -94,11 +94,14 @@ class HomeComponent extends Component {
           }
         />
         <Div
+          className="content"
           css={{
             display: `flex`,
             flexDirection: `column`,
             width: `100%`,
             gridArea: 'body',
+            // overflow: 'hidden',
+            position: 'relative',
             padding: '25px 20px',
           }}
         >

@@ -1,7 +1,7 @@
 import React from 'react'
 import glam, { Div, Img } from 'glamorous'
 import CurNetwork from '../atoms/CurNetwork'
-import logo from '../../assets/dapper-logo.svg'
+import logo from '../../assets/logo.svg'
 
 const version = require(`../../../package.json`).version
 
@@ -9,7 +9,7 @@ const HeaderDiv = glam.div({
   display: `flex`,
   flexDirection: `row`,
   justifyContent: `space-between`,
-  backgroundColor: `#000`,
+  // backgroundColor: `#000`,
   paddingRight: 54,
   textAlign: `right`,
   gridArea: 'header',
@@ -22,7 +22,7 @@ class PageHeader extends React.Component {
       : ``
     return (
       <HeaderDiv>
-        <Img className="image-header-logo" src={logo} />
+        <Img css={{ width: 300, marginLeft: 60 }} src={logo} />
         <Div className="vertical-center">
           <a
             href="https://github.com/XYOracleNetwork/tool-dapper-react"
