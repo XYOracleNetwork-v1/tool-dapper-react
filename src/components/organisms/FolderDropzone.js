@@ -12,7 +12,7 @@ const parentStyle = {
   alignSelf: `center`,
   padding: 20,
   // width: 400,
-  height: 180,
+  height: 200,
   marginRight: 40,
   border: `1px dashed #fff`,
   // borderImage: `url(${borderSmall}) 2 round`,
@@ -35,6 +35,8 @@ class FolderDropzone extends React.Component {
   }
 
   render() {
+    const { onSave } = this.props
+    const { files } = this.state
     return (
       <Div style={{ flex: 1 }}>
         <Dropzone
@@ -58,10 +60,7 @@ class FolderDropzone extends React.Component {
             <path strokeWidth="10px" d="M30,50h40 M50,30v40" />
           </Svg>
         </Dropzone>
-        <DroppedFileDiv
-          files={this.state.files}
-          onSave={hash => this.props.onSave(hash)}
-        />
+        <DroppedFileDiv files={files} onSave={onSave} />
       </Div>
     )
   }

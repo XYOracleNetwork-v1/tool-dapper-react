@@ -6,6 +6,7 @@ import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import FolderDropzone from '../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
+import JSONUploader from '../molecules/JSONUploader'
 
 const Heading = glam.h3({
   fontSize: 22,
@@ -101,24 +102,13 @@ class IPFSUploader extends Component {
             marginRight: 40,
           }}
         >
-          <Form
-            id="ipfs-upload-json"
-            onSubmit={e => {
-              e.preventDefault()
-              console.log('foo')
+          <JSONUploader
+            onSave={async ipfsHash => {
+              console.log('finished uploading!!', ipfsHash)
+              // this.stateChange(`ipfs`, ipfsHash)
+              // await service.loadIPFSContracts(cookies)
             }}
-          >
-            <Textarea
-              css={{
-                marginBottom: 20,
-                height: 240,
-                width: '100%',
-                padding: 20,
-              }}
-              placeholder={`{\n\tjsonKeys: values\n}`}
-            />
-            <Button>Upload JSON</Button>
-          </Form>
+          />
         </Div>
       </Div>
     )

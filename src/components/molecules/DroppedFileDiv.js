@@ -10,47 +10,31 @@ class DroppedFileDiv extends Component {
   }
 
   handleClick = async () => {
-    console.log(`Data submitted`)
     this.setState({ uploadBtnState: STATE.LOADING })
-    let data = []
-    let { files } = this.props
-
-    let promises = []
-    files.forEach(file => {
+    const { files, cookies, onSave } = this.props
+    const promises = files.map(file => {
       const reader = new FileReader()
-      promises.push(
-        new Promise((resolve, reject) => {
-          reader.onload = () => {
-            const fileBuf = new Buffer(reader.result)
-            data.push({ path: file.name, content: fileBuf })
-            resolve(true)
-          }
-          reader.onabort = () => reject(`file reading was aborted`)
-
-          reader.onerror = () => reject(`file reading has failed`)
-
-          reader.readAsBinaryString(file)
-        }),
-      )
+      return new Promise((resolve, reject) => {
+        reader.onload = () => {
+          const fileBuf = new Buffer(reader.result)
+          const fileDef = { path: file.name, content: fileBuf }
+          resolve(fileDef)
+        }
+        reader.onabort = () => reject(`file reading was aborted`)
+        reader.onerror = () => reject(`file reading has failed`)
+        reader.readAsBinaryString(file)
+      })
     })
-
-    return Promise.all(promises)
-      .then(async () => {
-        return uploadIPFS(this.props.cookies, data)
-      })
-      .then(ipfsHash => {
-        return this.props.onSave(ipfsHash)
-      })
-      .then(() => {
-        console.log(`WTFFFF`)
-        this.setState({ uploadBtnState: STATE.SUCCESS })
-      })
+    const data = await Promise.all(promises)
+    const res = await uploadIPFS(cookies, data)
+    await onSave(res)
+    this.setState({ uploadBtnState: STATE.SUCCESS })
   }
 
   render() {
-    let { files } = this.props
-    if (files.length > 0) {
-      return (
+    const { files } = this.props
+    return (
+      files.length > 0 && (
         <Div style={{ textAlign: `left` }}>
           <h2>Dropped files and folders</h2>
           <ul>
@@ -68,8 +52,7 @@ class DroppedFileDiv extends Component {
           </ProgressButton>
         </Div>
       )
-    }
-    return null
+    )
   }
 }
 

@@ -31,6 +31,8 @@ const parseResponse = (res, resolve, reject) => {
 }
 
 const uploadIPFS = async (cookies, data) => {
+  console.log({ data })
+
   let ipfsConfig = ipfsConfigFromCookies(cookies)
   const ipfs = new IPFS({
     host: ipfsConfig.ipfshost,
