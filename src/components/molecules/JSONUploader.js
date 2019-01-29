@@ -13,11 +13,21 @@ class JSONUploader extends Component {
   }
 
   handleSubmit = async () => {
-    const { cookies, onSave } = this.props
-    const { data } = this.state
-    const res = await uploadIPFS(cookies, Buffer.from(data))
-    onSave(res)
-    this.setState({ uploadBtnState: STATE.SUCCESS })
+    this.setState({ uploadBtnState: STATE.LOADING })
+    try {
+      const { cookies, onSave } = this.props
+      const { data } = this.state
+      // parse then stringify for simple validation
+      const res = await uploadIPFS(
+        cookies,
+        Buffer.from(JSON.stringify(JSON.parse(data))),
+      )
+      onSave(res)
+      this.setState({ uploadBtnState: STATE.SUCCESS })
+    } catch (err) {
+      console.error(err)
+      this.setState({ uploadBtnState: STATE.ERROR })
+    }
   }
 
   handleChange = e => this.setState({ data: e.target.value })
