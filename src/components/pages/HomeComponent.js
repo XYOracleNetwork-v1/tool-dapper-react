@@ -16,6 +16,7 @@ import DappHelperComponent from './../organisms/DappHelperComponent'
 import Sidebar from '../molecules/Sidebar'
 import ABISearch from './ABISearch'
 import IPFSUploader from './IPFSUploader'
+import ContractSimulator from './ContractSimulator'
 
 class HomeComponent extends Component {
   state = {
@@ -110,6 +111,10 @@ class HomeComponent extends Component {
             <Route
               path="/upload"
               render={() => <IPFSUploader service={service} />}
+            />
+            <Route
+              path="/simulator"
+              render={() => <ContractSimulator service={service} />}
             />
             <Route
               exact
