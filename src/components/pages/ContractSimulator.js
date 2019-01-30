@@ -7,11 +7,6 @@ import glam from 'glamorous'
 import Input from '../atoms/Input'
 import Button from '../atoms/Button'
 
-const Heading = glam.h3({
-  fontSize: 22,
-  fontWeight: 'normal',
-})
-
 const FieldGroup = glam.div({
   marginRight: 40,
   display: 'flex',
@@ -31,12 +26,33 @@ const Field = ({ label, id, placeholder }) => (
   </FieldGroup>
 )
 
+const Row = glam.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: '20px 0',
+  borderBottom: 'solid 1px #fff',
+  '&:first-child': {
+    color: '#ac6efd',
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingTop: 0,
+  },
+  '&:last-child': {
+    paddingBottom: 0,
+    border: 'none',
+  },
+  // the "Value" column
+  '& > *:last-child': {
+    fontWeight: 'bold',
+  },
+})
+
 class ContractSimulator extends Component {
   state = {}
 
   render() {
     return (
-      <Div css={{}}>
+      <Div css={{ paddingBottom: 50 }}>
         <Form
           onSubmit={e => {
             e.preventDefault()
@@ -50,6 +66,39 @@ class ContractSimulator extends Component {
             Deploy Contract
           </Button>
         </Form>
+        <Div
+          css={{
+            marginTop: 50,
+            borderRadius: 2,
+            boxShadow: '0 4px 4px 0 rgba(99,99,99,0.19)',
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            padding: 20,
+            fontSize: 14,
+          }}
+        >
+          <Row>
+            <Div>Transaction info</Div>
+            <Div>Values</Div>
+          </Row>
+          <Row>
+            <Div>Contract Address Tx#</Div>
+            <Div>
+              0xd57af62feb9133980769d2b89a3541a5da2fd0ea3eff7560d8aef983285daf9b
+            </Div>
+          </Row>
+          <Row>
+            <Div>Block #</Div>
+            <Div>5</Div>
+          </Row>
+          <Row>
+            <Div>Gas Used</Div>
+            <Div>183338</Div>
+          </Row>
+          <Row>
+            <Div>Gas Price</Div>
+            <Div>44</Div>
+          </Row>
+        </Div>
       </Div>
     )
   }
