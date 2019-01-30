@@ -80,7 +80,6 @@ class IPFSUploader extends Component {
           <Div
             css={{
               marginBottom: 20,
-              // marginLeft: 100,
               display: `flex`,
               justifyContent: `left`,
               align: `center`,

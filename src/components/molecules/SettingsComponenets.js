@@ -22,6 +22,7 @@ export const RowLayout = glam.div({
   marginBottom: 40,
   marginLeft: 40,
 })
+
 export const InputText = glam.div({
   display: `inline`,
   marginTop: `10`,
@@ -33,8 +34,7 @@ export const CenterColumn = glam.div({
   maxWidth: 390,
 })
 export const SettingsLayout = glam.div({
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
   flex: 1,
   marginRight: 60,
+  paddingBottom: 25,
 })

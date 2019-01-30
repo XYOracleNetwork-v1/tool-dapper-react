@@ -1,29 +1,53 @@
 import React, { Component } from 'react'
-import { Div, Input } from 'glamorous'
+import { Div, H2, Input } from 'glamorous'
 import { withRouter } from 'react-router-dom'
 import { withCookies } from 'react-cookie'
-import { HeaderStyle, HeaderStyle2 } from '../atoms/HeaderStyle'
+import { STATE } from 'react-progress-button'
+import glam from 'glamorous'
+
 import {
   SettingsInput,
-  RowLayout,
   InputText,
   CenterColumn,
   SettingsLayout,
 } from '../molecules/SettingsComponenets'
 import FolderDropzone from './../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
-import ProgressButton, { STATE } from 'react-progress-button'
 import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
+import TextInput from '../atoms/Input'
+import Button from '../atoms/Button'
+
+const Heading = glam.h3({
+  fontSize: 22,
+  fontWeight: 'normal',
+})
+
+const FieldGroup = glam.div({
+  marginRight: 40,
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+})
+
+const FieldLabel = glam.label({
+  fontSize: 16,
+  marginBottom: 10,
+})
+
+const Field = ({ label, id, placeholder, ...inputProps }) => (
+  <FieldGroup>
+    <FieldLabel htmlFor={id}>{label}</FieldLabel>
+    <TextInput id={id} name={id} placeholder={placeholder} {...inputProps} />
+  </FieldGroup>
+)
+
+const RadioInput = props => <Input type="radio" {...props} />
 
 class Settings extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      ...readSettings(props.cookies),
-      updateBtnState: STATE.NOTHING,
-      ipfsError: undefined,
-    }
+  state = {
+    ...readSettings(this.props.cookies),
+    updateBtnState: STATE.NOTHING,
+    ipfsError: undefined,
   }
 
   handleChange = changeEvent => {
@@ -35,147 +59,105 @@ class Settings extends Component {
     this.props.cookies.set(stateKey, stateValue, {
       path: `/`,
     })
-    const newState = this.state
-    newState[stateKey] = stateValue
-
-    this.setState(newState)
+    this.setState({ [stateKey]: stateValue })
   }
 
   handleSourceSelect = changeEvent =>
     this.stateChange(`currentSource`, changeEvent.target.name)
 
-  handleOptionChange = changeEvent =>
-    this.stateChange(`currentSource`, changeEvent.target.value)
-
   handleNetworkChange = changeEvent => {
-    this.stateChange(`portisNetwork`, changeEvent.target.value)
-    this.props.portisNetworkChange(changeEvent.target.value)
+    const val = changeEvent.target.value
+    this.stateChange(`portisNetwork`, val)
+    this.props.portisNetworkChange(val)
   }
 
-  handleFormSubmit = () => {
+  handleFormSubmit = async () => {
     this.setState({ updateBtnState: STATE.LOADING })
-    this.props.service
-      .loadIPFSContracts(this.props.cookies)
-      .then(_ => {
-        this.setState({ updateBtnState: STATE.SUCCESS })
-      })
-      .catch(e => {
-        this.setState({ ipfsError: e.toString(), updateBtnState: STATE.ERROR })
-      })
+    try {
+      await this.props.service.loadIPFSContracts(this.props.cookies)
+      this.setState({ updateBtnState: STATE.SUCCESS })
+    } catch (e) {
+      this.setState({ ipfsError: e.toString(), updateBtnState: STATE.ERROR })
+    }
   }
 
-  radioInput = (value, checked, onChange) => (
-    <Input type={`radio`} value={value} checked={checked} onChange={onChange} />
-  )
-
-  networkRadioInputs = () => {
-    const inputs = []
-    let curNetwork = this.state.portisNetwork
+  renderNetworkRadio = () => {
+    const curNetwork = this.state.portisNetwork
     console.log({ curNetwork, props: this.props })
 
-    if (curNetwork) {
-      const networks = this.props.service.getWeb3Networks()
-      networks.forEach(network => {
-        let { id, name, description } = network
-        if (id !== 0) {
-          // console.log(
-          //   `Updating radio buttons`,
-          //   id,
-          //   name,
-          //   curNetwork,
-          //   curNetwork === network,
-          // )
-          inputs.push(
-            <Div style={{ display: `inline`, margin: 10 }} key={id}>
-              {this.radioInput(
-                name,
-                curNetwork === name,
-                this.handleNetworkChange,
-              )}
-              {description}
-            </Div>,
-          )
-        }
-      })
-    }
+    if (!curNetwork) return null
 
-    return inputs
+    return this.props.service
+      .getWeb3Networks()
+      .filter(({ id }) => id !== 0)
+      .map(({ id, name, description }) => (
+        <React.Fragment key={id}>
+          <RadioInput
+            css={{ marginRight: 10 }}
+            id={id}
+            name="web3-networks"
+            value={name}
+            checked={curNetwork === name}
+            onChange={this.handleNetworkChange}
+          />
+          <label htmlFor={id}>{description}</label>
+        </React.Fragment>
+      ))
   }
 
-  leftColumnDiv = (source, description) => (
-    <InputText>
-      {/* {this.radioInput(
-        source,
-        this.state.currentSource === source,
-        this.handleOptionChange,
-      )} */}
-      {description}
-    </InputText>
-  )
-
-  centerColumnDiv = (source, value, placeholder) => (
-    <CenterColumn css={{}}>
-      <SettingsInput
-        style={{ minWidth: 350 }}
-        type="text"
-        value={value}
-        name={source}
-        placeholder={placeholder}
-        onChange={this.handleChange}
-        onSelect={this.handleSourceSelect}
-      />
-    </CenterColumn>
-  )
-
   render() {
+    const { service, cookies } = this.props
     return (
       <SettingsLayout>
-        <HeaderStyle>Settings</HeaderStyle>
-        <HeaderStyle2>IPFS Config</HeaderStyle2>
+        <H2>Settings</H2>
+        <Heading>IPFS Config</Heading>
         <IPFSConfigDiv />
-        <HeaderStyle2>Portis Network</HeaderStyle2>
-        <RowLayout css={{ justifyContent: `space-between`, maxWidth: 700 }}>
-          {this.networkRadioInputs()}
-        </RowLayout>
-        <HeaderStyle2>ABI Source</HeaderStyle2>
+        <Heading>Portis Network</Heading>
         <Div
-          style={{
-            marginBottom: 40,
-            marginLeft: 100,
-            display: `flex`,
-            justifyContent: `left`,
-            align: `center`,
+          css={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            maxWidth: 700,
+          }}
+        >
+          {this.renderNetworkRadio()}
+        </Div>
+        <Heading>ABI Source</Heading>
+        <Div
+          css={{
+            marginBottom: 20,
             textAlign: `center`,
           }}
         >
           <FolderDropzone
             onSave={async ipfsHash => {
               this.stateChange(`ipfs`, ipfsHash)
-              await this.props.service.loadIPFSContracts(this.props.cookies)
+              await service.loadIPFSContracts(cookies)
             }}
           />
-        </Div>
-        <RowLayout>
-          {this.leftColumnDiv(`ipfs`, `IPFS Address`)}
-          {this.centerColumnDiv(
-            `ipfs`,
-            this.props.cookies.get(`ipfs`),
-            `ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ`,
-          )}
-          <Div>
-            <ProgressButton
-              style={{
-                width: 200,
-                marginLeft: 20,
-              }}
-              state={this.state.updateBtnState}
-              onClick={this.handleFormSubmit}
-            >
-              Add ABI
-            </ProgressButton>
-            {this.state.ipfsError}
+          <Div css={{ fontSize: 14, marginTop: 15, textAlign: 'left' }}>
+            Ex: {`<solidity_project>/build/contracts/*.json`}
           </Div>
-        </RowLayout>
+        </Div>
+        <Div css={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Field
+            label="IPFS Address"
+            id="ipfs"
+            name="ipfs"
+            value={cookies.get(`ipfs`)}
+            placeholder="ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ"
+          />
+          <Button
+            css={{
+              display: 'block',
+            }}
+            state={this.state.updateBtnState}
+            onClick={this.handleFormSubmit}
+          >
+            Add ABI
+          </Button>
+        </Div>
+        <Div css={{ fontSize: 16, color: 'red' }}>{this.state.ipfsError}</Div>
       </SettingsLayout>
     )
   }
