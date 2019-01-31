@@ -21,6 +21,7 @@ const SidebarRoot = glam.div('sidebar', {
   position: 'relative',
   color: '#fff',
   padding: 30,
+  justifyContent: 'space-between',
 })
 
 const SelectContractLayout = glam.div({
@@ -64,10 +65,10 @@ const StyledLink = glam(Link)(
     },
 )
 
-const SidebarLink = ({ to, children, ...props }) => (
+const SidebarLink = ({ to, children, exact, ...props }) => (
   <Route
     path={to}
-    exact
+    exact={exact}
     children={({ match }) => (
       <StyledLink active={match} to={to} {...props}>
         {children}
@@ -76,71 +77,65 @@ const SidebarLink = ({ to, children, ...props }) => (
   />
 )
 
-const SidebarItem = glam.div({
-  fontSize: 24,
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  padding: '20px 0',
-  display: 'flex',
-  alignItems: 'center',
-  '& svg': {
-    marginRight: 22,
-    width: 22,
-    fill: 'currentColor',
-    stroke: 'currentColor',
-  },
-})
-
 const Sidebar = ({
   updateContract,
   updateDeploymentSelection,
-  contractObjects,
   updateAddress,
   service,
   deploymentSelection,
 }) => (
   <SidebarRoot>
-    <SidebarLink to="/search">
-      <Registry />
-      ABI Search
-    </SidebarLink>
-    <SidebarLink to="/upload">
-      <Upload />
-      IPFS Uploader
-    </SidebarLink>
-    <SidebarLink to="/helpers">
-      <W3 />
-      Web3 Helpers
-    </SidebarLink>
-    <SidebarLink to="/simulator">
-      <Simulator />
-      Contract Simulator
-    </SidebarLink>
-    <SelectContractLayout>
-      <SpaceBetweenRow>
-        <SelectContractHeader>Select Contract</SelectContractHeader>
-      </SpaceBetweenRow>
-      <SmartContractSelector
-        onSelect={updateContract}
-        selectedContractName
-        contracts={service.getSmartContracts()}
+    <Div>
+      <SidebarLink to="/search">
+        <Registry />
+        ABI Search
+      </SidebarLink>
+      <SidebarLink to="/upload">
+        <Upload />
+        IPFS Uploader
+      </SidebarLink>
+      <SidebarLink to="/helpers">
+        <W3 />
+        Web3 Helpers
+      </SidebarLink>
+      <SidebarLink to="/simulator">
+        <Simulator />
+        Contract Simulator
+      </SidebarLink>
+      <Route
+        path="/simulator/:contract?"
+        render={props => (
+          <SelectContractLayout>
+            <SpaceBetweenRow>
+              <SelectContractHeader>Select Contract</SelectContractHeader>
+            </SpaceBetweenRow>
+            <SmartContractSelector
+              onSelect={updateContract}
+              selectedContractName
+              contracts={service.getSmartContracts()}
+              {...props}
+            />
+            <ContractAddressDropdown
+              onSelect={updateDeploymentSelection}
+              service={service}
+              selectedAddress={deploymentSelection.address}
+              selectedNotes={deploymentSelection.notes}
+              {...props}
+            />
+          </SelectContractLayout>
+        )}
       />
-      <ContractAddressDropdown
-        onSelect={updateDeploymentSelection}
-        contractObjects={contractObjects}
-        service={service}
-        selectedAddress={deploymentSelection.address}
-        selectedNotes={deploymentSelection.notes}
+      <Route
+        path="/simulator/:contract"
+        render={props => <FunctionsList {...props} service={service} />}
       />
-    </SelectContractLayout>
-    <Route
-      path="/:contract"
-      render={props => <FunctionsList {...props} service={service} />}
-    />
-    <SidebarLink to="/settings" css={{ position: 'absolute', bottom: 0 }}>
-      <Cog />
-      Settings
-    </SidebarLink>
+    </Div>
+    <Div>
+      <SidebarLink to="/settings">
+        <Cog />
+        Settings
+      </SidebarLink>
+    </Div>
   </SidebarRoot>
 )
 

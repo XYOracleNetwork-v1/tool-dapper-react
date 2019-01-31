@@ -70,7 +70,10 @@ export const FunctionsList = props => {
   return (
     <FunctionsDiv>
       <FunctionsHeaderDiv>
-        <Link style={{ textDecoration: `none` }} to={`/${contractName}/deploy`}>
+        <Link
+          style={{ textDecoration: `none` }}
+          to={`/simulator/${contractName}/deploy`}
+        >
           <Div
             css={{
               display: `flex`,

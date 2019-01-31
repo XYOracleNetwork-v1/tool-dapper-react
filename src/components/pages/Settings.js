@@ -5,12 +5,7 @@ import { withCookies } from 'react-cookie'
 import { STATE } from 'react-progress-button'
 import glam from 'glamorous'
 
-import {
-  SettingsInput,
-  InputText,
-  CenterColumn,
-  SettingsLayout,
-} from '../molecules/SettingsComponenets'
+import { SettingsLayout } from '../molecules/SettingsComponenets'
 import FolderDropzone from './../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
 import IPFSConfigDiv from '../molecules/IPFSConfigDiv'

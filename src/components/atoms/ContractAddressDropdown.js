@@ -14,14 +14,21 @@ const GreyTopped = glam.div({
 
 class ContractAddressDropdown extends Component {
   state = {
-    selectedNotes: this.props.selectedNotes,
-    selectedAddress: this.props.selectedAddress,
     connectButtonState: STATE.NOTHING,
   }
 
+  fetchObjects = () => {
+    const {
+      service,
+      match: {
+        params: { contract },
+      },
+    } = this.props
+    return service.deployedContractObjects(contract) || []
+  }
+
   _onSelect = selection => {
-    let { contractObjects } = this.props
-    // let contractObjects = this.props.fetchObjects()
+    const contractObjects = this.fetchObjects()
     contractObjects.forEach(obj => {
       if (obj.address === selection.value || obj.notes === selection.value) {
         this.props.onSelect({ notes: obj.notes, address: obj.address })
@@ -30,19 +37,17 @@ class ContractAddressDropdown extends Component {
     })
   }
 
-  getOptionValue = contractObject => {
-    let val = contractObject.notes || contractObject.address
-    return val.length > 20 ? `${val.substring(0, 20)}...` : val
-  }
+  getOptionValue = val => (val.length > 20 ? `${val.substring(0, 20)}...` : val)
 
   connectProvider = async () => {
     this.props.service.loadWeb3(this.props.cookies)
   }
 
   dropdownDiv = () => {
-    // let contractObjects = this.props.fetchObjects()
-    let { contractObjects } = this.props
-    let network = this.props.service.getCurrentNetwork()
+    const { service, selectedNotes, selectedAddress } = this.props
+    const { connectButtonState } = this.state
+    const contractObjects = this.fetchObjects()
+    let network = service.getCurrentNetwork()
     if (!network) {
       return (
         <ProgressButton
@@ -51,44 +56,36 @@ class ContractAddressDropdown extends Component {
             marginTop: 10,
             color: `white`,
           }}
-          state={this.state.connectButtonState}
+          state={connectButtonState}
           onClick={this.connectProvider}
         >
           Connect Wallet
         </ProgressButton>
       )
     }
+
     if (!contractObjects || contractObjects.length === 0) {
       return <GreyTopped>Not deployed on {network.name}</GreyTopped>
     }
     return (
       <Div>
         <Dropdown
-          options={contractObjects.map(obj => {
-            let val = this.getOptionValue(obj)
+          options={contractObjects.map(({ notes, address }) => {
+            const value = notes || address
+            let val = this.getOptionValue(value)
             return {
-              value: obj.notes || obj.address,
+              value,
               label: val,
             }
           })}
           onChange={this._onSelect}
-          value={
-            this.props.selectedNotes
-              ? this.props.selectedNotes
-              : this.props.selectedAddress
-          }
+          value={selectedNotes || selectedAddress}
           placeholder="Nothing Selected"
         />
       </Div>
     )
   }
 
-  addressCopyDiv = () => {
-    if (this.props.selectedAddress) {
-      return <Div>Address: {this.props.selectedAddress}</Div>
-    }
-    return null
-  }
   render() {
     return (
       <Div

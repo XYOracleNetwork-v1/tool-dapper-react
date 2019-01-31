@@ -5,12 +5,19 @@ import { HeaderStyle2 } from '../atoms/HeaderStyle'
 
 class SelectedContractDiv extends Component {
   deploymentsTable = deployments => {
-    if (!deployments || deployments.length === 0) {
+    if (
+      !deployments ||
+      deployments.length === 0 ||
+      !this.props.service.getNetworkNamed
+    ) {
       return null
     }
     let rows = []
     deployments.forEach(dep => {
-      let network = this.props.service.getNetworkNamed(dep.netId).name
+      const net = this.props.service.getNetworkNamed(dep.netId)
+      console.log({ net, dep })
+      if (!net) return
+      const network = net.name
       let address = dep.notes ? dep.notes + ` - ` + dep.address : dep.address
       rows.push({ name: network, value: address })
     })

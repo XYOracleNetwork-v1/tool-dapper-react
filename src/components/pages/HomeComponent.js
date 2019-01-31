@@ -30,14 +30,6 @@ class HomeComponent extends Component {
     deploymentSelection: {},
   }
 
-  currentBaseRoute = () => {
-    const { pathname } = this.props.location
-    if (pathname.lastIndexOf(`/`) > 0) {
-      return pathname.slice(1).substring(0, pathname.lastIndexOf(`/`) - 1)
-    }
-    return pathname.slice(1)
-  }
-
   componentDidMount() {
     this.sidebarScroll = new PerfectScrollbar('.sidebar')
     this.contentScroll = new PerfectScrollbar('.content')
@@ -50,14 +42,6 @@ class HomeComponent extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     this.sidebarScroll.update()
     this.contentScroll.update()
-  }
-
-  fetchContractObjects = () => {
-    let baseRoute = this.currentBaseRoute()
-    if (baseRoute !== `settings`) {
-      return this.state.service.deployedContractObjects(baseRoute)
-    }
-    return []
   }
 
   render() {
@@ -89,7 +73,6 @@ class HomeComponent extends Component {
               deploymentSelection: {},
             })
           }
-          contractObjects={this.fetchContractObjects()}
           updateDeploymentSelection={deploymentSelection =>
             this.setState({ deploymentSelection })
           }
@@ -113,6 +96,7 @@ class HomeComponent extends Component {
               render={() => <IPFSUploader service={service} />}
             />
             <Route
+              exact
               path="/simulator"
               render={() => <ContractSimulator service={service} />}
             />
@@ -150,7 +134,7 @@ class HomeComponent extends Component {
             />
             <Route
               exact
-              path="/:contractName/deploy"
+              path="/simulator/:contractName/deploy"
               render={props => (
                 <ContractDeployment
                   {...props}
@@ -165,7 +149,7 @@ class HomeComponent extends Component {
             />
             <Route
               exact
-              path="/:contract/:method"
+              path="/simulator/:contract/:method"
               render={props => (
                 <FunctionDetails
                   {...props}
@@ -178,7 +162,7 @@ class HomeComponent extends Component {
 
           <Route
             exact
-            path="/:contract"
+            path="/simulator/:contract"
             render={props => (
               <SelectedContractDiv
                 {...props}

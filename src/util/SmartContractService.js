@@ -27,16 +27,12 @@ class SmartContractService {
   getWeb3Networks = () => web3Networks
 
   getNetworkWithId = netString => {
-    let found = element => {
-      return (element.name = netString)
-    }
+    const found = element => element.name == netString
     return web3Networks.find(found)
   }
 
   getNetworkNamed = netId => {
-    let found = element => {
-      return element.id == netId
-    }
+    const found = element => element.id == netId
     return web3Networks.find(found)
   }
 
@@ -108,10 +104,17 @@ class SmartContractService {
     if (!this.deployedContracts) {
       return []
     }
-    let currNet =
+    const currNet =
       netId || this.getCurrentNetwork()
         ? this.getCurrentNetwork().id
         : undefined
+
+    console.log({
+      deployedContracts: this.deployedContracts,
+      currNet,
+      name,
+      netId,
+    })
     let contractsOnNet = []
     Object.entries(this.deployedContracts).map(deployed => {
       if (deployed[1] && deployed[1].name === name) {
@@ -129,6 +132,7 @@ class SmartContractService {
     let promises = []
 
     let previouslyDeployed = this.deployedContracts
+    console.log({ previouslyDeployed })
     Object.entries(previouslyDeployed).forEach(deployed => {
       if (deployed[1] && deployed[1].netId == netId) {
         promises.push(this.validContract(deployed[0]))
