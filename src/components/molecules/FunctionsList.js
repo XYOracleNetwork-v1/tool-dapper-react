@@ -105,7 +105,7 @@ export const getMethodSig = method => {
 }
 
 export const MethodLink = ({ url, method, exact }) => {
-  const to = `${url}/${getMethodSig(method)}`
+  const to = `${url}/functions/${getMethodSig(method)}`
   return (
     <Route
       path={to}
@@ -142,8 +142,8 @@ export const FunctionsList = ({ match, service }) => {
         <NavItem>Deploy Contract</NavItem>
       </SidebarLink>
       <Route
-        path="/simulator/:contract/:function"
-        render={({ match }) => (
+        path="/simulator/:contract/functions/:function"
+        children={({ match }) => (
           <FunctionsHeaderDiv active={match}>
             <FunctionsIcon />
             <NavItem>Functions</NavItem>

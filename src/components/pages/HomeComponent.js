@@ -149,7 +149,7 @@ class HomeComponent extends Component {
             />
             <Route
               exact
-              path="/simulator/:contract/:method"
+              path="/simulator/:contract/functions/:method"
               render={props => (
                 <FunctionDetails
                   {...props}

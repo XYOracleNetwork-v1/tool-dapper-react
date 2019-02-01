@@ -5,9 +5,7 @@ const ResultDiv = glam.div({
   height: 78,
   padding: 35,
   maxWidth: 500,
-  fontSize: '18px',
-  fontFamily: 'PT Sans',
-  color: '#4D4D5C',
+  fontSize: 18,
 })
 
 const TransactionError = ({ error }) => {

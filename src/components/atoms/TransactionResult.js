@@ -5,9 +5,7 @@ const ResultDiv = glam.div({
   height: 78,
   paddingLeft: 35,
   paddingTop: 12,
-  fontSize: '25px',
-  fontFamily: 'PT Sans',
-  color: '#4D4D5C',
+  fontSize: 25,
 })
 
 const TransactionResult = ({ result }) => {

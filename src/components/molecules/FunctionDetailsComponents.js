@@ -3,8 +3,7 @@ import ProgressButton from 'react-progress-button'
 import React from 'react'
 
 export const MainDiv = glam.div({
-  color: `#4D4D5C`,
-  fontFamily: `PT Sans`,
+  color: `#fff`,
   flex: 1,
   height: `100%`,
   width: `auto`,

@@ -42,18 +42,6 @@ class FunctionDetails extends Component {
     this.updateInputs()
   }
 
-  componentDidUnmount() {
-    this.setState({
-      method: {
-        inputs: [],
-        outputs: [],
-        name: `loading...`,
-        type: ``,
-        executeBtnState: STATE.NOTHING,
-      },
-    })
-  }
-
   updateInputs = () => {
     const { match } = this.props
     const signature = getMethodSig(this.state.method)
@@ -80,13 +68,8 @@ class FunctionDetails extends Component {
     }
   }
 
-  methodObject = (methods, sig) => {
-    const methodObj = methods.find(method => getMethodSig(method) === sig)
-    if (methodObj) {
-      return methodObj
-    }
-    return undefined
-  }
+  methodObject = (methods, sig) =>
+    methods.find(method => getMethodSig(method) === sig)
 
   handleChange = e => {
     const { method } = this.state
@@ -289,4 +272,5 @@ class FunctionDetails extends Component {
     )
   }
 }
+
 export default FunctionDetails
