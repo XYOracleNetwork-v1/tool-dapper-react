@@ -8,7 +8,7 @@
         </mask>
     </defs>
     <g stroke="currentColor" stroke-linecap="square" stroke-width="1" fill="none" fill-rule="evenodd"
-       transform="translate(2, 2)"
+       transform="translate(2, 4)"
        mask="url(#sq)"
     >
         <path d="M28,3.39285714 L23,9.94671641" stroke-width="4"/>
