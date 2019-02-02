@@ -3,9 +3,8 @@ import { Div } from 'glamorous'
 import ResultTable from './ResultTable'
 import { FlexSpacingRow, LeftColumn, RightColumn } from './SharedStyles'
 
-const nvc = (name, value, color = undefined) => {
-  return { name: name, value: value, color: color }
-}
+const nvc = (name, value, color) => ({ name, value, color })
+
 export const Row = ({ name, value }) => (
   <FlexSpacingRow>
     <LeftColumn>{name}</LeftColumn>
