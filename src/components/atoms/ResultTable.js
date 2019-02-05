@@ -1,78 +1,72 @@
-import React, { Component } from 'react'
-import { Div } from 'glamorous'
-import './css/ResultTable.css'
-import Seperator from './Seperator'
+import React from 'react'
+import glam, { A } from 'glamorous'
 import { Link } from 'react-router-dom'
-import {
-  TableStyle,
-  FlexSpacingRow,
-  LeftColumn,
-  RightColumn,
-} from './/SharedStyles'
 
-const HeaderRow = ({ header }) => {
-  const { name, value, color } = header
-  return (
-    <FlexSpacingRow
-      css={{
-        color: color,
-        fontSize: 18,
-        paddingBottom: 12,
-      }}
-    >
-      <LeftColumn>{name}</LeftColumn>
-      <RightColumn>{value}</RightColumn>
-    </FlexSpacingRow>
-  )
-}
+const TableRoot = glam.div({
+  borderRadius: 2,
+  boxShadow: '0 4px 4px 0 rgba(99,99,99,0.19)',
+  backgroundColor: 'rgba(255,255,255,0.05)',
+  padding: 20,
+  fontSize: 14,
+})
 
-export const RowDivs = ({ rows }) => {
-  const rowDivs = []
-  rows.forEach(({ name, value, linkTo, url }, index) => {
-    let seperator = undefined
-    if (index < rows.length - 1) {
-      seperator = <Seperator />
-    }
-    let rightColumn = value => {
-      if (linkTo) {
-        return <RightColumn>{<Link to={linkTo}>{value}</Link>}</RightColumn>
-      } else if (url) {
-        return (
-          <RightColumn>
-            {
-              <a href={url} target="blank">
-                {value}
-              </a>
-            }
-          </RightColumn>
-        )
-      }
-      return <RightColumn>{value}</RightColumn>
-    }
-    rowDivs.push(
-      <Div key={index}>
-        <FlexSpacingRow>
-          <LeftColumn>{name}</LeftColumn>
-          {rightColumn(value)}
-        </FlexSpacingRow>
-        {seperator}
-      </Div>,
-    )
-  })
+const Row = glam.div(
+  {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '20px 0',
+    borderBottom: 'solid 1px #fff',
+    '&:first-child': {
+      color: '#ac6efd',
+      fontSize: 18,
+      fontWeight: 'bold',
+      paddingTop: 0,
+    },
+    '&:last-child': {
+      paddingBottom: 0,
+      border: 'none',
+    },
+    // the "Value" column
+    '& > *:last-child': {
+      fontWeight: 'bold',
+    },
+  },
+  ({ color }) => ({
+    '&:first-child': {
+      color,
+    },
+  }),
+)
 
-  return <Div>{rowDivs}</Div>
-}
-
-class ResultTable extends Component {
-  render() {
-    const { header, rows } = this.props
+const MaybeLink = ({ href, to, children }) => {
+  if (to) return <Link to={to}>{children}</Link>
+  if (href) {
     return (
-      <TableStyle>
-        <HeaderRow header={header} />
-        <RowDivs rows={rows} />
-      </TableStyle>
+      <A css={{ color: 'inherit' }} href={href} target="_blank">
+        {children}
+      </A>
     )
   }
+  return <div>{children}</div>
 }
 
-export default ResultTable
+export const Table = ({ header: { name, value, color }, rows }) => (
+  <TableRoot>
+    <Row color={color}>
+      <div>{name}</div>
+      <div>{value}</div>
+    </Row>
+    {rows.map(({ name, value, linkTo, url }) => {
+      return (
+        <Row key={name}>
+          <div>{name}</div>
+          <MaybeLink to={linkTo} href={url}>
+            {value}
+          </MaybeLink>
+        </Row>
+      )
+    })}
+  </TableRoot>
+)
+
+export default Table

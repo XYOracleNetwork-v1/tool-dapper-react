@@ -1,39 +1,28 @@
 import React from 'react'
 import { Div } from 'glamorous'
 import ResultTable from './ResultTable'
-import { FlexSpacingRow, LeftColumn, RightColumn } from './SharedStyles'
 
 const nvc = (name, value, color) => ({ name, value, color })
 
-export const Row = ({ name, value }) => (
-  <FlexSpacingRow>
-    <LeftColumn>{name}</LeftColumn>
-    <RightColumn>{value}</RightColumn>
-  </FlexSpacingRow>
+export const eventDatas = ({ returnValues }) =>
+  Object.entries(returnValues).reduce(
+    (acc, [name, value]) => (isNaN(name) ? [...acc, nvc(name, value)] : acc),
+    [],
+  )
+
+const colors = [`#3071D1`, `#6025AE`, `#D19830`]
+export const EventTables = ({ events }) => (
+  <Div>
+    {Object.entries(events).map(([name, event], index) => (
+      <ResultTable
+        key={name}
+        header={nvc(`Event`, name, colors[index % colors.length])}
+        rows={eventDatas(event)}
+      />
+    ))}
+  </Div>
 )
-export const eventDatas = event => {
-  const { returnValues } = event
-  const datas = []
-  Object.entries(returnValues).forEach(([name, value]) => {
-    if (isNaN(name)) {
-      datas.push(nvc(name, value))
-    }
-  })
-  return datas
-}
-export const EventTables = props => {
-  const colors = [`#3071D1`, `#6025AE`, `#D19830`]
-  const { events } = props
-  const eventTables = []
-  let index = 0
-  Object.entries(events).forEach(([name, event], v1, v2) => {
-    let header = nvc(`Event`, name, colors[index % colors.length])
-    let rows = eventDatas(event)
-    eventTables.push(<ResultTable key={name} header={header} rows={rows} />)
-    index++
-  })
-  return <Div>{eventTables}</Div>
-}
+
 export const TransactionReceipt = props => {
   const {
     transactionHash,
@@ -46,13 +35,14 @@ export const TransactionReceipt = props => {
     return null
   }
 
-  let header = nvc(`Transaction Information`, `Values`, `#D19830`)
-  let rows = [
+  const header = nvc(`Transaction Information`, `Values`, `#D19830`)
+  const rows = [
     nvc(`Transaction Hash`, transactionHash),
     nvc(`Block #`, blockNumber),
     nvc(`Gas Used`, gasUsed),
     // nvc('Gas Price', gasPrice),
   ]
+
   return (
     <Div
       css={{

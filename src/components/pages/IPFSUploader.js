@@ -48,6 +48,9 @@ class IPFSUploader extends Component {
 
   render() {
     const { service, cookies } = this.props
+    const { error } = this.state
+    console.log({ error })
+
     return (
       <Div
         css={{ display: 'flex', flexDirection: 'column', paddingBottom: 25 }}
@@ -107,8 +110,10 @@ class IPFSUploader extends Component {
               // this.stateChange(`ipfs`, ipfsHash)
               // await service.loadIPFSContracts(cookies)
             }}
+            setError={error => this.setState({ error })}
           />
         </Div>
+        {error && <Div>{error}</Div>}
       </Div>
     )
   }

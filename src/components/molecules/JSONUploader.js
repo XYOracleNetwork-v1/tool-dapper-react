@@ -14,8 +14,8 @@ class JSONUploader extends Component {
 
   handleSubmit = async () => {
     this.setState({ uploadBtnState: STATE.LOADING })
+    const { cookies, onSave, setError } = this.props
     try {
-      const { cookies, onSave } = this.props
       const { data } = this.state
       // parse then stringify for simple validation
       const res = await uploadIPFS(
@@ -26,6 +26,7 @@ class JSONUploader extends Component {
       this.setState({ uploadBtnState: STATE.SUCCESS })
     } catch (err) {
       console.error(err)
+      setError(err.message)
       this.setState({ uploadBtnState: STATE.ERROR })
     }
   }

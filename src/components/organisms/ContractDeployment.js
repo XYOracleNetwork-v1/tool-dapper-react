@@ -332,10 +332,21 @@ class ContractDeployment extends Component {
   )
 
   render() {
-    const { method, transactionResult, transactionReceipt } = this.state
+    const {
+      match: {
+        params: { contractName },
+      },
+    } = this.props
+    const {
+      method,
+      transactionResult,
+      transactionReceipt,
+      executeBtnState,
+      transactionError,
+    } = this.state
     return (
       <MainDiv>
-        <HeaderStyle>{this.props.match.params.contractName}</HeaderStyle>
+        <HeaderStyle>{contractName}</HeaderStyle>
         <FunctionParamLayout>
           <Horizontal>
             <FunctionPropertiesDiv>
@@ -345,7 +356,7 @@ class ContractDeployment extends Component {
           </Horizontal>
 
           <FormattedProgressButton
-            state={this.state.executeBtnState}
+            state={executeBtnState}
             onClick={this.handleExecute}
           >
             Deploy Contract
@@ -357,10 +368,11 @@ class ContractDeployment extends Component {
           }}
         /> */}
         <DeploymentResult {...transactionResult} />
-        <TransactionError error={this.state.transactionError} />
+        <TransactionError error={transactionError} />
         <TransactionReceipt {...transactionReceipt} />
       </MainDiv>
     )
   }
 }
+
 export default ContractDeployment

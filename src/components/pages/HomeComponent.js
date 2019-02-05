@@ -24,10 +24,11 @@ class HomeComponent extends Component {
       () => this.forceUpdate(),
       this.props.cookies,
     ),
-    selectedContractName: undefined,
-    serviceError: undefined,
-    currentUser: undefined,
+    // selectedContractName: undefined,
+    // serviceError: undefined,
+    // currentUser: undefined,
     deploymentSelection: {},
+    contracts: [],
   }
 
   componentDidMount() {
@@ -44,8 +45,30 @@ class HomeComponent extends Component {
     this.contentScroll.update()
   }
 
+  connectProvider = async () => {
+    const { cookies } = this.props
+    const { service } = this.state
+    await service.loadWeb3(cookies)
+    const currentNetwork = service.getCurrentNetwork()
+    const currentUser = service.getCurrentUser()
+    const contracts = service.getSmartContracts()
+    this.setState({ currentNetwork, currentUser, contracts })
+  }
+
+  getDeployedContractObjects = contract =>
+    this.state.service.deployedContractObjects(contract) || []
+
+  getContractObject = contract =>
+    this.state.service.contractObject(contract) || {}
+
   render() {
-    const { deploymentSelection, service } = this.state
+    const {
+      deploymentSelection,
+      service,
+      currentNetwork,
+      currentUser,
+      contracts,
+    } = this.state
     return (
       <Div
         css={{
@@ -63,10 +86,17 @@ class HomeComponent extends Component {
         `,
         }}
       >
-        <PageHeader service={service} />
+        <PageHeader
+          connectProvider={this.connectProvider}
+          network={currentNetwork}
+          account={currentUser}
+        />
         <Sidebar
           deploymentSelection={deploymentSelection}
-          service={service}
+          network={currentNetwork}
+          contracts={contracts}
+          getDeployedContractObjects={this.getDeployedContractObjects}
+          getContractObject={this.getContractObject}
           updateContract={selectedContractName =>
             this.setState({
               selectedContractName,
@@ -122,7 +152,7 @@ class HomeComponent extends Component {
               )}
             />
             <Route
-              path="/dappHelpers"
+              path="/helpers"
               render={props => (
                 <DappHelperComponent
                   {...props}
@@ -130,7 +160,6 @@ class HomeComponent extends Component {
                   selectedAddress={deploymentSelection.address}
                 />
               )}
-              service={service}
             />
             <Route
               exact

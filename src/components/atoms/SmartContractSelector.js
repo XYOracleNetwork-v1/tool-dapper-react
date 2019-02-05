@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import Dropdown from 'react-dropdown'
-import 'react-dropdown/style.css'
 
-import './css/SmartContractSelector.css'
+import Dropdown from './Dropdown'
 
 class SmartContractSelector extends Component {
   _onSelect = selection => {
@@ -30,7 +28,7 @@ class SmartContractSelector extends Component {
         options={options}
         onChange={this._onSelect}
         value={selectedContract}
-        placeholder="Nothing Selected"
+        placeholder="Select Contract"
       />
     )
   }

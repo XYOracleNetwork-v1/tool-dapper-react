@@ -27,19 +27,7 @@ const SidebarRoot = glam.div('sidebar', {
 const SelectContractLayout = glam.div({
   display: `flex`,
   flexDirection: `column`,
-  fontFamily: `PT Sans`,
-  padding: 30,
-})
-
-const SelectContractHeader = glam.div({
-  color: `white`,
-  fontSize: 23,
-})
-
-const SpaceBetweenRow = glam.div({
-  display: `flex`,
-  flexDirection: `row`,
-  justifyContent: `space-between`,
+  marginLeft: 45,
 })
 
 const StyledLink = glam(Link)(
@@ -81,23 +69,29 @@ const Sidebar = ({
   updateContract,
   updateDeploymentSelection,
   updateAddress,
-  service,
   deploymentSelection,
+  network,
+  getDeployedContractObjects,
+  contracts,
+  getContractObject,
 }) => (
   <SidebarRoot>
     <Div>
-      <SidebarLink to="/search">
-        <Registry />
-        ABI Search
-      </SidebarLink>
+      {/* not using for now */}
+      {/*<SidebarLink to="/search">*/}
+      {/*<Registry />*/}
+      {/*ABI Search*/}
+      {/*</SidebarLink>*/}
       <SidebarLink to="/upload">
         <Upload />
         IPFS Uploader
       </SidebarLink>
-      <SidebarLink to="/helpers">
-        <W3 />
-        Web3 Helpers
-      </SidebarLink>
+      {network && (
+        <SidebarLink to="/helpers">
+          <W3 />
+          Web3 Helpers
+        </SidebarLink>
+      )}
       <SidebarLink to="/simulator">
         <Simulator />
         Contract Simulator
@@ -106,28 +100,30 @@ const Sidebar = ({
         path="/simulator/:contract?"
         render={props => (
           <SelectContractLayout>
-            <SpaceBetweenRow>
-              <SelectContractHeader>Select Contract</SelectContractHeader>
-            </SpaceBetweenRow>
             <SmartContractSelector
               onSelect={updateContract}
               selectedContractName
-              contracts={service.getSmartContracts()}
+              contracts={contracts}
               {...props}
             />
-            <ContractAddressDropdown
-              onSelect={updateDeploymentSelection}
-              service={service}
-              selectedAddress={deploymentSelection.address}
-              selectedNotes={deploymentSelection.notes}
-              {...props}
-            />
+            {network && (
+              <ContractAddressDropdown
+                onSelect={updateDeploymentSelection}
+                getDeployedContractObjects={getDeployedContractObjects}
+                selectedAddress={deploymentSelection.address}
+                selectedNotes={deploymentSelection.notes}
+                network={network}
+                {...props}
+              />
+            )}
           </SelectContractLayout>
         )}
       />
       <Route
         path="/simulator/:contract"
-        render={props => <FunctionsList {...props} service={service} />}
+        render={props => (
+          <FunctionsList {...props} getContractObject={getContractObject} />
+        )}
       />
     </Div>
     <Div>

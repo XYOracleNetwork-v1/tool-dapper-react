@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import uploadIPFS from '../../util/IPFSUploader'
 import ProgressButton, { STATE } from 'react-progress-button'
 import { withCookies } from 'react-cookie'
 import { Div } from 'glamorous'
+
+import uploadIPFS from '../../util/IPFSUploader'
 
 class DroppedFileDiv extends Component {
   state = {

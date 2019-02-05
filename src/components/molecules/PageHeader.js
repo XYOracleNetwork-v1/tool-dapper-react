@@ -1,5 +1,5 @@
 import React from 'react'
-import glam, { Div, Img } from 'glamorous'
+import glam, { Div, Img, A } from 'glamorous'
 import CurNetwork from '../atoms/CurNetwork'
 import logo from '../../assets/logo.svg'
 
@@ -17,24 +17,31 @@ const HeaderDiv = glam.div({
 
 class PageHeader extends React.Component {
   render() {
-    let network = this.props.service.getCurrentNetwork()
-      ? this.props.service.getCurrentNetwork().name
-      : ``
+    const { connectProvider, network, account } = this.props
+    const networkName = network && network.name
     return (
       <HeaderDiv>
         <Img css={{ width: 300, marginLeft: 60 }} src={logo} />
-        <Div className="vertical-center">
-          <a
+        <Div
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            textAlign: 'right',
+          }}
+        >
+          <A
+            css={{ fontSize: 20, color: 'inherit' }}
             href="https://github.com/XYOracleNetwork/tool-dapper-react"
-            className="link-right"
             target="_blank"
             rel="noopener noreferrer"
           >
             View on Github - {version}
-          </a>
+          </A>
           <CurNetwork
-            account={this.props.service.getCurrentUser()}
-            network={network}
+            account={account}
+            network={networkName}
+            connectProvider={connectProvider}
           />
         </Div>
       </HeaderDiv>

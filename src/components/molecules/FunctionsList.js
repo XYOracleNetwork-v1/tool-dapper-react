@@ -5,18 +5,20 @@ import { NavLink as Link, Route } from 'react-router-dom'
 import { ReactComponent as Deploy } from '../../assets/deploy.svg'
 import { ReactComponent as FunctionsIcon } from '../../assets/functions-icon.svg'
 import { ReactComponent as FunctionIcon } from '../../assets/function-icon.svg'
-import './css/FunctionsList.css'
 import { lightPurple } from '../../theme'
 
 const FunctionsDiv = glam.div({
   // flex: 1,
   // overflow: `auto`,
+  marginLeft: 20,
 })
+
 const FunctionsHeaderDiv = glam.div(
   {
     display: `flex`,
     alignItems: 'center',
     margin: '10px 0',
+    marginLeft: 25,
     '& svg': {
       marginRight: 15,
       width: 22,
@@ -35,25 +37,33 @@ const FunctionsListDiv = glam.div({
 })
 
 const NavItem = glam.div({
-  fontSize: 25,
+  fontSize: 22,
 })
 
-const StyledLink = glam(Link)(
+const StyledLink = glam(Link)({
+  textDecoration: 'none',
+  color: 'inherit',
+  cursor: 'pointer',
+  paddingLeft: 25,
+  display: 'flex',
+  alignItems: 'center',
+  ':hover': {
+    background: 'rgba(0,0,0,0.1)',
+  },
+  '& svg': {
+    marginRight: 15,
+    fill: 'currentColor',
+    stroke: 'currentColor',
+  },
+})
+
+const StyledSectionLink = glam(StyledLink)(
   {
-    textDecoration: 'none',
-    color: 'inherit',
-    fontSize: 20,
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    padding: '20px 0',
-    display: 'flex',
-    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
     margin: '10px 0',
     '& svg': {
-      marginRight: 15,
       width: 22,
-      fill: 'currentColor',
-      stroke: 'currentColor',
     },
   },
   ({ active }) =>
@@ -62,22 +72,13 @@ const StyledLink = glam(Link)(
     },
 )
 
-const StyledMethodLink = glam(Link)(
+const StyledMethodLink = glam(StyledLink)(
   {
-    textDecoration: 'none',
-    fontSize: 18,
-    // lineHeight: '2.17px',
-    color: '#fff',
-    cursor: 'pointer',
-    padding: '10px 0',
-    display: 'flex',
-    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
     marginLeft: 30,
     '& svg': {
-      marginRight: 15,
       width: 15,
-      fill: 'currentColor',
-      stroke: 'currentColor',
     },
   },
   ({ active }) =>
@@ -93,9 +94,9 @@ const SidebarLink = ({ to, children, exact, ...props }) => (
     path={to}
     exact={exact}
     children={({ match }) => (
-      <StyledLink active={match} to={to} {...props}>
+      <StyledSectionLink active={match} to={to} {...props}>
         {children}
-      </StyledLink>
+      </StyledSectionLink>
     )}
   />
 )
@@ -120,9 +121,14 @@ export const MethodLink = ({ url, method, exact }) => {
   )
 }
 
-export const FunctionsList = ({ match, service }) => {
-  const contractName = match.params.contract
-  const contract = service.contractObject(contractName)
+export const FunctionsList = ({
+  match: {
+    params: { contract: contractName },
+    url,
+  },
+  getContractObject,
+}) => {
+  const contract = getContractObject(contractName)
 
   if (!contract || !contract.abi) {
     return null
@@ -132,7 +138,7 @@ export const FunctionsList = ({ match, service }) => {
     .filter(({ name, type }) => name && type === 'function')
     // .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 1))
     .map((method, index) => (
-      <MethodLink key={index} url={match.url} method={method} />
+      <MethodLink key={index} url={url} method={method} />
     ))
 
   return (
@@ -152,10 +158,6 @@ export const FunctionsList = ({ match, service }) => {
       />
 
       <FunctionsListDiv>{sortedMethods}</FunctionsListDiv>
-      <SidebarLink to="/dappHelpers">
-        <Deploy />
-        <NavItem>Dapp Helpers</NavItem>
-      </SidebarLink>
     </FunctionsDiv>
   )
 }

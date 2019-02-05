@@ -27,32 +27,3 @@ body {
     'Helvetica Neue', sans-serif;
   color: #fff;
 }
-
-.vertical-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: right;
-}
-
-.link-right {
-  font-family: PTSans-Regular;
-  font-size: 20px;
-  color: #ffffff;
-  letter-spacing: 0;
-}
-
-.account-right {
-  font-family: PTSans-Regular;
-  font-size: 14px;
-  color: #ffffff;
-  letter-spacing: 0;
-  padding-top: 10px;
-}
-
-.network-right {
-  font-family: PTSans-Regular;
-  font-size: 14px;
-  color: #ffffff;
-  letter-spacing: 0;
-}

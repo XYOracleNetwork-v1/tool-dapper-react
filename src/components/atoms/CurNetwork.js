@@ -1,32 +1,26 @@
 import React from 'react'
 import { Div } from 'glamorous'
 
-const WalletDiv = account => {
-  if (account) {
-    return (
-      <Div key="account" className="account-right">
-        Wallet: {account}
-      </Div>
-    )
-  }
-  return (
-    <Div key="account" className="account-right">
-      No Wallet Connected
-    </Div>
-  )
-}
+import Button from '../atoms/Button'
 
-const CurNetwork = ({ account, network }) => {
-  let returnDivs = []
-  returnDivs.push(WalletDiv(account))
-  if (network) {
-    returnDivs.push(
-      <Div key="network" className="network-right">
-        Network: {network}
-      </Div>,
-    )
-  }
-  return <Div>{returnDivs}</Div>
-}
+const CurrentNetwork = ({ account, network, connectProvider }) => (
+  <Div>
+    {network ? (
+      <>
+        <Div css={{ fontSize: 14, paddingTop: 10 }}>
+          {account ? `Wallet: ${account}` : 'No Wallet Connected'}
+        </Div>
+        <Div css={{ fontSize: 14 }}>Network: {network}</Div>
+      </>
+    ) : (
+      <Button
+        css={{ marginTop: 10, marginRight: 0, width: 250 }}
+        onClick={connectProvider}
+      >
+        Connect Wallet
+      </Button>
+    )}
+  </Div>
+)
 
-export default CurNetwork
+export default CurrentNetwork

@@ -122,18 +122,6 @@ class DappHelperComponent extends Component {
     helpers: defaultHelpers,
   }
 
-  getFunctions = () => {
-    const results = []
-    this.state.helpers.forEach((func, index) => {
-      results.push(
-        <Div key={index} css={{ margin: 20 }}>
-          <Link to={`/dappHelpers/${func.id}`}>{func.name}</Link>
-          <Div>{func.description}</Div>
-        </Div>,
-      )
-    })
-    return <Div>{results}</Div>
-  }
   finishExecuting = (error, result) => {
     console.log(`Got result`, result)
     this.setState({
@@ -142,14 +130,23 @@ class DappHelperComponent extends Component {
       executeBtnState: error ? STATE.ERROR : STATE.SUCCESS,
     })
   }
+
   render() {
     // console.log(`RENDERING DAPP HELPER COMPONENT`)
+    const { helpers } = this.state
     return (
       <MainDiv>
-        <Div>{this.getFunctions()}</Div>
+        <Div>
+          {helpers.map(func => (
+            <Div key={func.name} css={{ margin: 20 }}>
+              <Link to={`/helpers/${func.id}`}>{func.name}</Link>
+              <Div>{func.description}</Div>
+            </Div>
+          ))}
+        </Div>
         <Route
           exact
-          path="/dappHelpers/:funcId"
+          path="/helpers/:funcId"
           render={props => (
             <DappHelperExecutionComponent
               {...props}
@@ -157,7 +154,6 @@ class DappHelperComponent extends Component {
               executeHelper={this.finishExecuting}
             />
           )}
-          service={this.state.service}
         />
         <ResultDiv result={this.state.transactionResult} />
         <TransactionError error={this.state.transactionError} />
