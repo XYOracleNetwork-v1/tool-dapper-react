@@ -5,6 +5,7 @@ import { Div, Form, Textarea } from 'glamorous'
 
 import Button from '../atoms/Button'
 import uploadIPFS from '../../util/IPFSUploader'
+import { parse, stringify } from '../../util/JSON'
 
 class JSONUploader extends Component {
   state = {
@@ -18,10 +19,7 @@ class JSONUploader extends Component {
     try {
       const { data } = this.state
       // parse then stringify for simple validation
-      const res = await uploadIPFS(
-        cookies,
-        Buffer.from(JSON.stringify(JSON.parse(data))),
-      )
+      const res = await uploadIPFS(cookies, Buffer.from(stringify(parse(data))))
       onSave(res)
       this.setState({ uploadBtnState: STATE.SUCCESS })
     } catch (err) {

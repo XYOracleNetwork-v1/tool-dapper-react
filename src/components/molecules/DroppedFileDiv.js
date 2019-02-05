@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import ProgressButton, { STATE } from 'react-progress-button'
+import { STATE } from 'react-progress-button'
 import { withCookies } from 'react-cookie'
 import { Div } from 'glamorous'
 
 import uploadIPFS from '../../util/IPFSUploader'
+import Button from './../atoms/Button'
 
 class DroppedFileDiv extends Component {
   state = {
@@ -34,6 +35,7 @@ class DroppedFileDiv extends Component {
 
   render() {
     const { files } = this.props
+    const { uploadBtnState } = this.state
     return (
       files.length > 0 && (
         <Div style={{ textAlign: `left` }}>
@@ -45,12 +47,9 @@ class DroppedFileDiv extends Component {
               </li>
             ))}
           </ul>
-          <ProgressButton
-            state={this.state.uploadBtnState}
-            onClick={this.handleClick}
-          >
+          <Button state={uploadBtnState} onClick={this.handleClick}>
             Upload Contracts
-          </ProgressButton>
+          </Button>
         </Div>
       )
     )

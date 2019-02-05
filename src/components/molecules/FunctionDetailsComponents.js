@@ -1,6 +1,7 @@
 import glam from 'glamorous'
-import ProgressButton from 'react-progress-button'
 import React from 'react'
+
+import Button from './../atoms/Button'
 
 export const MainDiv = glam.div({
   color: `#fff`,
@@ -38,23 +39,12 @@ export const FunctionParamLayout = glam.div({
   width: `100%`,
   flex: 1,
 })
+
 export const FunctionParamList = glam.div({
   display: `flex`,
   flexDirection: `column`,
   justifyContent: `flex-start`,
-  paddingLeft: 30,
   paddingRight: 30,
-  flex: 1,
-})
-
-export const InputBar = glam.input({
-  marginTop: 8,
-  marginRight: 8,
-  paddingLeft: 8,
-  border: `1px solid #E0E0E0`,
-  borderRadius: `6px`,
-  backgroundColor: `#F6F6F6`,
-  height: 40,
   flex: 1,
 })
 
@@ -65,13 +55,7 @@ export const ParamInputDiv = glam.div({
   minWidth: 300,
 })
 
-export const FormattedProgressButton = props => (
-  <ProgressButton
-    style={{
-      width: 260,
-      margin: 20,
-      marginTop: 30,
-    }}
-    {...props}
-  />
-)
+export const ExecuteFunctionButton = glam(Button)({
+  width: 260,
+  marginTop: 30,
+})

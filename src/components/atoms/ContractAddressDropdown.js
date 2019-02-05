@@ -43,6 +43,8 @@ class ContractAddressDropdown extends Component {
   render() {
     const { selectedNotes, selectedAddress, network } = this.props
     const { contractObjects } = this.state
+    console.log({ contractObjects })
+
     return (
       <Div
         css={{

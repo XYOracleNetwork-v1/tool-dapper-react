@@ -4,27 +4,8 @@ import { withRouter } from 'react-router-dom'
 import { withCookies } from 'react-cookie'
 import glam from 'glamorous'
 
-import Input from '../atoms/Input'
 import Button from '../atoms/Button'
-
-const FieldGroup = glam.div({
-  marginRight: 40,
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-})
-
-const FieldLabel = glam.label({
-  fontSize: 16,
-  marginBottom: 10,
-})
-
-const Field = ({ label, id, placeholder }) => (
-  <FieldGroup>
-    <FieldLabel htmlFor={id}>{label}</FieldLabel>
-    <Input id={id} placeholder={placeholder} />
-  </FieldGroup>
-)
+import TextInput from '../atoms/TextInput'
 
 const Row = glam.div({
   display: 'flex',
@@ -60,8 +41,8 @@ class ContractSimulator extends Component {
           }}
         >
           <H2>Deploy DataVault</H2>
-          <Field label="Name" id="name" placeholder="string" />
-          <Field label="Parameters" id="params" placeholder="string" />
+          <TextInput label="Name" id="name" placeholder="string" />
+          <TextInput label="Parameters" id="params" placeholder="string" />
           <Button css={{ marginTop: 40 }} type="submit">
             Deploy Contract
           </Button>

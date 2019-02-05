@@ -9,32 +9,13 @@ import { SettingsLayout } from '../molecules/SettingsComponenets'
 import FolderDropzone from './../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
 import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
-import TextInput from '../atoms/Input'
+import TextInput from '../atoms/TextInput'
 import Button from '../atoms/Button'
 
 const Heading = glam.h3({
   fontSize: 22,
   fontWeight: 'normal',
 })
-
-const FieldGroup = glam.div({
-  marginRight: 40,
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-})
-
-const FieldLabel = glam.label({
-  fontSize: 16,
-  marginBottom: 10,
-})
-
-const Field = ({ label, id, placeholder, ...inputProps }) => (
-  <FieldGroup>
-    <FieldLabel htmlFor={id}>{label}</FieldLabel>
-    <TextInput id={id} name={id} placeholder={placeholder} {...inputProps} />
-  </FieldGroup>
-)
 
 const RadioInput = props => <Input type="radio" {...props} />
 
@@ -135,7 +116,7 @@ class Settings extends Component {
           </Div>
         </Div>
         <Div css={{ display: 'flex', alignItems: 'flex-end' }}>
-          <Field
+          <TextInput
             label="IPFS Address"
             id="ipfs"
             name="ipfs"

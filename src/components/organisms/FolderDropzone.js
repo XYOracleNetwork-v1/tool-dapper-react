@@ -3,7 +3,6 @@ import Dropzone from 'react-dropzone'
 import { Div, Svg } from 'glamorous'
 
 import DroppedFileDiv from '../molecules/DroppedFileDiv'
-import './css/FolderDropzone.css'
 import { createBorder } from '../../theme'
 
 const { fromEvent } = require(`file-selector`)
@@ -11,11 +10,9 @@ const { fromEvent } = require(`file-selector`)
 const parentStyle = {
   alignSelf: `center`,
   padding: 20,
-  // width: 400,
   height: 200,
   marginRight: 40,
   border: `1px dashed #fff`,
-  // borderImage: `url(${borderSmall}) 2 round`,
   color: 'white',
   borderImage: createBorder({ color: 'white' }),
   background: 'rgba(216, 216, 216, 0.22)',
@@ -23,11 +20,7 @@ const parentStyle = {
 }
 
 class FolderDropzone extends React.Component {
-  constructor() {
-    super()
-    this.state = { files: [] }
-  }
-
+  state = { files: [] }
   onDrop = files => {
     this.setState({
       files,

@@ -61,6 +61,9 @@ class HomeComponent extends Component {
   getContractObject = contract =>
     this.state.service.contractObject(contract) || {}
 
+  createContract = (abi, address) =>
+    this.state.service.createContract(abi, address)
+
   render() {
     const {
       deploymentSelection,
@@ -110,11 +113,10 @@ class HomeComponent extends Component {
         <Div
           className="content"
           css={{
-            display: `flex`,
-            flexDirection: `column`,
-            width: `100%`,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
             gridArea: 'body',
-            // overflow: 'hidden',
             position: 'relative',
             padding: '25px 20px',
           }}
@@ -182,8 +184,11 @@ class HomeComponent extends Component {
               render={props => (
                 <FunctionDetails
                   {...props}
-                  service={service}
+                  getContractObject={this.getContractObject}
+                  user={currentUser}
+                  createContract={this.createContract}
                   selectedAddress={deploymentSelection.address}
+                  network={currentNetwork}
                 />
               )}
             />

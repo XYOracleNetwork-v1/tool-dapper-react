@@ -1,69 +1,69 @@
 import React, { Component } from 'react'
-import { Div } from 'glamorous'
-import TransactionResult from '../atoms/TransactionResult'
-import TransactionError from '../atoms/TransactionError'
+import { Form } from 'glamorous'
 import { TransactionReceipt } from '../atoms/TransactionReceipt'
-import { HeaderStyle } from '../atoms/HeaderStyle'
 import { STATE } from 'react-progress-button'
 import {
-  MainDiv,
-  FunctionParamLayout,
-  FunctionPropertiesDiv,
   FunctionParamList,
-  InputBar,
   ParamInputDiv,
-  Horizontal,
-  FormattedProgressButton,
+  ExecuteFunctionButton,
 } from '../molecules/FunctionDetailsComponents'
 import { getMethodSig } from '../molecules/FunctionsList'
+import TextInput from '../atoms/TextInput'
+import ResultDiv from '../atoms/ResultDiv'
+import { stringify } from '../../util/JSON'
+import asyncSetState from '../../util/asyncSetState'
 
 class FunctionDetails extends Component {
-  state = {
-    method: {
-      inputs: [],
-      outputs: [],
-      name: `loading...`,
-      type: ``,
+  constructor(props) {
+    super(props)
+    this.state = {
       executeBtnState: STATE.NOTHING,
-    },
-    service: this.props.service,
-    transactionResult: undefined,
-    transactionReceipt: undefined,
-    transactionError: undefined,
-    inputs: undefined,
-    contractAbi: undefined,
-  }
-
-  componentDidMount() {
+    }
     this.updateInputs()
   }
 
-  componentDidUpdate() {
-    this.updateInputs()
+  componentDidUpdate(prevProps) {
+    const {
+      match: {
+        params: { method: prevMethodSig },
+      },
+      network: prevNetwork,
+    } = prevProps
+    const {
+      match: {
+        params: { method: methodSig },
+      },
+      network,
+    } = this.props
+
+    if (prevMethodSig !== methodSig || prevNetwork !== network) {
+      this.updateInputs()
+    }
   }
 
   updateInputs = () => {
-    const { match } = this.props
-    const signature = getMethodSig(this.state.method)
-    const methodSig = match.params.method
-    if (signature !== methodSig) {
-      const contractName = match.params.contract
-      let contract = this.state.service.contractObject(contractName)
-      if (contract) {
-        const { abi } = contract
-        const newMethod = this.methodObject(abi, methodSig)
-        if (newMethod) {
-          this.setState({
-            method: newMethod,
-            transactionResult: undefined,
-            transactionError: undefined,
-            transactionReceipt: undefined,
-            inputs: [],
-            value: 0,
-            executeBtnState: STATE.NOTHING,
-            contractAbi: abi,
-          })
-        }
+    const {
+      match: {
+        params: { contract: contractName, method: methodSig },
+      },
+      getContractObject,
+    } = this.props
+
+    const { abi } = getContractObject(contractName)
+    if (abi) {
+      const method = this.methodObject(abi, methodSig)
+      if (method) {
+        const inputs = method.inputs.reduce(
+          (acc, input) => ({ [input.name]: '' }),
+          {},
+        )
+        this.setState({
+          method,
+          inputs,
+          value: 0,
+          executeBtnState: STATE.NOTHING,
+          contractAbi: abi,
+        })
       }
     }
   }
@@ -72,33 +72,27 @@ class FunctionDetails extends Component {
     methods.find(method => getMethodSig(method) === sig)
 
   handleChange = e => {
-    const { method } = this.state
-    const inputs =
-      this.state.inputs && this.state.inputs.length > 0
-        ? this.state.inputs
-        : method.inputs
-
-    const newInputs = inputs.map(input => {
-      if (input.name === e.target.name) {
-        return { ...input, value: e.target.value }
-      }
-      return input
-    })
-
-    if (e.target.name === `Value`) {
-      this.setState({ value: e.target.value })
+    const { inputs } = this.state
+    const { name: inputName, value } = e.target
+    if (inputName === 'Value') {
+      return this.setState({ value })
     }
+
+    const newInputs = inputs
+    newInputs[inputName] = value
+
     this.setState({ inputs: newInputs })
   }
 
   executeContract = async (user, contract) => {
-    const { method } = this.state
-
-    const inputParams = this.state.inputs.map(i => i.value)
-    const methodName = method.name
-    const { stateMutability } = method
+    const {
+      method: { stateMutability, name: methodName },
+      inputs,
+      value,
+    } = this.state
+    const inputParams = Object.entries(inputs).map(([name, value]) => value)
     if (
-      this.state.value === 0 &&
+      value === 0 &&
       (inputParams.length === 0 ||
         stateMutability === `view` ||
         stateMutability === `pure`)
@@ -123,152 +117,130 @@ class FunctionDetails extends Component {
       // contract.methods
       //   .mint(...inputParams)
       //   .send({ from: user, value: this.state.value })
-      await contract.methods[methodName](...inputParams)
+      const transactionReceipt = await contract.methods[methodName](
+        ...inputParams,
+      )
         .send({ from: user, value: this.state.value, gas: 4712388 })
-        .then(transactionReceipt => {
-          console.log(`Got receipts`, transactionReceipt)
-          this.setState({
-            transactionReceipt,
-            executeBtnState: STATE.SUCCESS,
-          })
-        })
         .catch(e =>
           this.setState({
             transactionError: e,
             executeBtnState: STATE.ERROR,
           }),
         )
+      console.log(`Got receipts`, transactionReceipt)
+      this.setState({
+        transactionReceipt,
+        executeBtnState: STATE.SUCCESS,
+      })
     }
   }
 
   handleExecute = async e => {
     e.preventDefault()
-    this.setState({
-      transactionResult: undefined,
-      transactionError: undefined,
-      transactionReceipt: undefined,
+    const { user, createContract, selectedAddress } = this.props
+    const { contractAbi } = this.state
+    await asyncSetState(this.setState.bind(this), {
+      transactionResult: null,
+      transactionError: null,
+      transactionReceipt: null,
       executeBtnState: STATE.LOADING,
     })
 
     try {
-      const user = this.state.service.getCurrentUser()
       if (!user) {
         throw new Error(`Please connect a wallet`)
       }
 
-      const { selectedAddress } = this.props
       if (!selectedAddress) {
         throw new Error(
           `No contract address selected, contract must be deployed at address.`,
         )
       }
 
-      let contract = this.state.service.createContract(
-        this.state.contractAbi,
-        selectedAddress,
-      )
+      const contract = createContract(contractAbi, selectedAddress)
       await this.executeContract(user, contract)
     } catch (e) {
       this.setState({
         transactionError: e,
+        executeBtnState: STATE.ERROR,
       })
       throw e
     }
   }
 
-  getInputValue = name => {
-    let val = ``
-    const input = this.state.inputs.filter(input => input.name === name)
-    if (input) {
-      val = input[0] ? (input[0].value ? input[0].value : ``) : ``
-    }
-    return val
+  getInputs = () => {
+    const { method, inputs } = this.state
+    if (!method || !inputs) return null
+    return method.inputs.map(({ name, type }, index) => (
+      <ParamInputDiv key={name}>
+        <TextInput
+          label={name}
+          name={name || `param-${index}`}
+          id={name}
+          placeholder={type}
+          onChange={this.handleChange}
+          value={inputs[name]}
+        />
+      </ParamInputDiv>
+    ))
   }
-
-  getInputs = method => {
-    const results = method.inputs.map((input, index) => {
-      if (input.name === ``) {
-        input.name = `param${index}`
-      }
-      return (
-        <ParamInputDiv key={input.name}>
-          {input.name}
-          <InputBar
-            type="text"
-            name={input.name}
-            placeholder={input.type}
-            onChange={this.handleChange}
-            value={this.getInputValue(input.name)}
-          />
-        </ParamInputDiv>
-      )
-    })
-
-    if (method.stateMutability === `payable`) {
-      results.push(
-        <ParamInputDiv key="Value">
-          Value To Transfer
-          <InputBar
-            type="text"
-            name="Value"
-            placeholder="ETH (wei)"
-            onChange={this.handleChange}
-            value={this.state.value}
-          />
-        </ParamInputDiv>,
-      )
-    }
-    return results
-  }
-
-  functionProperties = method => (
-    <Div>
-      {method.name}(
-      {method.inputs.map(input => `${input.type} ${input.name}`).join(`, `)})
-      <Div>{method.stateMutability}</Div>
-      {method.outputs.length === 0
-        ? ``
-        : `returns (` +
-          method.outputs
-            .map(
-              output => `${output.type}${output.name ? ` ` : ``}${output.name}`,
-            )
-            .join(`, `) +
-          `)`}
-    </Div>
-  )
 
   render() {
+    const { network } = this.props
     const {
       method,
       transactionResult,
       transactionReceipt,
       transactionError,
+      executeBtnState,
+      value,
     } = this.state
 
+    if (!network) return <div>Please connect a wallet</div>
+    if (!method) return <div>Loading...</div>
+
     return (
-      <MainDiv>
-        <HeaderStyle>{method.name}()</HeaderStyle>
-        <FunctionParamLayout>
-          <Horizontal>
-            <FunctionPropertiesDiv>
-              {this.functionProperties(method)}
-            </FunctionPropertiesDiv>
-            <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
-          </Horizontal>
-
-          <FormattedProgressButton
-            state={this.state.executeBtnState}
-            onClick={this.handleExecute}
-          >
+      <>
+        <h2>{method.name}</h2>
+        <Form
+          css={{
+            display: `flex`,
+            flexDirection: `column`,
+            paddingBottom: 40,
+            borderBottom: `1px solid #979797`,
+            width: `100%`,
+          }}
+          onSubmit={this.handleExecute}
+        >
+          <FunctionParamList>
+            {this.getInputs()}
+            {method.stateMutability === 'payable' && (
+              <ParamInputDiv key="Value">
+                Value To Transfer
+                <TextInput
+                  name="Value"
+                  id="value"
+                  placeholder="ETH (wei)"
+                  onChange={this.handleChange}
+                  value={value}
+                />
+              </ParamInputDiv>
+            )}
+          </FunctionParamList>
+          <ExecuteFunctionButton state={executeBtnState} type="submit">
             Execute
-          </FormattedProgressButton>
-        </FunctionParamLayout>
-
-        <TransactionResult result={transactionResult} />
-        <TransactionError error={transactionError} />
-        <TransactionReceipt {...transactionReceipt} />
-      </MainDiv>
+          </ExecuteFunctionButton>
+        </Form>
+        {transactionResult && (
+          <ResultDiv title="Result">{stringify(transactionResult)}</ResultDiv>
+        )}
+        {transactionError && (
+          <ResultDiv title="Error">{transactionError.toString()}</ResultDiv>
+        )}
+        {transactionReceipt && (
+          <TransactionReceipt transactionReceipt={transactionReceipt} />
+        )}
+      </>
     )
   }
 }

@@ -10,11 +10,11 @@ import {
   FunctionParamLayout,
   FunctionPropertiesDiv,
   FunctionParamList,
-  InputBar,
   ParamInputDiv,
   Horizontal,
-  FormattedProgressButton,
+  ExecuteFunctionButton,
 } from '../molecules/FunctionDetailsComponents'
+import TextInput from '../atoms/TextInput'
 
 class ContractDeployment extends Component {
   state = {
@@ -36,18 +36,6 @@ class ContractDeployment extends Component {
 
   componentDidMount() {
     this.updateInputs()
-  }
-
-  componentDidUnmount() {
-    this.setState({
-      method: {
-        inputs: [],
-        outputs: [],
-        name: `loading...`,
-        type: ``,
-        executeBtnState: STATE.NOTHING,
-      },
-    })
   }
 
   updateInputs = () => {
@@ -264,8 +252,7 @@ class ContractDeployment extends Component {
         results.push(
           <ParamInputDiv key={index}>
             {lib}
-            <InputBar
-              type="text"
+            <TextInput
               name={lib}
               placeholder="Library Address (0x...)"
               onChange={this.handleLibChange}
@@ -279,8 +266,7 @@ class ContractDeployment extends Component {
     results.push(
       <ParamInputDiv key="Notes">
         Deployment Notes
-        <InputBar
-          type="text"
+        <TextInput
           name="Notes"
           placeholder="Optional Notes or Description"
           onChange={this.handleChange}
@@ -295,7 +281,7 @@ class ContractDeployment extends Component {
       results.push(
         <ParamInputDiv key={input.name}>
           {input.name}
-          <InputBar
+          <TextInput
             type="text"
             name={input.name}
             placeholder={input.type}
@@ -310,8 +296,7 @@ class ContractDeployment extends Component {
       results.push(
         <ParamInputDiv key="Value">
           Value To Transfer
-          <InputBar
-            type="text"
+          <TextInput
             name="Value"
             placeholder="ETH (wei)"
             onChange={this.handleChange}
@@ -355,12 +340,12 @@ class ContractDeployment extends Component {
             <FunctionParamList>{this.getInputs(method)}</FunctionParamList>
           </Horizontal>
 
-          <FormattedProgressButton
+          <ExecuteFunctionButton
             state={executeBtnState}
             onClick={this.handleExecute}
           >
             Deploy Contract
-          </FormattedProgressButton>
+          </ExecuteFunctionButton>
         </FunctionParamLayout>
         {/* <Div
           css={{

@@ -23,14 +23,14 @@ export const EventTables = ({ events }) => (
   </Div>
 )
 
-export const TransactionReceipt = props => {
+export const TransactionReceipt = ({ transactionReceipt }) => {
   const {
     transactionHash,
     // ethAddress,
     blockNumber,
     gasUsed,
     events,
-  } = props
+  } = transactionReceipt
   if (!transactionHash) {
     return null
   }

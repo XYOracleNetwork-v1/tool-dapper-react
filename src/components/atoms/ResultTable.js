@@ -58,7 +58,7 @@ export const Table = ({ header: { name, value, color }, rows }) => (
     </Row>
     {rows.map(({ name, value, linkTo, url }) => {
       return (
-        <Row key={name}>
+        <Row key={`${name}-${value}`}>
           <div>{name}</div>
           <MaybeLink to={linkTo} href={url}>
             {value}

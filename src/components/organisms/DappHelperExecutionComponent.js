@@ -3,13 +3,13 @@ import React, { Component } from 'react'
 import {
   FunctionParamLayout,
   FunctionParamList,
-  InputBar,
   ParamInputDiv,
   Horizontal,
-  FormattedProgressButton,
+  ExecuteFunctionButton,
 } from '../molecules/FunctionDetailsComponents'
 import { Div } from 'glamorous'
 import { defaultHelpers } from './DappHelperComponent'
+import TextInput from '../atoms/TextInput'
 
 class DappHelperExecutionComponent extends Component {
   getFunc = () =>
@@ -66,8 +66,7 @@ class DappHelperExecutionComponent extends Component {
     this.getFunc().inputs.forEach((input, i2) => {
       results.push(
         <ParamInputDiv key={i2}>
-          <InputBar
-            type="text"
+          <TextInput
             name={input.name}
             placeholder={input.placeholder}
             onChange={this.handleChange}
@@ -120,12 +119,12 @@ class DappHelperExecutionComponent extends Component {
           <FunctionParamList>{this.getInputs()}</FunctionParamList>
         </Horizontal>
 
-        <FormattedProgressButton
+        <ExecuteFunctionButton
           state={this.state.executeBtnState}
           onClick={this.executeFunction}
         >
           Execute
-        </FormattedProgressButton>
+        </ExecuteFunctionButton>
       </FunctionParamLayout>
     )
   }

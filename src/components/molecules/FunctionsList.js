@@ -76,7 +76,7 @@ const StyledMethodLink = glam(StyledLink)(
   {
     paddingTop: 10,
     paddingBottom: 10,
-    marginLeft: 30,
+    paddingLeft: 55,
     '& svg': {
       width: 15,
     },
@@ -86,6 +86,7 @@ const StyledMethodLink = glam(StyledLink)(
       fontWeight: 'bold',
       color: lightPurple,
       marginLeft: 0,
+      paddingLeft: 25,
     },
 )
 

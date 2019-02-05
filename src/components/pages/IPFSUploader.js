@@ -3,34 +3,17 @@ import glam, { Div, Form, H2, Textarea } from 'glamorous'
 import { withCookies } from 'react-cookie'
 
 import Button from '../atoms/Button'
-import Input from '../atoms/Input'
+import TextInput from '../atoms/TextInput'
 import FolderDropzone from '../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
 import JSONUploader from '../molecules/JSONUploader'
+
+const StyledTextInput = glam(TextInput)({ marginRight: 40 })
 
 const Heading = glam.h3({
   fontSize: 22,
   fontWeight: 'normal',
 })
-
-const FieldGroup = glam.div({
-  marginRight: 40,
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-})
-
-const FieldLabel = glam.label({
-  fontSize: 16,
-  marginBottom: 10,
-})
-
-const Field = ({ label, id, placeholder }) => (
-  <FieldGroup>
-    <FieldLabel htmlFor={id}>{label}</FieldLabel>
-    <Input id={id} placeholder={placeholder} />
-  </FieldGroup>
-)
 
 class IPFSUploader extends Component {
   state = {
@@ -72,9 +55,17 @@ class IPFSUploader extends Component {
           }}
         >
           <Div css={{ display: 'flex', marginBottom: 25 }}>
-            <Field label="Host" id="host" placeholder="ipfs.xyo.network" />
-            <Field label="Port" id="port" placeholder="5002" />
-            <Field label="Protocol" id="protocol" placeholder="https" />
+            <StyledTextInput
+              label="Host"
+              id="host"
+              placeholder="ipfs.xyo.network"
+            />
+            <StyledTextInput label="Port" id="port" placeholder="5002" />
+            <StyledTextInput
+              label="Protocol"
+              id="protocol"
+              placeholder="https"
+            />
           </Div>
           <Button type="submit">Save</Button>
         </Form>
