@@ -72,26 +72,24 @@ class Web3HelperExecution extends Component {
   handleChange = e => {
     const { inputs } = this.state
     const { name: inputName, value } = e.target
-    const newInputs = inputs
+    const { ...newInputs } = inputs
     newInputs[inputName] = value
     this.setState({ inputs: newInputs })
   }
 
   getInputs = () => {
     const { func, inputs } = this.state
-    return func.inputs.map(({ name, placeholder }) => {
-      return (
-        <ParamInputDiv key={name}>
-          <TextInput
-            label={name}
-            name={name}
-            placeholder={placeholder}
-            onChange={this.handleChange}
-            value={inputs[name]}
-          />
-        </ParamInputDiv>
-      )
-    })
+    return func.inputs.map(({ name, placeholder }) => (
+      <ParamInputDiv key={name}>
+        <TextInput
+          label={name}
+          name={name}
+          placeholder={placeholder}
+          onChange={this.handleChange}
+          value={inputs[name]}
+        />
+      </ParamInputDiv>
+    ))
   }
 
   executeFunction = async e => {

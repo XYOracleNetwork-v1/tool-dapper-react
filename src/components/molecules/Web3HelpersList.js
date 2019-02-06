@@ -72,7 +72,7 @@ export const Web3HelpersList = ({
   <Div css={{ marginLeft: 20 }}>
     {helpers.map(func => (
       <MethodLink key={func.name} to={`/helpers/${func.id}`}>
-        {func.name}
+        {func.name}()
       </MethodLink>
     ))}
   </Div>

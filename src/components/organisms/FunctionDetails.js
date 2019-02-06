@@ -84,7 +84,7 @@ class FunctionDetails extends Component {
       return this.setState({ value })
     }
 
-    const newInputs = inputs
+    const { ...newInputs } = inputs
     newInputs[inputName] = value
     this.setState({ inputs: newInputs })
   }
@@ -203,6 +203,7 @@ class FunctionDetails extends Component {
 
     if (!network) return <div>Please connect a wallet</div>
     if (!method) return <div>Loading...</div>
+    console.log({ method })
 
     return (
       <>

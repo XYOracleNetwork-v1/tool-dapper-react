@@ -3,7 +3,7 @@ import abi from 'ethereumjs-abi'
 export default [
   {
     id: 0,
-    name: `sign()`,
+    name: `sign`,
     description: `Use your account to sign a message`,
     inputs: [
       {
@@ -24,14 +24,14 @@ export default [
   },
   {
     id: 1,
-    name: `now()`,
+    name: `now`,
     description: `Return block time and number`,
     inputs: [],
     method: (web3, callback) => web3.eth.getBlockNumber(callback),
   },
   {
     id: 2,
-    name: `kekkak256()`,
+    name: `kekkak256`,
     description: `Return hash of input`,
     inputs: [
       {
@@ -45,7 +45,7 @@ export default [
   },
   {
     id: 3,
-    name: `encodeParameter()`,
+    name: `encodeParameter`,
     description: `Return abi encoded of two inputs`,
     inputs: [
       {
@@ -72,7 +72,7 @@ export default [
   },
   {
     id: 4,
-    name: `recover()`,
+    name: `recover`,
     description: `Recovers Ethereum address used to sign this data.`,
     inputs: [
       {
