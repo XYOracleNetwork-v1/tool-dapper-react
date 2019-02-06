@@ -20,7 +20,7 @@ const DeploymentsTable = ({ deployments, getNetworkNamed }) => {
   )
 }
 
-const SelectedContractDiv = ({
+const SelectedContract = ({
   service,
   selectedAddress,
   match: {
@@ -60,4 +60,4 @@ const SelectedContractDiv = ({
   )
 }
 
-export default SelectedContractDiv
+export default SelectedContract

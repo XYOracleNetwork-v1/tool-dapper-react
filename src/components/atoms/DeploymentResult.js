@@ -13,6 +13,7 @@ const DeploymentResult = ({ address, ipfs, name, notes }) => {
     color: `6025AE`,
     value: name,
   }
+
   const rows = [
     {
       name: `IPFS`,
@@ -23,13 +24,12 @@ const DeploymentResult = ({ address, ipfs, name, notes }) => {
       name: `Address`,
       value: address,
     },
-  ]
-  if (notes) {
-    rows.push({
+    notes && {
       name: `Notes`,
       value: notes,
-    })
-  }
+    },
+  ].filter(Boolean)
+
   return (
     <Div
       css={{

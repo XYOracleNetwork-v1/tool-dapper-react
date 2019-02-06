@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Div } from 'glamorous'
+import { STATE } from 'react-progress-button'
 import DeploymentResult from '../atoms/DeploymentResult'
-import TransactionError from '../atoms/TransactionError'
 import { TransactionReceipt } from '../atoms/TransactionReceipt'
 import { HeaderStyle } from '../atoms/HeaderStyle'
-import { STATE } from 'react-progress-button'
 import {
   MainDiv,
   FunctionParamLayout,
@@ -15,6 +14,7 @@ import {
   ExecuteFunctionButton,
 } from '../molecules/FunctionDetailsComponents'
 import TextInput from '../atoms/TextInput'
+import ResultDiv from '../atoms/ResultDiv'
 
 class ContractDeployment extends Component {
   state = {
@@ -353,8 +353,10 @@ class ContractDeployment extends Component {
           }}
         /> */}
         <DeploymentResult {...transactionResult} />
-        <TransactionError error={transactionError} />
-        <TransactionReceipt {...transactionReceipt} />
+        {transactionError && <ResultDiv title="Error" />}
+        {transactionReceipt && (
+          <TransactionReceipt transactionReceipt={transactionReceipt} />
+        )}
       </MainDiv>
     )
   }

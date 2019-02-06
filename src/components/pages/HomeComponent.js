@@ -6,20 +6,20 @@ import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
 import SmartContractService from '../../util/SmartContractService'
-import FunctionDetails from './../organisms/FunctionDetails'
+import web3helpers from '../../util/web3helpers'
+import PrivateRoute from '../atoms/PrivateRoute'
+import PageHeader from '../organisms/PageHeader'
+import Sidebar from '../organisms/Sidebar'
 import Settings from './Settings'
-import PageHeader from '../molecules/PageHeader'
-import ContractDeployment from './../organisms/ContractDeployment'
-import SelectedContractDiv from '../molecules/SelectedContractDiv'
-import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
-import Sidebar from '../molecules/Sidebar'
+import FunctionDetails from './FunctionDetails'
+import ContractDeployment from './ContractDeployment'
+import SelectedContract from './SelectedContract'
+import SettingsIPFSDownload from './SettingsIPFSDownload'
 import ABISearch from './ABISearch'
 import IPFSUploader from './IPFSUploader'
 import ContractSimulator from './ContractSimulator'
 import Login from './Login'
 import Web3HelperExecution from './Web3HelperExecution'
-import PrivateRoute from '../atoms/PrivateRoute'
-import web3helpers from '../../util/web3helpers'
 
 class HomeComponent extends Component {
   state = {
@@ -219,7 +219,7 @@ class HomeComponent extends Component {
             exact
             path="/simulator/:contract"
             render={props => (
-              <SelectedContractDiv
+              <SelectedContract
                 {...props}
                 service={service}
                 selectedAddress={deploymentSelection.address}

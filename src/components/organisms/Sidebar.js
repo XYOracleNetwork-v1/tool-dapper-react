@@ -8,10 +8,10 @@ import { ReactComponent as Upload } from '../../assets/upload.svg'
 import { ReactComponent as W3 } from '../../assets/w3.svg'
 import { ReactComponent as Simulator } from '../../assets/simulator.svg'
 import SmartContractSelector from '../atoms/SmartContractSelector'
-import { FunctionsList } from './FunctionsList'
+import { FunctionsList } from '../molecules/FunctionsList'
 import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
 import { lightPurple } from '../../theme'
-import { Web3HelpersList } from './Web3HelpersList'
+import { Web3HelpersList } from '../molecules/Web3HelpersList'
 
 const SidebarRoot = glam.div('sidebar', {
   display: `flex`,
