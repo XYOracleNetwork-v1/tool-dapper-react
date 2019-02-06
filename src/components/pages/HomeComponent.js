@@ -12,11 +12,14 @@ import PageHeader from '../molecules/PageHeader'
 import ContractDeployment from './../organisms/ContractDeployment'
 import SelectedContractDiv from '../molecules/SelectedContractDiv'
 import SettingsIPFSDownload from '../molecules/SettingsIPFSDownload'
-import DappHelperComponent from './../organisms/DappHelperComponent'
 import Sidebar from '../molecules/Sidebar'
 import ABISearch from './ABISearch'
 import IPFSUploader from './IPFSUploader'
 import ContractSimulator from './ContractSimulator'
+import Login from './Login'
+import Web3HelperExecution from './Web3HelperExecution'
+import PrivateRoute from '../atoms/PrivateRoute'
+import web3helpers from '../../util/web3helpers'
 
 class HomeComponent extends Component {
   state = {
@@ -29,6 +32,7 @@ class HomeComponent extends Component {
     // currentUser: undefined,
     deploymentSelection: {},
     contracts: [],
+    helpers: web3helpers,
   }
 
   componentDidMount() {
@@ -71,6 +75,7 @@ class HomeComponent extends Component {
       currentNetwork,
       currentUser,
       contracts,
+      helpers,
     } = this.state
     return (
       <Div
@@ -98,6 +103,7 @@ class HomeComponent extends Component {
           deploymentSelection={deploymentSelection}
           network={currentNetwork}
           contracts={contracts}
+          helpers={helpers}
           getDeployedContractObjects={this.getDeployedContractObjects}
           getContractObject={this.getContractObject}
           updateContract={selectedContractName =>
@@ -122,6 +128,10 @@ class HomeComponent extends Component {
           }}
         >
           <Switch>
+            <Route
+              path="/login"
+              render={props => <Login {...props} user={currentUser} />}
+            />
             <Route path="/search" component={ABISearch} />
             <Route
               path="/upload"
@@ -153,18 +163,28 @@ class HomeComponent extends Component {
                 <SettingsIPFSDownload {...props} service={service} />
               )}
             />
-            <Route
+            <PrivateRoute
+              exact
               path="/helpers"
+              authenticated={currentUser}
+              render={() => <div>Select a helper from the left menu</div>}
+            />
+            <PrivateRoute
+              exact
+              authenticated={currentUser}
+              path="/helpers/:funcId"
               render={props => (
-                <DappHelperComponent
+                <Web3HelperExecution
                   {...props}
-                  service={service}
-                  selectedAddress={deploymentSelection.address}
+                  helpers={helpers}
+                  network={currentNetwork}
+                  web3={service.web3}
                 />
               )}
             />
-            <Route
+            <PrivateRoute
               exact
+              authenticated={currentUser}
               path="/simulator/:contractName/deploy"
               render={props => (
                 <ContractDeployment
@@ -178,8 +198,9 @@ class HomeComponent extends Component {
                 />
               )}
             />
-            <Route
+            <PrivateRoute
               exact
+              authenticated={currentUser}
               path="/simulator/:contract/functions/:method"
               render={props => (
                 <FunctionDetails

@@ -1,15 +1,6 @@
-import React, { Component } from 'react'
-import { Div } from 'glamorous'
-import { Route, Link } from 'react-router-dom'
-import { MainDiv, Vertical } from '../molecules/FunctionDetailsComponents'
-import { STATE } from 'react-progress-button'
-import TransactionError from '../atoms/TransactionError'
-import { TransactionReceipt } from '../atoms/TransactionReceipt'
-import DappHelperExecutionComponent from './DappHelperExecutionComponent'
-// import  abi  from 'ethereumjs-abi'
-const abi = require(`ethereumjs-abi`)
+import abi from 'ethereumjs-abi'
 
-export const defaultHelpers = [
+export default [
   {
     id: 0,
     name: `sign()`,
@@ -112,55 +103,3 @@ export const defaultHelpers = [
       ),
   },
 ]
-
-const ResultDiv = props => {
-  return <Div> {props.result}</Div>
-}
-
-class DappHelperComponent extends Component {
-  state = {
-    helpers: defaultHelpers,
-  }
-
-  finishExecuting = (error, result) => {
-    console.log(`Got result`, result)
-    this.setState({
-      transactionResult: result,
-      transactionError: error,
-      executeBtnState: error ? STATE.ERROR : STATE.SUCCESS,
-    })
-  }
-
-  render() {
-    // console.log(`RENDERING DAPP HELPER COMPONENT`)
-    const { helpers } = this.state
-    return (
-      <MainDiv>
-        <Div>
-          {helpers.map(func => (
-            <Div key={func.name} css={{ margin: 20 }}>
-              <Link to={`/helpers/${func.id}`}>{func.name}</Link>
-              <Div>{func.description}</Div>
-            </Div>
-          ))}
-        </Div>
-        <Route
-          exact
-          path="/helpers/:funcId"
-          render={props => (
-            <DappHelperExecutionComponent
-              {...props}
-              service={this.props.service}
-              executeHelper={this.finishExecuting}
-            />
-          )}
-        />
-        <ResultDiv result={this.state.transactionResult} />
-        <TransactionError error={this.state.transactionError} />
-        <TransactionReceipt {...this.state.transactionResult} />
-      </MainDiv>
-    )
-  }
-}
-
-export default DappHelperComponent

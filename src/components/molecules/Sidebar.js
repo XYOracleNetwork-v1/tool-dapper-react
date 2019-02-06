@@ -11,6 +11,7 @@ import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from './FunctionsList'
 import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
 import { lightPurple } from '../../theme'
+import { Web3HelpersList } from './Web3HelpersList'
 
 const SidebarRoot = glam.div('sidebar', {
   display: `flex`,
@@ -73,6 +74,7 @@ const Sidebar = ({
   network,
   getDeployedContractObjects,
   contracts,
+  helpers,
   getContractObject,
 }) => (
   <SidebarRoot>
@@ -92,6 +94,10 @@ const Sidebar = ({
           Web3 Helpers
         </SidebarLink>
       )}
+      <Route
+        path="/helpers"
+        render={props => <Web3HelpersList {...props} helpers={helpers} />}
+      />
       <SidebarLink to="/simulator">
         <Simulator />
         Contract Simulator

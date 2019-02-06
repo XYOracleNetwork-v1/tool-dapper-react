@@ -19,6 +19,9 @@ class FunctionDetails extends Component {
     this.state = {
       executeBtnState: STATE.NOTHING,
     }
+  }
+
+  componentDidMount() {
     this.updateInputs()
   }
 
@@ -61,6 +64,9 @@ class FunctionDetails extends Component {
           method,
           inputs,
           value: 0,
+          transactionResult: null,
+          transactionError: null,
+          transactionReceipt: null,
           executeBtnState: STATE.NOTHING,
           contractAbi: abi,
         })
@@ -80,7 +86,6 @@ class FunctionDetails extends Component {
 
     const newInputs = inputs
     newInputs[inputName] = value
-
     this.setState({ inputs: newInputs })
   }
 
