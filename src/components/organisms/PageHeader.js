@@ -1,6 +1,6 @@
 import React from 'react'
 import glam, { Div, Img, A } from 'glamorous'
-import CurNetwork from '../atoms/CurNetwork'
+import CurrentNetwork from '../atoms/CurrentNetwork'
 import logo from '../../assets/logo.svg'
 
 const version = require(`../../../package.json`).version
@@ -38,7 +38,7 @@ class PageHeader extends React.Component {
           >
             View on Github - {version}
           </A>
-          <CurNetwork
+          <CurrentNetwork
             account={account}
             network={networkName}
             connectProvider={connectProvider}
