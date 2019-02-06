@@ -1,6 +1,7 @@
 import React from 'react'
-import glam, { A } from 'glamorous'
-import { Link } from 'react-router-dom'
+import glam from 'glamorous'
+import Anchor from './Anchor'
+import Link from './Link'
 
 const TableRoot = glam.div({
   borderRadius: 2,
@@ -42,9 +43,9 @@ const MaybeLink = ({ href, to, children }) => {
   if (to) return <Link to={to}>{children}</Link>
   if (href) {
     return (
-      <A css={{ color: 'inherit' }} href={href} target="_blank">
+      <Anchor href={href} target="_blank">
         {children}
-      </A>
+      </Anchor>
     )
   }
   return <div>{children}</div>

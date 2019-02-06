@@ -2,6 +2,7 @@ import React from 'react'
 import glam, { Div, Img, A } from 'glamorous'
 import CurrentNetwork from '../atoms/CurrentNetwork'
 import logo from '../../assets/logo.svg'
+import Anchor from '../atoms/Anchor'
 
 const version = require(`../../../package.json`).version
 
@@ -30,14 +31,14 @@ class PageHeader extends React.Component {
             textAlign: 'right',
           }}
         >
-          <A
-            css={{ fontSize: 20, color: 'inherit' }}
+          <Anchor
+            css={{ fontSize: 20 }}
             href="https://github.com/XYOracleNetwork/tool-dapper-react"
             target="_blank"
             rel="noopener noreferrer"
           >
             View on Github - {version}
-          </A>
+          </Anchor>
           <CurrentNetwork
             account={account}
             network={networkName}

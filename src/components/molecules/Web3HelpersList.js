@@ -1,10 +1,10 @@
 import React from 'react'
 import glam, { Div } from 'glamorous'
-import { NavLink as Link, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import { ReactComponent as FunctionIcon } from '../../assets/function-icon.svg'
 import { lightPurple } from '../../theme'
-import web3helpers from '../../util/web3helpers'
+import Link from '../atoms/Link'
 
 const FunctionsDiv = glam.div({
   // flex: 1,
@@ -14,8 +14,6 @@ const FunctionsDiv = glam.div({
 
 const StyledLink = glam(Link)({
   textDecoration: 'none',
-  color: 'inherit',
-  cursor: 'pointer',
   paddingLeft: 25,
   display: 'flex',
   alignItems: 'center',

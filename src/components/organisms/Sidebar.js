@@ -1,15 +1,16 @@
 import React from 'react'
 import glam, { Div, Img } from 'glamorous'
-import { Link, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
+// import { ReactComponent as Registry } from '../../assets/registry-icon.svg'
 import { ReactComponent as Cog } from '../../assets/cog.svg'
-import { ReactComponent as Registry } from '../../assets/registry-icon.svg'
 import { ReactComponent as Upload } from '../../assets/upload.svg'
 import { ReactComponent as W3 } from '../../assets/w3.svg'
 import { ReactComponent as Simulator } from '../../assets/simulator.svg'
 import SmartContractSelector from '../atoms/SmartContractSelector'
 import { FunctionsList } from '../molecules/FunctionsList'
 import ContractAddressDropdown from '../atoms/ContractAddressDropdown'
+import Link from '../atoms/Link'
 import { lightPurple } from '../../theme'
 import { Web3HelpersList } from '../molecules/Web3HelpersList'
 
@@ -34,10 +35,8 @@ const SelectContractLayout = glam.div({
 const StyledLink = glam(Link)(
   {
     textDecoration: 'none',
-    color: 'inherit',
     fontSize: 24,
     fontWeight: 'bold',
-    cursor: 'pointer',
     padding: '20px 0',
     display: 'flex',
     alignItems: 'center',
