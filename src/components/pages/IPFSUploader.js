@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
-import glam, { Div, Form, H2, Textarea } from 'glamorous'
+import glam, { Div, H2 } from 'glamorous'
 import { withCookies } from 'react-cookie'
 
 import Button from '../atoms/Button'
-import TextInput from '../atoms/TextInput'
 import FolderDropzone from '../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
 import JSONUploader from '../molecules/JSONUploader'
-
-const StyledTextInput = glam(TextInput)({ marginRight: 40 })
+import IPFSConfigForm from '../molecules/IPFSConfigForm'
 
 const Heading = glam.h3({
   fontSize: 22,
@@ -20,20 +18,19 @@ class IPFSUploader extends Component {
     ...readSettings(this.props.cookies),
   }
 
-  stateChange = (stateKey, stateValue) => {
-    console.log(`attempting State Change`, stateKey, stateValue)
-    this.props.cookies.set(stateKey, stateValue, {
-      path: `/`,
-    })
-
-    this.setState({ [stateKey]: stateValue })
+  handleUpload = async ipfsHash => {
+    const { loadIPFSContracts } = this.props
+    this.setState({ ipfsHash })
+    await loadIPFSContracts()
   }
 
-  render() {
-    const { service, cookies } = this.props
-    const { error } = this.state
-    console.log({ error })
+  saveIPFSContracts = async () => {}
 
+  setError = error => this.setState({ error })
+
+  render() {
+    const { uploadIPFS, ipfsConfig, updateIPFSConfig } = this.props
+    const { error, ipfsHash } = this.state
     return (
       <Div
         css={{ display: 'flex', flexDirection: 'column', paddingBottom: 25 }}
@@ -47,28 +44,10 @@ class IPFSUploader extends Component {
           Pin files and JSON to a remote IPFS Node
         </Div>
         <Heading>IPFS Config</Heading>
-        <Form
-          id="ipfs-config-form"
-          onSubmit={e => {
-            e.preventDefault()
-            console.log('foo')
-          }}
-        >
-          <Div css={{ display: 'flex', marginBottom: 25 }}>
-            <StyledTextInput
-              label="Host"
-              id="host"
-              placeholder="ipfs.xyo.network"
-            />
-            <StyledTextInput label="Port" id="port" placeholder="5002" />
-            <StyledTextInput
-              label="Protocol"
-              id="protocol"
-              placeholder="https"
-            />
-          </Div>
-          <Button type="submit">Save</Button>
-        </Form>
+        <IPFSConfigForm
+          config={ipfsConfig}
+          updateIPFSConfig={updateIPFSConfig}
+        />
         <Heading>IPFS File</Heading>
         <Div>
           <Div
@@ -81,10 +60,9 @@ class IPFSUploader extends Component {
             }}
           >
             <FolderDropzone
-              onSave={async ipfsHash => {
-                this.stateChange(`ipfs`, ipfsHash)
-                await service.loadIPFSContracts(cookies)
-              }}
+              onSave={this.handleUpload}
+              onError={this.handleError}
+              uploadIPFS={uploadIPFS}
             />
           </Div>
           <Button>Upload File</Button>
@@ -96,15 +74,12 @@ class IPFSUploader extends Component {
           }}
         >
           <JSONUploader
-            onSave={async ipfsHash => {
-              console.log('finished uploading!!', ipfsHash)
-              // this.stateChange(`ipfs`, ipfsHash)
-              // await service.loadIPFSContracts(cookies)
-            }}
-            setError={error => this.setState({ error })}
+            onSave={this.handleUpload}
+            setError={this.handleError}
           />
         </Div>
         {error && <Div>{error}</Div>}
+        {ipfsHash && <Div>{ipfsHash}</Div>}
       </Div>
     )
   }

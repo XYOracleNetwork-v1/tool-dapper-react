@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { STATE } from 'react-progress-button'
-import { withCookies } from 'react-cookie'
 import { Div } from 'glamorous'
 
-import uploadIPFS from '../../util/IPFSUploader'
 import Button from './../atoms/Button'
 
 class DroppedFileDiv extends Component {
@@ -13,7 +11,7 @@ class DroppedFileDiv extends Component {
 
   handleClick = async () => {
     this.setState({ uploadBtnState: STATE.LOADING })
-    const { files, cookies, onSave } = this.props
+    const { files, onSave, onError, uploadIPFS } = this.props
     const promises = files.map(file => {
       const reader = new FileReader()
       return new Promise((resolve, reject) => {
@@ -27,10 +25,15 @@ class DroppedFileDiv extends Component {
         reader.readAsBinaryString(file)
       })
     })
-    const data = await Promise.all(promises)
-    const res = await uploadIPFS(cookies, data)
-    await onSave(res)
-    this.setState({ uploadBtnState: STATE.SUCCESS })
+    try {
+      const data = await Promise.all(promises)
+      const res = await uploadIPFS(data)
+      await onSave(res)
+      this.setState({ uploadBtnState: STATE.SUCCESS })
+    } catch (err) {
+      this.setState({ uploadBtnState: STATE.ERROR })
+      onError(err)
+    }
   }
 
   render() {
@@ -56,4 +59,4 @@ class DroppedFileDiv extends Component {
   }
 }
 
-export default withCookies(DroppedFileDiv)
+export default DroppedFileDiv

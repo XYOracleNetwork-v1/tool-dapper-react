@@ -8,7 +8,7 @@ import glam from 'glamorous'
 import { SettingsLayout } from '../molecules/SettingsComponenets'
 import FolderDropzone from './../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
-import IPFSConfigDiv from '../molecules/IPFSConfigDiv'
+import IPFSConfigForm from '../molecules/IPFSConfigForm'
 import TextInput from '../atoms/TextInput'
 import Button from '../atoms/Button'
 
@@ -23,11 +23,6 @@ class Settings extends Component {
   state = {
     ...readSettings(this.props.cookies),
     updateBtnState: STATE.NOTHING,
-    ipfsError: undefined,
-  }
-
-  handleChange = changeEvent => {
-    this.stateChange(changeEvent.target.name, changeEvent.target.value)
   }
 
   stateChange = (stateKey, stateValue) => {
@@ -38,9 +33,6 @@ class Settings extends Component {
     this.setState({ [stateKey]: stateValue })
   }
 
-  handleSourceSelect = changeEvent =>
-    this.stateChange(`currentSource`, changeEvent.target.name)
-
   handleNetworkChange = changeEvent => {
     const val = changeEvent.target.value
     this.stateChange(`portisNetwork`, val)
@@ -50,7 +42,7 @@ class Settings extends Component {
   handleFormSubmit = async () => {
     this.setState({ updateBtnState: STATE.LOADING })
     try {
-      await this.props.service.loadIPFSContracts(this.props.cookies)
+      await this.props.loadIPFSContracts()
       this.setState({ updateBtnState: STATE.SUCCESS })
     } catch (e) {
       this.setState({ ipfsError: e.toString(), updateBtnState: STATE.ERROR })
@@ -82,12 +74,23 @@ class Settings extends Component {
   }
 
   render() {
-    const { service, cookies } = this.props
+    const {
+      cookies,
+      uploadIPFS,
+      ipfsConfig,
+      loadIPFSContracts,
+      updateIPFSConfig,
+    } = this.props
+    const { ipfsError, updateBtnState } = this.state
+
     return (
       <SettingsLayout>
         <H2>Settings</H2>
         <Heading>IPFS Config</Heading>
-        <IPFSConfigDiv />
+        <IPFSConfigForm
+          config={ipfsConfig}
+          updateIPFSConfig={updateIPFSConfig}
+        />
         <Heading>Portis Network</Heading>
         <Div
           css={{
@@ -108,15 +111,17 @@ class Settings extends Component {
           <FolderDropzone
             onSave={async ipfsHash => {
               this.stateChange(`ipfs`, ipfsHash)
-              await service.loadIPFSContracts(cookies)
+              await loadIPFSContracts()
             }}
+            uploadIPFS={uploadIPFS}
           />
           <Div css={{ fontSize: 14, marginTop: 15, textAlign: 'left' }}>
             Ex: {`<solidity_project>/build/contracts/*.json`}
           </Div>
         </Div>
-        <Div css={{ display: 'flex', alignItems: 'flex-end' }}>
+        <Div css={{ display: 'flex', alignItems: 'center' }}>
           <TextInput
+            css={{ marginRight: 40 }}
             label="IPFS Address"
             id="ipfs"
             name="ipfs"
@@ -127,13 +132,13 @@ class Settings extends Component {
             css={{
               display: 'block',
             }}
-            state={this.state.updateBtnState}
+            state={updateBtnState}
             onClick={this.handleFormSubmit}
           >
             Add ABI
           </Button>
         </Div>
-        <Div css={{ fontSize: 16, color: 'red' }}>{this.state.ipfsError}</Div>
+        <Div css={{ fontSize: 16, color: 'red' }}>{ipfsError}</Div>
       </SettingsLayout>
     )
   }

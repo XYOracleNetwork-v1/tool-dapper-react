@@ -1,51 +1,47 @@
 import React, { Component } from 'react'
-import { withCookies } from 'react-cookie'
 import glam, { Div, Form } from 'glamorous'
 
-import { ipfsConfigFromCookies } from '../../util/IPFSUploader'
 import TextInput from '../atoms/TextInput'
 import Button from '../atoms/Button'
 
+const Input = glam(TextInput)({ marginRight: 40 })
+
 class IPFSConfigDiv extends Component {
-  state = ipfsConfigFromCookies(this.props.cookies)
+  state = { config: this.props.config }
 
   handleChange = evt => {
-    // maybe don't update cookies on each change, only on save
-    // this.props.cookies.set(stateKey, stateValue, {
-    //   path: `/`,
-    // })
-    this.setState({ [evt.target.name]: evt.target.value })
+    this.setState(({ config }) => ({
+      config: { ...config, [evt.target.name]: evt.target.value },
+    }))
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    Object.entries(this.state).forEach(([stateKey, stateValue]) => {
-      this.props.cookies.set(stateKey, stateValue, {
-        path: `/`,
-      })
-    })
+    this.props.updateIPFSConfig(this.state.config)
   }
 
   render() {
-    const { ipfshost, ipfsport, ipfsprotocol } = this.state
+    const {
+      config: { ipfshost, ipfsport, ipfsprotocol },
+    } = this.state
     return (
       <Form id="ipfs-config-form" onSubmit={this.handleSubmit}>
         <Div css={{ display: 'flex', marginBottom: 25 }}>
-          <TextInput
+          <Input
             onChange={this.handleChange}
             value={ipfshost}
             label="Host"
             id="ipfshost"
             placeholder="ipfs.xyo.network"
           />
-          <TextInput
+          <Input
             onChange={this.handleChange}
             value={ipfsport}
             label="Port"
             id="ipfsport"
             placeholder="5002"
           />
-          <TextInput
+          <Input
             onChange={this.handleChange}
             value={ipfsprotocol}
             label="Protocol"
@@ -59,4 +55,4 @@ class IPFSConfigDiv extends Component {
   }
 }
 
-export default withCookies(IPFSConfigDiv)
+export default IPFSConfigDiv

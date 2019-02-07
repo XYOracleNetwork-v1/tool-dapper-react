@@ -28,7 +28,7 @@ class FolderDropzone extends React.Component {
   }
 
   render() {
-    const { onSave } = this.props
+    const { onSave, onError, uploadIPFS } = this.props
     const { files } = this.state
     return (
       <Div style={{ flex: 1 }}>
@@ -53,7 +53,12 @@ class FolderDropzone extends React.Component {
             <path strokeWidth="10px" d="M30,50h40 M50,30v40" />
           </Svg>
         </Dropzone>
-        <DroppedFileDiv files={files} onSave={onSave} />
+        <DroppedFileDiv
+          files={files}
+          onSave={onSave}
+          onError={onError}
+          uploadIPFS={uploadIPFS}
+        />
       </Div>
     )
   }

@@ -20,28 +20,34 @@ import IPFSUploader from './IPFSUploader'
 import ContractSimulator from './ContractSimulator'
 import Login from './Login'
 import Web3HelperExecution from './Web3HelperExecution'
+import IPFSClient from '../../util/IPFS'
 
 class HomeComponent extends Component {
-  state = {
-    service: new SmartContractService(
+  constructor(props) {
+    super(props)
+    this.ipfsClient = new IPFSClient(props.cookies)
+    this.service = new SmartContractService(
       () => this.forceUpdate(),
-      this.props.cookies,
-    ),
-    // selectedContractName: undefined,
-    // serviceError: undefined,
-    // currentUser: undefined,
-    deploymentSelection: {},
-    contracts: [],
-    helpers: web3helpers,
+      props.cookies,
+      this.ipfsClient,
+    )
+    this.state = {
+      deploymentSelection: {},
+      contracts: [],
+      helpers: web3helpers,
+      ipfsConfig: this.ipfsClient.getIpfsConfig(),
+    }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.sidebarScroll = new PerfectScrollbar('.sidebar')
     this.contentScroll = new PerfectScrollbar('.content')
-    this.state.service.loadLocalStoreObjects()
-    this.state.service.loadIPFSContracts(this.props.cookies).catch(e => {
-      console.log(`Cannot load invalid ipfs contracts`)
-    })
+    try {
+      await this.service.loadLocalStoreObjects()
+      await this.service.loadIPFSContracts()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -51,31 +57,32 @@ class HomeComponent extends Component {
 
   connectProvider = async () => {
     const { cookies } = this.props
-    const { service } = this.state
-    await service.loadWeb3(cookies)
-    const currentNetwork = service.getCurrentNetwork()
-    const currentUser = service.getCurrentUser()
-    const contracts = service.getSmartContracts()
+    await this.service.loadWeb3(cookies)
+    const currentNetwork = this.service.getCurrentNetwork()
+    const currentUser = this.service.getCurrentUser()
+    const contracts = this.service.getSmartContracts()
     this.setState({ currentNetwork, currentUser, contracts })
   }
 
   getDeployedContractObjects = contract =>
-    this.state.service.deployedContractObjects(contract) || []
+    this.service.deployedContractObjects(contract) || []
 
-  getContractObject = contract =>
-    this.state.service.contractObject(contract) || {}
+  getContractObject = contract => this.service.contractObject(contract) || {}
 
-  createContract = (abi, address) =>
-    this.state.service.createContract(abi, address)
+  createContract = (abi, address) => this.service.createContract(abi, address)
+
+  loadIPFSContracts = () => this.service.loadIPFSContracts()
+  uploadIPFS = data => this.ipfsClient.uploadFiles(data)
+  updateIPFSConfig = config => this.ipfsClient.updateIpfsConfig(config)
 
   render() {
     const {
       deploymentSelection,
-      service,
       currentNetwork,
       currentUser,
       contracts,
       helpers,
+      ipfsConfig,
     } = this.state
     return (
       <Div
@@ -135,12 +142,19 @@ class HomeComponent extends Component {
             <Route path="/search" component={ABISearch} />
             <Route
               path="/upload"
-              render={() => <IPFSUploader service={service} />}
+              render={() => (
+                <IPFSUploader
+                  loadIPFSContracts={this.loadIPFSContracts}
+                  uploadIPFS={this.uploadIPFS}
+                  ipfsConfig={ipfsConfig}
+                  updateIPFSConfig={this.updateIPFSConfig}
+                />
+              )}
             />
             <Route
               exact
               path="/simulator"
-              render={() => <ContractSimulator service={service} />}
+              render={() => <ContractSimulator service={this.service} />}
             />
             <Route
               exact
@@ -148,11 +162,14 @@ class HomeComponent extends Component {
               render={props => (
                 <Settings
                   {...props}
-                  service={service}
+                  service={this.service}
                   portisNetworkChange={async network => {
-                    await service.changePortisNetwork(network)
-                    this.forceUpdate()
+                    await this.service.changePortisNetwork(network)
                   }}
+                  ipfsConfig={ipfsConfig}
+                  loadIPFSContracts={this.loadIPFSContracts}
+                  uploadIPFS={this.uploadIPFS}
+                  updateIPFSConfig={this.updateIPFSConfig}
                 />
               )}
             />
@@ -160,7 +177,7 @@ class HomeComponent extends Component {
               exact
               path="/settings/:ipfs"
               render={props => (
-                <SettingsIPFSDownload {...props} service={service} />
+                <SettingsIPFSDownload {...props} service={this.service} />
               )}
             />
             <PrivateRoute
@@ -178,7 +195,7 @@ class HomeComponent extends Component {
                   {...props}
                   helpers={helpers}
                   network={currentNetwork}
-                  web3={service.web3}
+                  web3={this.service.web3}
                 />
               )}
             />
@@ -189,7 +206,7 @@ class HomeComponent extends Component {
               render={props => (
                 <ContractDeployment
                   {...props}
-                  service={service}
+                  service={this.service}
                   onDeploy={selection =>
                     this.setState({
                       deploymentSelection: selection,
@@ -221,11 +238,10 @@ class HomeComponent extends Component {
             render={props => (
               <SelectedContract
                 {...props}
-                service={service}
+                service={this.service}
                 selectedAddress={deploymentSelection.address}
               />
             )}
-            service={service}
           />
         </Div>
       </Div>

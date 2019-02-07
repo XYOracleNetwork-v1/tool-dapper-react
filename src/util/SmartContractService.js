@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
-import { fetchABI } from './ABIReader'
+import { readSettings } from './CookieReader'
 
 const localProviderUrl = 'http://localhost:8545'
 
@@ -15,10 +15,12 @@ const web3Networks = [
 ]
 
 class SmartContractService {
-  constructor(refreshUI, cookies) {
+  constructor(refreshUI, cookies, ipfsClient) {
     this.refreshUI = refreshUI
     this.smartContracts = []
     this.currentUser = undefined
+    this.cookies = cookies
+    this.ipfsClient = ipfsClient
   }
 
   getCurrentUser = () => this.currentUser
@@ -233,11 +235,21 @@ class SmartContractService {
     this.refreshUI()
   }
 
-  loadIPFSContracts = async cookies => {
-    let ipfs = cookies.get(`ipfs`)
+  fetchABI = async () => {
+    let settings = readSettings(this.cookies)
 
+    switch (settings.currentSource) {
+      default: {
+        const files = await this.ipfsClient.downloadFiles(settings.ipfs)
+        return { abi: files }
+      }
+    }
+  }
+
+  loadIPFSContracts = async () => {
+    const ipfs = this.cookies.get(`ipfs`)
     if (ipfs) {
-      let { abi } = await fetchABI(cookies)
+      let { abi } = await this.fetchABI()
       await abi.forEach(this.storeABI)
       await abi.forEach(this.storeDeployments)
       this.refreshUI()
