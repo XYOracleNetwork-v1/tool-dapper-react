@@ -16,7 +16,7 @@ const defaultIpfsProtocol = 'https'
 
 const fields = ['ipfshost', 'ipfsport', 'ipfsprotocol']
 
-export const ipfsConfigFromCookies = () => {
+const ipfsConfigFromCookies = () => {
   const ipfshost = Cookies.get(`ipfshost`) || defaultIpfsHost
   const ipfsport = Cookies.get(`ipfsport`) || defaultIpfsPort
   const ipfsprotocol = Cookies.get(`ipfsprotocol`) || defaultIpfsProtocol

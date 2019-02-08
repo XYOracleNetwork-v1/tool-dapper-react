@@ -1,12 +1,13 @@
 import React from 'react'
 import { Div } from 'glamorous'
 import ResultTable from '../atoms/ResultTable'
+import { getNetworkById } from '../../util/web3'
 
-const DeploymentsTable = ({ deployments, getNetworkNamed }) => {
+const DeploymentsTable = ({ deployments }) => {
   if (!deployments || !deployments.length) return null
   const header = { name: 'Network', value: 'Address' }
   const rows = deployments.reduce((acc, dep) => {
-    const net = getNetworkNamed(dep.netId)
+    const net = getNetworkById(dep.netId)
     if (!net) return acc
     const network = net.name
     const address = dep.notes ? dep.notes + ` - ` + dep.address : dep.address
@@ -52,10 +53,7 @@ const SelectedContract = ({
   return (
     <Div>
       <ResultTable header={header} rows={rows} />
-      <DeploymentsTable
-        deployments={deployments}
-        getNetworkNamed={service.getNetworkNamed}
-      />
+      <DeploymentsTable deployments={deployments} />
     </Div>
   )
 }

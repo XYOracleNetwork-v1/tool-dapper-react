@@ -22,17 +22,16 @@ import Login from './Login'
 import Web3HelperExecution from './Web3HelperExecution'
 import { useIPFS } from '../../util/IPFS'
 
-const NewHomeComponent = () => {
+const HomeComponent = () => {
   const ipfsClient = useIPFS()
   const { updateIpfsConfig, uploadFiles, ipfsConfig } = ipfsClient
   const service = useScsc(ipfsClient)
-  console.log(service)
+  // console.log(service)
   const {
     loadLocalStoreObjects,
     loadIPFSContracts,
     currentUser,
     currentNetwork,
-    loadWeb3,
     smartContracts,
     deployedContractObjects,
     contractObject,
@@ -70,7 +69,7 @@ const NewHomeComponent = () => {
       }}
     >
       <PageHeader
-        connectProvider={loadWeb3}
+        // connectProvider={loadWeb3}
         network={currentNetwork}
         account={currentUser}
       />
@@ -200,4 +199,6 @@ const NewHomeComponent = () => {
   )
 }
 
-export default withRouter(NewHomeComponent)
+const Foo = () => <div />
+
+export default withRouter(HomeComponent)

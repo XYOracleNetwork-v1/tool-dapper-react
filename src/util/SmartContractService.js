@@ -1,10 +1,10 @@
 /* eslint-disable */
 import Web3 from 'web3'
 import { useEffect, useState } from 'react'
-import { PortisProvider } from 'portis'
 import Cookies from 'js-cookie'
 
 import { readSettings } from './CookieReader'
+import { useWeb3Manager } from './web3'
 
 const localProviderUrl = 'http://localhost:8545'
 
@@ -18,79 +18,10 @@ export const web3Networks = [
 ]
 
 export const useScsc = ipfsClient => {
-  const [currentUser, setCurrentUser] = useState(null)
-  const [currentNetwork, setCurrentNetwork] = useState(null)
   const [smartContracts, setSmartContracts] = useState([])
   const [deployedContracts, setDeployedContracts] = useState({})
-  const [web3, setWeb3] = useState(null)
-  const getNetworkWithId = netString => {
-    const found = element => element.name == netString
-    return web3Networks.find(found)
-  }
-  const getNetworkNamed = netId => {
-    const found = element => element.id == netId
-    return web3Networks.find(found)
-  }
-
-  const refreshNetwork = async () => {
-    if (!window.web3) return null
-    const netId = await window.web3.eth.net.getId()
-    console.log(`Updating Network To`, netId)
-    const currNet = getNetworkNamed(netId)
-    setCurrentNetwork(currNet)
-    return currNet
-  }
-
-  useEffect(() => {
-    if (!web3) return () => {}
-    web3.eth.net.getId().then(netId => {
-      console.log(`Updating Network To`, netId)
-      const currNet = getNetworkNamed(netId)
-      setCurrentNetwork(currNet)
-    })
-  })
-
-  const refreshUser = async () => {
-    const [newUser] = await window.web3.eth.getAccounts()
-    console.log(`Updating USER from ${currentUser} to ${newUser}`)
-    setCurrentUser(newUser)
-    return newUser
-  }
-
-  useEffect(() => {
-    if (!web3) return () => {}
-    window.web3.eth.getAccounts().then(([newUser]) => {
-      console.log(`Updating USER from ${currentUser} to ${newUser}`)
-      setCurrentUser(newUser)
-    })
-  })
-
-  const portisProvider = () => {
-    console.log('Creating Portis connection')
-
-    const portisNetwork = Cookies.get('portisNetwork')
-    const portisAPI = '3b1ca5fed7f439bf72771e64e9442d74'
-    this.currentNetwork = getNetworkWithId(portisNetwork)
-
-    console.log('Creating Portis Privider', portisNetwork)
-
-    if (portisNetwork !== 'development') {
-      return new Web3(
-        new PortisProvider({
-          apiKey: portisAPI,
-          network: portisNetwork,
-        }),
-      )
-    } else {
-      return new Web3(
-        new PortisProvider({
-          apiKey: portisAPI,
-          network: portisNetwork,
-          providerNodeUrl: localProviderUrl,
-        }),
-      )
-    }
-  }
+  const web3Manager = useWeb3Manager()
+  const { currentUser, currentNetwork, web3js: web3 } = web3Manager
 
   const changePortisNetwork = async newNetwork => {
     if (web3 && web3.currentProvider.isPortis) {
@@ -105,7 +36,6 @@ export const useScsc = ipfsClient => {
         })
       }
       console.log('Changing Portis Network', newNetwork)
-      setWeb3(web3)
     }
   }
 
@@ -166,30 +96,43 @@ export const useScsc = ipfsClient => {
     setDeployedContracts(newDeployed)
   }
 
-  useEffect(() => {
-    if (!netId) return () => {}
-    const netId = currentNetwork.id
-    const promises = Object.entries(deployedContracts).reduce(
-      (acc, [address, dep]) =>
-        dep && dep.netId == netId ? [...acc, validContract(address)] : acc,
-      [],
-    )
+  useEffect(
+    () => {
+      console.log('effect', 1)
 
-    Promise.all(promises).then(results => {
-      const newDeployed = results.reduce((acc, { valid, address }) => {
-        if (!valid) {
-          const { [address]: x, ...rest } = acc
-          return rest
-        }
-        return acc
-      }, deployedContracts)
-      setDeployedContracts(newDeployed)
-    })
-  })
+      if (!netId) return () => {}
+      const netId = currentNetwork.id
+      const promises = Object.entries(deployedContracts).reduce(
+        (acc, [address, dep]) =>
+          dep && dep.netId == netId ? [...acc, validContract(address)] : acc,
+        [],
+      )
 
-  useEffect(() => {
-    localStorage.setItem('deployedContracts', JSON.stringify(deployedContracts))
-  })
+      Promise.all(promises).then(results => {
+        const newDeployed = results.reduce((acc, { valid, address }) => {
+          if (!valid) {
+            const { [address]: x, ...rest } = acc
+            return rest
+          }
+          return acc
+        }, deployedContracts)
+        setDeployedContracts(newDeployed)
+      })
+    },
+    [currentNetwork],
+  )
+
+  useEffect(
+    () => {
+      console.log('effect', 2)
+
+      localStorage.setItem(
+        'deployedContracts',
+        JSON.stringify(deployedContracts),
+      )
+    },
+    [deployedContracts],
+  )
 
   const addSmartContract = abiObject => {
     const existingABI = smartContracts.filter(
@@ -341,7 +284,7 @@ export const useScsc = ipfsClient => {
               }
             })
             .filter(Boolean)
-          return acc.concat(contractsToDeploy)
+          return [...acc, contractsToDeploy]
         }
       },
       [],
@@ -388,56 +331,7 @@ export const useScsc = ipfsClient => {
     return new web3.eth.Contract(abi, address)
   }
 
-  const getCurrentConfigStore = () =>
-    web3 && web3.currentProvider && web3.currentProvider.publicConfigStore
-
-  useEffect(() => {
-    const currentConfigStore = getCurrentConfigStore()
-    // if (currentConfigStore) currentConfigStore.on(`update`, refreshUser)
-  })
-
-  const setupPortis = async () => {
-    console.log('Setting up Portis')
-    const newWeb3 = portisProvider()
-    setWeb3(newWeb3)
-    const promise = new Promise((resolve, reject) => {
-      newWeb3.currentProvider.on('login', async () => {
-        // await refreshUser()
-        // await refreshNetwork()
-        console.log('Portis Logged in', currentNetwork, currentUser)
-        // await validateDeployedOnNetwork(currentNetwork.id)
-        resolve()
-      })
-    })
-    // await refreshUser() // forces login
-
-    console.log('Done initializing web3 Portis', currentNetwork)
-    return promise
-  }
-
-  const loadWeb3 = async () => {
-    try {
-      console.log('LOADING WEB 3')
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum)
-        setWeb3(window.web3)
-        // Request account access if needed
-        await window.ethereum.enable()
-      } else if (typeof window.web3 !== 'undefined') {
-        setWeb3(new Web3(window.web3.currentProvider))
-      } else {
-        return setupPortis()
-      }
-      // await refreshUser()
-      // await refreshNetwork()
-      // await validateDeployedOnNetwork(currentNetwork.id)
-    } catch (err) {
-      console.log({ err })
-    }
-  }
-
   return {
-    loadWeb3,
     loadLocalStoreObjects,
     loadIPFSContracts,
     currentNetwork,
@@ -448,7 +342,6 @@ export const useScsc = ipfsClient => {
     createContract,
     addDeployedContract,
     addDeployedContracts,
-    getNetworkNamed,
     web3,
     changePortisNetwork,
   }

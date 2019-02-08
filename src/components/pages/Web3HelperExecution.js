@@ -1,10 +1,7 @@
-import { withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import {
-  FunctionParamLayout,
   FunctionParamList,
   ParamInputDiv,
-  Horizontal,
   ExecuteFunctionButton,
 } from '../molecules/FunctionDetailsComponents'
 import { STATE } from 'react-progress-button'
@@ -44,6 +41,34 @@ class Web3HelperExecution extends Component {
     if (prevFuncId !== funcId || prevNetwork !== network) {
       this.updateInputs()
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const {
+      match: {
+        params: { funcId: nextFuncId },
+      },
+      network: nextNetwork,
+    } = nextProps
+    const {
+      match: {
+        params: { funcId },
+      },
+      network,
+    } = this.props
+    const {
+      func: nextFunc,
+      transactionResult: nextTransactionResult,
+      transactionError: nextTransactionError,
+    } = nextState
+    const { func, transactionResult, transactionError } = this.state
+    return (
+      nextFuncId !== funcId ||
+      nextNetwork !== network ||
+      nextFunc !== func ||
+      transactionResult !== nextTransactionResult ||
+      transactionError !== nextTransactionError
+    )
   }
 
   updateInputs = () => {
@@ -177,4 +202,4 @@ class Web3HelperExecution extends Component {
   }
 }
 
-export default withRouter(Web3HelperExecution)
+export default Web3HelperExecution
