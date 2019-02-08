@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Div, Form, H2 } from 'glamorous'
 import { withRouter } from 'react-router-dom'
-import { withCookies } from 'react-cookie'
 import glam from 'glamorous'
 
 import Button from '../atoms/Button'
@@ -85,4 +84,4 @@ class ContractSimulator extends Component {
   }
 }
 
-export default withCookies(withRouter(ContractSimulator))
+export default withRouter(ContractSimulator)

@@ -1,3 +1,6 @@
+import Cookies from 'js-cookie'
+import { useState, useEffect } from 'react'
+
 const IPFS = require(`ipfs-http-client`)
 
 const folder = `contracts`
@@ -13,12 +16,12 @@ const defaultIpfsProtocol = 'https'
 
 const fields = ['ipfshost', 'ipfsport', 'ipfsprotocol']
 
-export const ipfsConfigFromCookies = cookies => {
-  const ipfshost = cookies.get(`ipfshost`) || defaultIpfsHost
-  const ipfsport = cookies.get(`ipfsport`) || defaultIpfsPort
-  const ipfsprotocol = cookies.get(`ipfsprotocol`) || defaultIpfsProtocol
+export const ipfsConfigFromCookies = () => {
+  const ipfshost = Cookies.get(`ipfshost`) || defaultIpfsHost
+  const ipfsport = Cookies.get(`ipfsport`) || defaultIpfsPort
+  const ipfsprotocol = Cookies.get(`ipfsprotocol`) || defaultIpfsProtocol
   const config = { ipfshost, ipfsport, ipfsprotocol }
-  fields.forEach(field => cookies.set(field, config[field]))
+  fields.forEach(field => Cookies.set(field, config[field]))
   return config
 }
 
@@ -55,39 +58,25 @@ const parseFiles = (files, resolve) => {
   resolve(abi)
 }
 
-class IPFSClient {
-  constructor(cookies) {
-    this.cookies = cookies
+export const useIPFS = () => {
+  const [ipfsConfig, updateIpfsConfig] = useState(ipfsConfigFromCookies())
+  const { ipfshost: host, ipfsport: port, ipfsprotocol: protocol } = ipfsConfig
+  const [ipfs, setIPFS] = useState(new IPFS({ host, port, protocol }))
+
+  useEffect(() => {
     const {
       ipfshost: host,
       ipfsport: port,
       ipfsprotocol: protocol,
-    } = ipfsConfigFromCookies(cookies)
-    this.ipfs = new IPFS({ host, port, protocol })
-  }
+    } = ipfsConfig
+    fields.forEach(field => Cookies.set(field, ipfsConfig[field]))
+    const ipfs = new IPFS({ host, port, protocol })
+    setIPFS(ipfs)
+  })
 
-  getIpfsConfig = () =>
-    fields.reduce(
-      (acc, field) => ({ ...acc, [field]: this.cookies.get(field) }),
-      {},
-    )
-
-  updateIpfsConfig = config => {
-    fields.forEach(field => {
-      this.cookies.set(field, config[field])
-    })
-    const {
-      ipfshost: host,
-      ipfsport: port,
-      ipfsprotocol: protocol,
-    } = ipfsConfigFromCookies(this.cookies)
-    this.ipfs = new IPFS({ host, port, protocol })
-    return this.getIpfsConfig()
-  }
-
-  uploadFiles = async data =>
+  const uploadFiles = async data =>
     new Promise((resolve, reject) =>
-      this.ipfs.add(
+      ipfs.add(
         data,
         { recursive: false, wrapWithDirectory: true, pin: true },
         (err, res) => {
@@ -100,16 +89,20 @@ class IPFSClient {
       ),
     )
 
-  downloadFiles = async ipfsHash => {
-    return new Promise((resolve, reject) => {
-      this.ipfs.get(ipfsHash, (err, files) => {
+  const downloadFiles = async ipfsHash =>
+    new Promise((resolve, reject) => {
+      ipfs.get(ipfsHash, (err, files) => {
         if (err) {
           return reject(err)
         }
         parseFiles(files, resolve)
       })
     })
+
+  return {
+    updateIpfsConfig,
+    uploadFiles,
+    downloadFiles,
+    ipfsConfig,
   }
 }
-
-export default IPFSClient

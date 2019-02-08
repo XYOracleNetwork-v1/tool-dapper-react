@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import glam, { Div, H2 } from 'glamorous'
-import { withCookies } from 'react-cookie'
 
 import Button from '../atoms/Button'
 import FolderDropzone from '../organisms/FolderDropzone'
@@ -15,7 +14,7 @@ const Heading = glam.h3({
 
 class IPFSUploader extends Component {
   state = {
-    ...readSettings(this.props.cookies),
+    ...readSettings(),
   }
 
   handleUpload = async ipfsHash => {
@@ -85,4 +84,4 @@ class IPFSUploader extends Component {
   }
 }
 
-export default withCookies(IPFSUploader)
+export default IPFSUploader

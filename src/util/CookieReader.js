@@ -1,14 +1,16 @@
-export const readSettings = cookies => {
-  if (!cookies.get(`portisNetwork`)) {
-    cookies.set(`portisNetwork`, `mainnet`, {
+import Cookies from 'js-cookie'
+
+export const readSettings = () => {
+  if (!Cookies.get(`portisNetwork`)) {
+    Cookies.set(`portisNetwork`, `mainnet`, {
       path: `/`,
     })
   }
   return {
-    portisNetwork: cookies.get(`portisNetwork`),
-    currentSource: cookies.get(`currentSource`) || `ipfs`,
-    local: cookies.get(`local`) || ``,
-    remote: cookies.get(`remote`) || ``,
-    ipfs: cookies.get(`ipfs`) || ``,
+    portisNetwork: Cookies.get(`portisNetwork`),
+    currentSource: Cookies.get(`currentSource`) || `ipfs`,
+    local: Cookies.get(`local`) || ``,
+    remote: Cookies.get(`remote`) || ``,
+    ipfs: Cookies.get(`ipfs`) || ``,
   }
 }

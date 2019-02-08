@@ -1,21 +1,27 @@
 import React, { Component } from 'react'
 import { Div } from 'glamorous'
 import { HeaderStyle, HeaderStyle2 } from '../atoms/HeaderStyle'
-import { withCookies } from 'react-cookie'
+import Cookies from 'js-cookie'
 import { withRouter } from 'react-router-dom'
 
 class SettingsIPFSDownload extends Component {
   state = {
     error: undefined,
   }
+
   componentDidMount() {
-    let { ipfs } = this.props.match.params
-    this.props.cookies.set(`ipfs`, ipfs, {
+    const {
+      match: {
+        params: { ipfs },
+      },
+      service,
+      history,
+    } = this.props
+    Cookies.set(`ipfs`, ipfs, {
       path: `/`,
     })
-    let { history } = this.props
-    this.props.service
-      .loadIPFSContracts(this.props.cookies)
+    service
+      .loadIPFSContracts()
       .then(_ => {
         history.push(`/settings`)
       })
@@ -25,22 +31,27 @@ class SettingsIPFSDownload extends Component {
         })
       })
   }
+
   render() {
-    if (this.state.error) {
+    const {
+      match: {
+        params: { ipfs },
+      },
+    } = this.props
+    const { error } = this.state
+    if (error) {
       return (
         <Div>
-          <HeaderStyle2 style={{ color: `red` }}>
-            {this.state.error}
-          </HeaderStyle2>
+          <HeaderStyle2 style={{ color: `red` }}>{error}</HeaderStyle2>
         </Div>
       )
     }
     return (
       <Div>
-        <HeaderStyle>Loading {this.props.match.params.ipfs}</HeaderStyle>
+        <HeaderStyle>Loading {ipfs}</HeaderStyle>
       </Div>
     )
   }
 }
 
-export default withRouter(withCookies(SettingsIPFSDownload))
+export default withRouter(SettingsIPFSDownload)

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Div, H2, Input } from 'glamorous'
 import { withRouter } from 'react-router-dom'
-import { withCookies } from 'react-cookie'
 import { STATE } from 'react-progress-button'
 import glam from 'glamorous'
+import Cookies from 'js-cookie'
 
 import { SettingsLayout } from '../molecules/SettingsComponenets'
 import FolderDropzone from './../organisms/FolderDropzone'
@@ -11,6 +11,7 @@ import { readSettings } from '../../util/CookieReader'
 import IPFSConfigForm from '../molecules/IPFSConfigForm'
 import TextInput from '../atoms/TextInput'
 import Button from '../atoms/Button'
+import { web3Networks } from '../../util/SmartContractService'
 
 const Heading = glam.h3({
   fontSize: 22,
@@ -21,13 +22,13 @@ const RadioInput = props => <Input type="radio" {...props} />
 
 class Settings extends Component {
   state = {
-    ...readSettings(this.props.cookies),
+    ...readSettings(),
     updateBtnState: STATE.NOTHING,
   }
 
   stateChange = (stateKey, stateValue) => {
     console.log(`attempting State Change`, stateKey, stateValue)
-    this.props.cookies.set(stateKey, stateValue, {
+    Cookies.set(stateKey, stateValue, {
       path: `/`,
     })
     this.setState({ [stateKey]: stateValue })
@@ -55,8 +56,7 @@ class Settings extends Component {
 
     if (!curNetwork) return null
 
-    return this.props.service
-      .getWeb3Networks()
+    return web3Networks
       .filter(({ id }) => id !== 0)
       .map(({ id, name, description }) => (
         <React.Fragment key={id}>
@@ -75,7 +75,6 @@ class Settings extends Component {
 
   render() {
     const {
-      cookies,
       uploadIPFS,
       ipfsConfig,
       loadIPFSContracts,
@@ -101,31 +100,13 @@ class Settings extends Component {
         >
           {this.renderNetworkRadio()}
         </Div>
-        <Heading>ABI Source</Heading>
-        <Div
-          css={{
-            marginBottom: 20,
-            textAlign: `center`,
-          }}
-        >
-          <FolderDropzone
-            onSave={async ipfsHash => {
-              this.stateChange(`ipfs`, ipfsHash)
-              await loadIPFSContracts()
-            }}
-            uploadIPFS={uploadIPFS}
-          />
-          <Div css={{ fontSize: 14, marginTop: 15, textAlign: 'left' }}>
-            Ex: {`<solidity_project>/build/contracts/*.json`}
-          </Div>
-        </Div>
         <Div css={{ display: 'flex', alignItems: 'center' }}>
           <TextInput
             css={{ marginRight: 40 }}
             label="IPFS Address"
             id="ipfs"
             name="ipfs"
-            value={cookies.get(`ipfs`)}
+            value={Cookies.get(`ipfs`)}
             placeholder="ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ"
           />
           <Button
@@ -144,4 +125,4 @@ class Settings extends Component {
   }
 }
 
-export default withCookies(withRouter(Settings))
+export default withRouter(Settings)

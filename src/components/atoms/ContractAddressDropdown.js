@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import glam, { Div } from 'glamorous'
 import { withRouter } from 'react-router-dom'
-import { withCookies } from 'react-cookie'
 
 import Dropdown from './Dropdown'
 
@@ -73,4 +72,4 @@ class ContractAddressDropdown extends Component {
   }
 }
 
-export default withCookies(withRouter(ContractAddressDropdown))
+export default withRouter(ContractAddressDropdown)
