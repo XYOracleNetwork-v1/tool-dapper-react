@@ -1,37 +1,39 @@
-import React, { Component } from 'react'
+import React, { memo, useMemo } from 'react'
 
 import Dropdown from './Dropdown'
 
-class SmartContractSelector extends Component {
-  _onSelect = selection => {
-    const { history, onSelect } = this.props
+const SmartContractSelector = ({
+  onSelect,
+  contracts,
+  contract: selectedContract,
+  history,
+}) => {
+  const options = useMemo(
+    () => contracts.map(({ name }) => ({ value: name, label: name })),
+    [contracts],
+  )
+  const select = selection => {
     history.push(`/simulator/${selection.label}`)
     onSelect(selection)
   }
-
-  render() {
-    const {
-      contracts,
-      match: {
-        params: { contract: selectedContract },
-      },
-    } = this.props
-    const options = contracts.map(({ name }) => ({ value: name, label: name }))
-
-    console.log(`Selected`, options, this.props)
-    return (
-      <Dropdown
-        css={{
-          height: 60,
-          fontFamily: `PT Sans`,
-        }}
-        options={options}
-        onChange={this._onSelect}
-        value={selectedContract}
-        placeholder="Select Contract"
-      />
-    )
-  }
+  console.log(`Selected`, contracts, options, selectedContract)
+  return (
+    <Dropdown
+      css={{
+        height: 60,
+        fontFamily: `PT Sans`,
+      }}
+      options={options}
+      onChange={select}
+      value={selectedContract}
+      placeholder="Select Contract"
+    />
+  )
 }
 
-export default SmartContractSelector
+export default memo(
+  SmartContractSelector,
+  (prevProps, nextProps) =>
+    Object.is(prevProps.contract, nextProps.contract) &&
+    prevProps.contracts.length === nextProps.contracts.length,
+)

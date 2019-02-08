@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { memo, useMemo } from 'react'
 import glam, { Div } from 'glamorous'
-import { withRouter } from 'react-router-dom'
+import { usePrevious } from 'react-hanger'
 
 import Dropdown from './Dropdown'
 
@@ -9,25 +9,26 @@ const GreyTopped = glam.div({
   color: `#c8c8c8`,
 })
 
-class ContractAddressDropdown extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { contractObjects: this.fetchObjects() }
-  }
+const getOptionValue = val =>
+  val.length > 20 ? `${val.substring(0, 20)}...` : val
 
-  fetchObjects = () => {
-    const {
-      match: {
-        params: { contract },
-      },
-      getDeployedContractObjects,
-    } = this.props
-    return getDeployedContractObjects(contract) || []
-  }
+const ContractAddressDropdown = ({
+  onSelect,
+  selectedNotes,
+  selectedAddress,
+  network,
+  contract,
+  getDeployedContractObjects,
+}) => {
+  const prevContract = usePrevious(contract)
+  const contractObjects = useMemo(
+    () => getDeployedContractObjects(contract) || [],
+    [contract],
+  )
 
-  _onSelect = ({ value }) => {
-    const { onSelect } = this.props
-    const { contractObjects } = this.state
+  console.log({ contractObjects, contract, prevContract })
+
+  const onSelect2 = ({ value }) => {
     const objToSelect = contractObjects.find(
       ({ address, notes }) => value === address || value === notes,
     )
@@ -37,39 +38,33 @@ class ContractAddressDropdown extends Component {
     onSelect({ notes, address })
   }
 
-  getOptionValue = val => (val.length > 20 ? `${val.substring(0, 20)}...` : val)
-
-  render() {
-    const { selectedNotes, selectedAddress, network } = this.props
-    const { contractObjects } = this.state
-    console.log({ contractObjects })
-
-    return (
-      <Div
-        css={{
-          marginTop: 25,
-        }}
-      >
-        {!contractObjects || contractObjects.length === 0 ? (
-          <GreyTopped>Not deployed on {network.name}</GreyTopped>
-        ) : (
-          <Dropdown
-            options={contractObjects.map(({ notes, address }) => {
-              const value = notes || address
-              const label = this.getOptionValue(value)
-              return {
-                value,
-                label,
-              }
-            })}
-            onChange={this._onSelect}
-            value={selectedNotes || selectedAddress}
-            placeholder="Nothing Selected"
-          />
-        )}
-      </Div>
-    )
-  }
+  return (
+    <Div
+      css={{
+        marginTop: 25,
+      }}
+    >
+      {!contractObjects || contractObjects.length === 0 ? (
+        <GreyTopped>Not deployed on {network.name}</GreyTopped>
+      ) : (
+        <Dropdown
+          options={contractObjects.map(({ notes, address }) => {
+            const value = notes || address
+            const label = getOptionValue(value)
+            return {
+              value,
+              label,
+            }
+          })}
+          onChange={onSelect2}
+          value={selectedNotes || selectedAddress}
+          placeholder="Nothing Selected"
+        />
+      )}
+    </Div>
+  )
 }
 
-export default withRouter(ContractAddressDropdown)
+export default memo(ContractAddressDropdown, (prevProps, nextProps) =>
+  Object.is(prevProps.contract, nextProps.contract),
+)

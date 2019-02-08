@@ -59,9 +59,6 @@ export const useScsc = ipfsClient => {
   }
 
   const deployedContractObjects = (name, netId) => {
-    if (!deployedContracts) {
-      return []
-    }
     const currNet = (netId || currentNetwork) && currentNetwork.id
 
     console.log({
@@ -100,8 +97,8 @@ export const useScsc = ipfsClient => {
     () => {
       console.log('effect', 1)
 
+      const netId = currentNetwork && currentNetwork.id
       if (!netId) return () => {}
-      const netId = currentNetwork.id
       const promises = Object.entries(deployedContracts).reduce(
         (acc, [address, dep]) =>
           dep && dep.netId == netId ? [...acc, validContract(address)] : acc,
@@ -116,6 +113,8 @@ export const useScsc = ipfsClient => {
           }
           return acc
         }, deployedContracts)
+        console.log({ newDeployed })
+
         setDeployedContracts(newDeployed)
       })
     },

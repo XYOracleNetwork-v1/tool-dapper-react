@@ -167,7 +167,6 @@ class Web3HelperExecution extends Component {
       func,
     } = this.state
     if (!func) return <div>Loading...</div>
-    console.log({ func })
 
     return (
       <>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import glam, { Div, Img } from 'glamorous'
 import { Route } from 'react-router-dom'
 
@@ -75,69 +75,77 @@ const Sidebar = ({
   contracts,
   helpers,
   getContractObject,
-}) => (
-  <SidebarRoot>
-    <Div>
-      {/* not using for now */}
-      {/*<SidebarLink to="/search">*/}
-      {/*<Registry />*/}
-      {/*ABI Search*/}
-      {/*</SidebarLink>*/}
-      <SidebarLink to="/upload">
-        <Upload />
-        IPFS Uploader
-      </SidebarLink>
-      {network && (
-        <SidebarLink to="/helpers">
-          <W3 />
-          Web3 Helpers
+}) => {
+  return (
+    <SidebarRoot>
+      <Div>
+        {/* not using for now */}
+        {/*<SidebarLink to="/search">*/}
+        {/*<Registry />*/}
+        {/*ABI Search*/}
+        {/*</SidebarLink>*/}
+        <SidebarLink to="/upload">
+          <Upload />
+          IPFS Uploader
         </SidebarLink>
-      )}
-      <Route
-        path="/helpers"
-        render={props => <Web3HelpersList {...props} helpers={helpers} />}
-      />
-      <SidebarLink to="/simulator">
-        <Simulator />
-        Contract Simulator
-      </SidebarLink>
-      <Route
-        path="/simulator/:contract?"
-        render={props => (
-          <SelectContractLayout>
-            <SmartContractSelector
-              onSelect={updateContract}
-              selectedContractName
-              contracts={contracts}
-              {...props}
-            />
-            {network && (
-              <ContractAddressDropdown
-                onSelect={updateDeploymentSelection}
-                getDeployedContractObjects={getDeployedContractObjects}
-                selectedAddress={deploymentSelection.address}
-                selectedNotes={deploymentSelection.notes}
-                network={network}
-                {...props}
+        {network && (
+          <SidebarLink to="/helpers">
+            <W3 />
+            Web3 Helpers
+          </SidebarLink>
+        )}
+        <Route
+          path="/helpers"
+          render={props => <Web3HelpersList {...props} helpers={helpers} />}
+        />
+        <SidebarLink to="/simulator">
+          <Simulator />
+          Contract Simulator
+        </SidebarLink>
+        <Route
+          path="/simulator/:contract?"
+          render={({
+            history,
+            match: {
+              params: { contract },
+            },
+          }) => (
+            <SelectContractLayout>
+              <SmartContractSelector
+                onSelect={updateContract}
+                selectedContractName
+                contracts={contracts}
+                contract={contract}
+                history={history}
               />
-            )}
-          </SelectContractLayout>
-        )}
-      />
-      <Route
-        path="/simulator/:contract"
-        render={props => (
-          <FunctionsList {...props} getContractObject={getContractObject} />
-        )}
-      />
-    </Div>
-    <Div>
-      <SidebarLink to="/settings">
-        <Cog />
-        Settings
-      </SidebarLink>
-    </Div>
-  </SidebarRoot>
-)
+              {network && (
+                <ContractAddressDropdown
+                  onSelect={updateDeploymentSelection}
+                  getDeployedContractObjects={getDeployedContractObjects}
+                  selectedAddress={deploymentSelection.address}
+                  selectedNotes={deploymentSelection.notes}
+                  network={network}
+                  contract={contract}
+                />
+              )}
+            </SelectContractLayout>
+          )}
+        />
+        <Route
+          path="/simulator/:contract"
+          render={props => (
+            <FunctionsList {...props} getContractObject={getContractObject} />
+          )}
+        />
+      </Div>
+      <Div>
+        <SidebarLink to="/settings">
+          <Cog />
+          Settings
+        </SidebarLink>
+      </Div>
+    </SidebarRoot>
+  )
+}
 
-export default Sidebar
+export default memo(Sidebar)
