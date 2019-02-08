@@ -75,7 +75,7 @@ const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT'
 const initialWeb3State = {
   web3js: undefined,
   account: undefined,
-  network: undefined,
+  network: {},
   usingProviderURL: undefined,
 }
 

@@ -118,7 +118,7 @@ const Sidebar = ({
                 contract={contract}
                 history={history}
               />
-              {network && (
+              {network && contract && (
                 <ContractAddressDropdown
                   onSelect={updateDeploymentSelection}
                   getDeployedContractObjects={getDeployedContractObjects}

@@ -283,11 +283,13 @@ export const useScsc = ipfsClient => {
               }
             })
             .filter(Boolean)
-          return [...acc, contractsToDeploy]
+          return [...acc, ...contractsToDeploy]
         }
+        return acc
       },
       [],
     )
+
     addDeployedContracts(contractsToDeploy)
   }
 
@@ -311,15 +313,17 @@ export const useScsc = ipfsClient => {
   }
 
   const loadIPFSContracts = async () => {
-    const ipfs = Cookies.get(`ipfs`)
-    console.log({ ipfs })
-
-    if (ipfs) {
-      let { abi } = await fetchABI()
-      await storeABIs(abi)
-      await storeABIDeployments(abi)
-    } else {
-      console.log('No ipfs file loaded, please add in settings')
+    try {
+      const ipfs = Cookies.get(`ipfs`)
+      if (ipfs) {
+        let { abi } = await fetchABI()
+        await storeABIs(abi)
+        await storeABIDeployments(abi)
+      } else {
+        console.log('No ipfs file loaded, please add in settings')
+      }
+    } catch (err) {
+      console.log({ err })
     }
   }
 
