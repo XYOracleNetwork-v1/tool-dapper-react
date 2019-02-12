@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, memo } from 'react'
 import { Div, H2, Input } from 'glamorous'
-import { withRouter } from 'react-router-dom'
 import { STATE } from 'react-progress-button'
 import glam from 'glamorous'
 import Cookies from 'js-cookie'
 
 import { SettingsLayout } from '../molecules/SettingsComponenets'
-import FolderDropzone from './../organisms/FolderDropzone'
 import { readSettings } from '../../util/CookieReader'
 import IPFSConfigForm from '../molecules/IPFSConfigForm'
 import TextInput from '../atoms/TextInput'
@@ -28,9 +26,9 @@ class Settings extends Component {
 
   stateChange = (stateKey, stateValue) => {
     console.log(`attempting State Change`, stateKey, stateValue)
-    Cookies.set(stateKey, stateValue, {
-      path: `/`,
-    })
+    // Cookies.set(stateKey, stateValue, {
+    //   path: `/`,
+    // })
     this.setState({ [stateKey]: stateValue })
   }
 
@@ -41,9 +39,13 @@ class Settings extends Component {
   }
 
   handleFormSubmit = async () => {
+    const { ipfs } = this.state
     this.setState({ updateBtnState: STATE.LOADING })
     try {
-      await this.props.loadIPFSContracts()
+      console.log({ ipfs })
+
+      await this.props.loadIPFSContracts(ipfs)
+      console.log({ ipfs })
       this.setState({ updateBtnState: STATE.SUCCESS })
     } catch (e) {
       this.setState({ ipfsError: e.toString(), updateBtnState: STATE.ERROR })
@@ -74,12 +76,7 @@ class Settings extends Component {
   }
 
   render() {
-    const {
-      uploadIPFS,
-      ipfsConfig,
-      loadIPFSContracts,
-      updateIPFSConfig,
-    } = this.props
+    const { ipfsConfig, updateIPFSConfig } = this.props
     const { ipfsError, updateBtnState } = this.state
 
     return (
@@ -100,13 +97,14 @@ class Settings extends Component {
         >
           {this.renderNetworkRadio()}
         </Div>
+        <Heading>Add ABI</Heading>
         <Div css={{ display: 'flex', alignItems: 'center' }}>
           <TextInput
             css={{ marginRight: 40 }}
             label="IPFS Address"
+            onChange={e => this.stateChange('ipfs', e.target.value)}
             id="ipfs"
             name="ipfs"
-            value={Cookies.get(`ipfs`)}
             placeholder="ie. QmRyaWmtHXByH1XzqNRmJ8uKLCqAbtem4bmfTdr7DmyxNJ"
           />
           <Button
@@ -125,4 +123,6 @@ class Settings extends Component {
   }
 }
 
-export default withRouter(Settings)
+export default memo(Settings, (prevProps, nextProps) => {
+  return prevProps.curNetwork === nextProps.curNetwork
+})

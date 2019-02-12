@@ -302,21 +302,21 @@ export const useScsc = ipfsClient => {
     setDeployedContracts(objects)
   }
 
-  const fetchABI = async () => {
+  const fetchABI = async hash => {
     const settings = readSettings()
     switch (settings.currentSource) {
       default: {
-        const files = await ipfsClient.downloadFiles(settings.ipfs)
+        const files = await ipfsClient.downloadFiles(hash)
         return { abi: files }
       }
     }
   }
 
-  const loadIPFSContracts = async () => {
+  const loadIPFSContracts = async hash => {
     try {
-      const ipfs = Cookies.get(`ipfs`)
+      const ipfs = Cookies.get(`ipfs`) || hash
       if (ipfs) {
-        let { abi } = await fetchABI()
+        let { abi } = await fetchABI(ipfs)
         await storeABIs(abi)
         await storeABIDeployments(abi)
       } else {

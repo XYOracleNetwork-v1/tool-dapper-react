@@ -55,7 +55,7 @@ const parseFiles = (files, resolve) => {
         : acc,
     [],
   )
-  resolve(abi)
+  return resolve ? resolve(abi) : abi
 }
 
 export const useIPFS = () => {
@@ -89,15 +89,10 @@ export const useIPFS = () => {
       ),
     )
 
-  const downloadFiles = async ipfsHash =>
-    new Promise((resolve, reject) => {
-      ipfs.get(ipfsHash, (err, files) => {
-        if (err) {
-          return reject(err)
-        }
-        parseFiles(files, resolve)
-      })
-    })
+  const downloadFiles = async ipfsHash => {
+    const files = await ipfs.get(ipfsHash)
+    return parseFiles(files)
+  }
 
   return {
     updateIpfsConfig,

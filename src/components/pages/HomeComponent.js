@@ -129,7 +129,6 @@ const HomeComponent = () => {
                 portisNetworkChange={changePortisNetwork}
                 ipfsConfig={ipfsConfig}
                 loadIPFSContracts={loadIPFSContracts}
-                uploadIPFS={uploadFiles()}
                 updateIPFSConfig={updateIpfsConfig}
               />
             )}
@@ -138,7 +137,10 @@ const HomeComponent = () => {
             exact
             path="/settings/:ipfs"
             render={props => (
-              <SettingsIPFSDownload {...props} service={service} />
+              <SettingsIPFSDownload
+                {...props}
+                loadIPFSContracts={loadIPFSContracts}
+              />
             )}
           />
           <PrivateRoute

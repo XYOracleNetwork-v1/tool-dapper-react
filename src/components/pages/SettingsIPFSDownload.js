@@ -2,34 +2,28 @@ import React, { Component } from 'react'
 import { Div } from 'glamorous'
 import { HeaderStyle, HeaderStyle2 } from '../atoms/HeaderStyle'
 import Cookies from 'js-cookie'
-import { withRouter } from 'react-router-dom'
 
 class SettingsIPFSDownload extends Component {
   state = {
     error: undefined,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       match: {
         params: { ipfs },
       },
-      service,
       history,
+      loadIPFSContracts,
     } = this.props
-    Cookies.set(`ipfs`, ipfs, {
-      path: `/`,
-    })
-    service
-      .loadIPFSContracts()
-      .then(_ => {
-        history.push(`/settings`)
+    try {
+      await loadIPFSContracts(ipfs)
+      history.push('/settings')
+    } catch (e) {
+      this.setState({
+        error: `Cannot Load IPFS, "${ipfs}", ${e.toString()}`,
       })
-      .catch(e => {
-        this.setState({
-          error: `Cannot Load IPFS, "${ipfs}", ${e.toString()}`,
-        })
-      })
+    }
   }
 
   render() {
@@ -54,4 +48,4 @@ class SettingsIPFSDownload extends Component {
   }
 }
 
-export default withRouter(SettingsIPFSDownload)
+export default SettingsIPFSDownload
