@@ -17,6 +17,8 @@ class IPFSUploader extends Component {
     ...readSettings(),
   }
 
+  handleJSONUpload = async ipfsHash => {}
+
   handleUpload = async ipfsHash => {
     const { loadIPFSContracts } = this.props
     this.setState({ ipfsHash })
@@ -75,6 +77,7 @@ class IPFSUploader extends Component {
           <JSONUploader
             onSave={this.handleUpload}
             setError={this.handleError}
+            uploadIPFS={uploadIPFS}
           />
         </Div>
         {error && <Div>{error}</Div>}

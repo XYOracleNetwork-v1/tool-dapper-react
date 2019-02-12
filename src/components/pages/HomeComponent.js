@@ -38,6 +38,7 @@ const HomeComponent = () => {
     web3,
     createContract,
     changePortisNetwork,
+    initWeb3,
   } = service
   const sidebarScroll = useRef()
   const contentScroll = useRef()
@@ -50,6 +51,8 @@ const HomeComponent = () => {
 
   const [deploymentSelection, updateDeploymentSelection] = useState({})
   const [selectedContractName, updateSelectedContractName] = useState(null)
+
+  const networkInitialized = Object.entries(currentNetwork).length !== 0
 
   return (
     <Div
@@ -69,13 +72,15 @@ const HomeComponent = () => {
       }}
     >
       <PageHeader
-        // connectProvider={loadWeb3}
+        connectProvider={initWeb3}
+        networkInitialized={networkInitialized}
         network={currentNetwork}
         account={currentUser}
       />
       <Sidebar
         deploymentSelection={deploymentSelection}
         network={currentNetwork}
+        networkInitialized={networkInitialized}
         contracts={smartContracts}
         helpers={web3helpers}
         getDeployedContractObjects={deployedContractObjects}

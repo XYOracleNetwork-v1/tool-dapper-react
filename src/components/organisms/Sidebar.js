@@ -75,6 +75,7 @@ const Sidebar = ({
   contracts,
   helpers,
   getContractObject,
+  networkInitialized,
 }) => {
   return (
     <SidebarRoot>
@@ -88,7 +89,7 @@ const Sidebar = ({
           <Upload />
           IPFS Uploader
         </SidebarLink>
-        {network && (
+        {networkInitialized && (
           <SidebarLink to="/helpers">
             <W3 />
             Web3 Helpers
@@ -118,7 +119,7 @@ const Sidebar = ({
                 contract={contract}
                 history={history}
               />
-              {network && contract && (
+              {networkInitialized && contract && (
                 <ContractAddressDropdown
                   onSelect={updateDeploymentSelection}
                   getDeployedContractObjects={getDeployedContractObjects}

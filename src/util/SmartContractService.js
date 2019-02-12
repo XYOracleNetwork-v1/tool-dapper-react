@@ -21,7 +21,7 @@ export const useScsc = ipfsClient => {
   const [smartContracts, setSmartContracts] = useState([])
   const [deployedContracts, setDeployedContracts] = useState({})
   const web3Manager = useWeb3Manager()
-  const { currentUser, currentNetwork, web3js: web3 } = web3Manager
+  const { currentUser, currentNetwork, web3js: web3, initWeb3 } = web3Manager
 
   const changePortisNetwork = async newNetwork => {
     if (web3 && web3.currentProvider.isPortis) {
@@ -347,5 +347,6 @@ export const useScsc = ipfsClient => {
     addDeployedContracts,
     web3,
     changePortisNetwork,
+    initWeb3,
   }
 }

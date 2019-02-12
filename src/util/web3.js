@@ -110,8 +110,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     if (web3Initialized && web3Error) setWeb3Error(null)
   })
 
-  // run one-time initialization
-  useEffect(() => {
+  const initWeb3 = () => {
     const { web3, ethereum } = window
 
     // for modern dapp browsers
@@ -158,7 +157,10 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
       const web3js = new Web3(new PortisProvider(portisArgs))
       dispatchWeb3State({ type: INITIALIZE, payload: web3js })
     }
-  }, [])
+  }
+
+  // run one-time initialization
+  // useEffect(initWeb3, [])
 
   const networkPoll = () => {
     web3State.web3js.eth.net
@@ -232,6 +234,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     networkReRenderer,
     forceAccountReRender,
     forceNetworkReRender,
+    initWeb3,
     ...rest,
   }
 }
