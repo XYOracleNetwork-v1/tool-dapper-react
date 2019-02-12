@@ -303,6 +303,7 @@ export const useScsc = ipfsClient => {
   }
 
   const fetchABI = async hash => {
+    Cookies.set('ipfs', hash)
     const settings = readSettings()
     switch (settings.currentSource) {
       default: {
@@ -312,11 +313,10 @@ export const useScsc = ipfsClient => {
     }
   }
 
-  const loadIPFSContracts = async hash => {
+  const loadIPFSContracts = async (hash = Cookies.get('ipfs')) => {
     try {
-      const ipfs = Cookies.get(`ipfs`) || hash
-      if (ipfs) {
-        let { abi } = await fetchABI(ipfs)
+      if (hash) {
+        let { abi } = await fetchABI(hash)
         await storeABIs(abi)
         await storeABIDeployments(abi)
       } else {
