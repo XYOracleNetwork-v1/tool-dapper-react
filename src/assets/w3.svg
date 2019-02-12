@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="24" viewBox="0 0 29 24">
+    <g fill="none" fill-rule="evenodd">
+        <text fill="currentColor" font-family="PTSans-Bold, PT Sans" font-size="24" font-weight="bold"
+              transform="translate(2 1)">
+            <tspan x="15" y="22">3</tspan>
+        </text>
+        <path stroke="currentColor" stroke-width="3" d="M2.147 1.021L5.96 13 9.576 7.01 12.904 13l4.101-11.978"/>
+    </g>
+</svg>
