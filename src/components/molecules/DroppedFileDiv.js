@@ -51,7 +51,7 @@ class DroppedFileDiv extends Component {
             ))}
           </ul>
           <Button state={uploadBtnState} onClick={this.handleClick}>
-            Upload Contracts
+            Upload Files
           </Button>
         </Div>
       )

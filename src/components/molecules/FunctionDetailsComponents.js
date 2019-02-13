@@ -35,7 +35,6 @@ export const FunctionParamLayout = glam.div({
   display: `flex`,
   flexDirection: `column`,
   paddingBottom: `30px`,
-  borderBottom: `1px solid #979797`,
   width: `100%`,
   flex: 1,
 })

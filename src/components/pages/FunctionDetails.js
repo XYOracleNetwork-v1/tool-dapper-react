@@ -38,8 +38,8 @@ class FunctionDetails extends Component {
       },
       network,
     } = this.props
-
-    if (prevMethodSig !== methodSig || prevNetwork !== network) {
+    // console.log(`Prev diffs`, prevMethodSig, methodSig, prevNetwork, network)
+    if (prevMethodSig !== methodSig || prevNetwork.id !== network.id) {
       this.updateInputs()
     }
   }
@@ -57,7 +57,7 @@ class FunctionDetails extends Component {
       const method = this.methodObject(abi, methodSig)
       if (method) {
         const inputs = method.inputs.reduce(
-          (acc, input) => ({ [input.name]: '' }),
+          (acc, input) => ({ [input.name]: `` }),
           {},
         )
         this.setState({
@@ -80,7 +80,7 @@ class FunctionDetails extends Component {
   handleChange = e => {
     const { inputs } = this.state
     const { name: inputName, value } = e.target
-    if (inputName === 'Value') {
+    if (inputName === `Value`) {
       return this.setState({ value })
     }
 
@@ -98,26 +98,24 @@ class FunctionDetails extends Component {
     const inputParams = Object.entries(inputs).map(([name, value]) => value)
     if (
       value === 0 &&
-      (inputParams.length === 0 ||
-        stateMutability === `view` ||
-        stateMutability === `pure`)
+      (stateMutability === `view` || stateMutability === `pure`)
     ) {
-      // console.log(
-      //   `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
-      //     inputParams,
-      //   )}`,
-      // )
+      console.log(
+        `Calling view or pure method \'${methodName}\' with params ${JSON.stringify(
+          inputParams,
+        )}`,
+      )
       const result = await contract.methods[methodName](...inputParams).call()
       this.setState({
         transactionResult: result,
         executeBtnState: STATE.SUCCESS,
       })
     } else {
-      // console.log(
-      //   `Calling ${contract} ${methodName} with params ${JSON.stringify(
-      //     inputParams,
-      //   )}`,
-      // )
+      console.log(
+        `Calling ${contract} ${methodName} with params ${JSON.stringify(
+          inputParams,
+        )}`,
+      )
       // For debugging purposes if you need to examine the call to web3 provider:
       // contract.methods
       //   .mint(...inputParams)
@@ -157,9 +155,12 @@ class FunctionDetails extends Component {
       }
 
       if (!selectedAddress) {
-        throw new Error(
-          `No contract address selected, contract must be deployed at address.`,
-        )
+        this.setState({
+          transactionError: new Error(
+            `No contract address selected, contract must be deployed at address.`,
+          ),
+          executeBtnState: STATE.ERROR,
+        })
       }
 
       const contract = createContract(contractAbi, selectedAddress)
@@ -169,7 +170,6 @@ class FunctionDetails extends Component {
         transactionError: e,
         executeBtnState: STATE.ERROR,
       })
-      throw e
     }
   }
 
@@ -203,7 +203,7 @@ class FunctionDetails extends Component {
 
     if (!network) return <div>Please connect a wallet</div>
     if (!method) return <div>Loading...</div>
-    console.log({ method })
+    // console.log({ method })
 
     return (
       <>
@@ -213,14 +213,13 @@ class FunctionDetails extends Component {
             display: `flex`,
             flexDirection: `column`,
             paddingBottom: 40,
-            borderBottom: `1px solid #979797`,
             width: `100%`,
           }}
           onSubmit={this.handleExecute}
         >
           <FunctionParamList>
             {this.getInputs()}
-            {method.stateMutability === 'payable' && (
+            {method.stateMutability === `payable` && (
               <ParamInputDiv key="Value">
                 Value To Transfer
                 <TextInput
