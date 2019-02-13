@@ -22,7 +22,11 @@ const ContractAddressDropdown = ({
 }) => {
   const prevContract = usePrevious(contract)
   const contractObjects = useMemo(
-    () => getDeployedContractObjects(contract) || [],
+    () => {
+      console.log({ yay: 'aya' })
+
+      return getDeployedContractObjects(contract) || []
+    },
     [contract],
   )
 

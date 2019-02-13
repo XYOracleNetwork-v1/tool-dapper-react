@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, useMemo } from 'react'
 import { Div } from 'glamorous'
 import ResultTable from '../atoms/ResultTable'
 import { getNetworkById } from '../../util/web3'
@@ -22,14 +22,17 @@ const DeploymentsTable = ({ deployments }) => {
 }
 
 const SelectedContract = ({
-  service,
   selectedAddress,
   match: {
     params: { contract },
   },
+  getContractObject,
+  getDeployedContractObjects,
 }) => {
-  const contractObj = service.contractObject(contract)
-  const deployments = service.deployedContractObjects(contract)
+  const contractObj = useMemo(() => getContractObject(contract), [contract])
+  const deployments = useMemo(() => getDeployedContractObjects(contract), [
+    contract,
+  ])
 
   if (!contractObj) {
     return null
