@@ -82,10 +82,7 @@ const HomeComponent = memo(() => {
         networkInitialized={networkInitialized}
         contracts={smartContracts}
         helpers={web3helpers}
-        getDeployedContractObjects={(...args) => {
-          console.log('Sidebar', args)
-          deployedContractObjects(...args)
-        }}
+        getDeployedContractObjects={deployedContractObjects}
         getContractObject={contractObject}
         updateContract={selectedContractName => {
           updateSelectedContractName(selectedContractName)
