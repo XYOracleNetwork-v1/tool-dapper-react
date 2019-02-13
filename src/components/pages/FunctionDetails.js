@@ -122,7 +122,10 @@ const FnDetails = memo(
         const method = methodObject(abi, methodSig)
         if (method) {
           const inputs = method.inputs.reduce(
-            (acc, input) => ({ [input.name]: `` }),
+            (acc, input, index) => ({
+              ...acc,
+              [input.name || `param-${index}`]: ``,
+            }),
             {},
           )
           setMethod(method)
@@ -144,7 +147,7 @@ const FnDetails = memo(
     const getInputs = () => {
       if (!inputs || inputs.length === 0) return null
       return method.inputs.map(({ name, type }, index) => (
-        <ParamInputDiv key={name}>
+        <ParamInputDiv key={name || `param-${index}`}>
           <TextInput
             label={name}
             name={name || `param-${index}`}
