@@ -115,15 +115,15 @@ class ContractDeployment extends Component {
     return bytecode.split(symbol).join(libAddress.toLowerCase().substr(2))
   }
 
-  deployContract = async user => {
+  deployContract = async () => {
+    const { user, createContract, getContractObject, match } = this.props
+
     const inputParams = this.state.inputs
       ? this.state.inputs.map(i => i.value)
       : []
-    let contractObj = this.state.service.contractObject(
-      this.props.match.params.contractName,
-    )
+    let contractObj = getContractObject(match.params.contractName)
     let bytecode = contractObj.bytecode
-    let contract = this.state.service.createContract(contractObj.abi)
+    let contract = createContract(contractObj.abi)
 
     let libraries = Object.entries(this.state.libraries)
     if (libraries.length > 0) {
@@ -152,15 +152,15 @@ class ContractDeployment extends Component {
             from: user,
             gas: 4712388,
           },
-          function(error, transactionHash) {
-            console.log(`Finished Deploy Call`, error, transactionHash)
+          function(error, receipt) {
+            console.log(`Finished Deploy Call`, error, receipt)
           },
         )
         .then(newContractInstance => {
           this.setState({
             executeBtnState: STATE.SUCCESS,
             transactionResult: {
-              address: newContractInstance._address,
+              address: newContractInstance.address,
               ipfs: contractObj.ipfs,
               name: contractObj.name,
               notes: this.state.notes,
@@ -169,20 +169,19 @@ class ContractDeployment extends Component {
           this.props.service.addDeployedContract(
             contractObj.ipfs,
             contractObj.name,
-            newContractInstance._address,
+            newContractInstance.address,
             bytecode,
             contractObj.abi,
             this.state.notes,
           )
           this.props.onDeploy({
             notes: this.state.notes,
-            address: newContractInstance._address,
+            address: newContractInstance.address,
           })
           console.log(
             `Created New Instance`,
+            newContractInstance,
             contractObj.ipfs,
-            contractObj.name,
-            newContractInstance._address,
             bytecode,
             contractObj.abi,
             this.state.notes,
@@ -204,17 +203,22 @@ class ContractDeployment extends Component {
     }
   }
 
-  handleExecute = () => {
+  handleExecute = e => {
+    e.preventDefault()
     this.setState({
       transactionResult: undefined,
       transactionError: undefined,
       transactionReceipt: undefined,
       executeBtnState: STATE.LOADING,
     })
+    console.log(`EXECUTE TAPPED`)
     try {
-      const user = this.state.service.getCurrentUser()
+      const { user } = this.props
+
       if (!user) {
         let e = new Error(`Please connect a wallet`)
+        console.log(`ERR`, e)
+
         this.setState({
           executeBtnState: STATE.ERROR,
           transactionError: e,
@@ -222,8 +226,9 @@ class ContractDeployment extends Component {
         return
       }
 
-      this.deployContract(user)
+      this.deployContract()
     } catch (e) {
+      console.log(`ERR`, e)
       this.setState({
         executeBtnState: STATE.ERROR,
         transactionError: e,
@@ -353,7 +358,9 @@ class ContractDeployment extends Component {
           }}
         /> */}
         <DeploymentResult {...transactionResult} />
-        {transactionError && <ResultDiv title="Error" />}
+        {transactionError && (
+          <ResultDiv title="Error">{transactionError.message}</ResultDiv>
+        )}
         {transactionReceipt && (
           <TransactionReceipt transactionReceipt={transactionReceipt} />
         )}

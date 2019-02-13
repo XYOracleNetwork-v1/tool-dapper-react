@@ -79,23 +79,29 @@ class FunctionDetails extends Component {
 
   handleChange = e => {
     const { inputs } = this.state
+
     const { name: inputName, value } = e.target
+
     if (inputName === `Value`) {
       return this.setState({ value })
     }
 
     const { ...newInputs } = inputs
     newInputs[inputName] = value
+
     this.setState({ inputs: newInputs })
   }
 
   executeContract = async (user, contract) => {
     const {
+      method,
       method: { stateMutability, name: methodName },
       inputs,
       value,
     } = this.state
-    const inputParams = Object.entries(inputs).map(([name, value]) => value)
+
+    const inputParams = method.inputs.map(({ name }, _) => inputs[name])
+
     if (
       value === 0 &&
       (stateMutability === `view` || stateMutability === `pure`)
@@ -177,11 +183,11 @@ class FunctionDetails extends Component {
     const { method, inputs } = this.state
     if (!method || !inputs) return null
     return method.inputs.map(({ name, type }, index) => (
-      <ParamInputDiv key={name}>
+      <ParamInputDiv key={index}>
         <TextInput
           label={name}
           name={name || `param-${index}`}
-          id={name}
+          id={index}
           placeholder={type}
           onChange={this.handleChange}
           value={inputs[name]}
@@ -240,7 +246,7 @@ class FunctionDetails extends Component {
           <ResultDiv title="Result">{stringify(transactionResult)}</ResultDiv>
         )}
         {transactionError && (
-          <ResultDiv title="Error">{transactionError.toString()}</ResultDiv>
+          <ResultDiv title="Error">{transactionError.message}</ResultDiv>
         )}
         {transactionReceipt && (
           <TransactionReceipt transactionReceipt={transactionReceipt} />

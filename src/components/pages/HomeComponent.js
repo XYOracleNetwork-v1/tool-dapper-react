@@ -42,8 +42,8 @@ const HomeComponent = memo(() => {
   const sidebarScroll = useRef()
   const contentScroll = useRef()
   useOnMount(async () => {
-    sidebarScroll.current = new PerfectScrollbar('.sidebar')
-    contentScroll.current = new PerfectScrollbar('.content')
+    sidebarScroll.current = new PerfectScrollbar(`.sidebar`)
+    contentScroll.current = new PerfectScrollbar(`.content`)
     await loadLocalStoreObjects()
     await loadIPFSContracts()
   })
@@ -61,9 +61,9 @@ const HomeComponent = memo(() => {
         height: `100%`,
         // width: `100%`,
         backgroundImage: `linear-gradient(338deg, #8d8fc6, #190e24)`,
-        display: 'grid',
-        gridTemplateRows: '125px 1fr',
-        gridTemplateColumns: '420px 1fr',
+        display: `grid`,
+        gridTemplateRows: `125px 1fr`,
+        gridTemplateColumns: `420px 1fr`,
         gridTemplateAreas: `
           'header header'
           'sidebar body'
@@ -93,12 +93,12 @@ const HomeComponent = memo(() => {
       <Div
         className="content"
         css={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          gridArea: 'body',
-          position: 'relative',
-          padding: '25px 20px',
+          display: `flex`,
+          flexDirection: `column`,
+          width: `100%`,
+          gridArea: `body`,
+          position: `relative`,
+          padding: `25px 20px`,
         }}
       >
         <Switch>
@@ -168,7 +168,10 @@ const HomeComponent = memo(() => {
             render={props => (
               <ContractDeployment
                 {...props}
+                user={currentUser}
+                createContract={createContract}
                 service={service}
+                getContractObject={contractObject}
                 onDeploy={updateDeploymentSelection}
               />
             )}
