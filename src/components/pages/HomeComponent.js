@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, memo } from 'react'
 import { Div } from 'glamorous'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 import { useOnMount } from 'react-hanger'
@@ -22,11 +22,10 @@ import Login from './Login'
 import Web3HelperExecution from './Web3HelperExecution'
 import { useIPFS } from '../../util/IPFS'
 
-const HomeComponent = () => {
+const HomeComponent = memo(() => {
   const ipfsClient = useIPFS()
   const { updateIpfsConfig, uploadFiles, ipfsConfig } = ipfsClient
   const service = useScsc(ipfsClient)
-  // console.log(service)
   const {
     loadLocalStoreObjects,
     loadIPFSContracts,
@@ -196,7 +195,8 @@ const HomeComponent = () => {
           render={props => (
             <SelectedContract
               {...props}
-              service={service}
+              getContractObject={contractObject}
+              getDeployedContractObjects={deployedContractObjects}
               selectedAddress={deploymentSelection.address}
             />
           )}
@@ -204,8 +204,6 @@ const HomeComponent = () => {
       </Div>
     </Div>
   )
-}
+})
 
-const Foo = () => <div />
-
-export default withRouter(HomeComponent)
+export default HomeComponent
