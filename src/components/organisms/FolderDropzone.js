@@ -13,10 +13,10 @@ const parentStyle = {
   height: 200,
   marginRight: 40,
   border: `1px dashed #fff`,
-  color: 'white',
-  borderImage: createBorder({ color: 'white' }),
-  background: 'rgba(216, 216, 216, 0.22)',
-  cursor: 'pointer',
+  color: `white`,
+  borderImage: createBorder({ color: `white` }),
+  background: `rgba(216, 216, 216, 0.22)`,
+  cursor: `pointer`,
 }
 
 class FolderDropzone extends React.Component {
@@ -37,14 +37,13 @@ class FolderDropzone extends React.Component {
           getDataTransferItems={evt => fromEvent(evt)}
           onDrop={this.onDrop}
         >
-          <h2>Drop ABI Folder here (JSON files)</h2>
-          <div>ie. [solidity_project]/build/contracts</div>
+          <h2>Drop files here</h2>
           <Svg
             css={{
               width: 50,
               height: 50,
-              fill: 'none',
-              stroke: 'white',
+              fill: `none`,
+              stroke: `white`,
               marginTop: 10,
             }}
             viewBox="0 0 100 100"
