@@ -31,6 +31,7 @@ const Web3HelperExecution = ({
     setInputs(
       func.inputs.reduce(
         (acc, input) => ({
+          ...acc,
           [input.name]: '',
         }),
         {},
@@ -42,12 +43,7 @@ const Web3HelperExecution = ({
     setExecuteBtnState(STATE.NOTHING)
   }
 
-  useEffect(
-    () => {
-      updateInputs()
-    },
-    [funcId],
-  )
+  useEffect(updateInputs, [funcId])
 
   const finishExecuting = (error, result) => {
     setTxResult(result)
@@ -56,12 +52,8 @@ const Web3HelperExecution = ({
   }
 
   const handleChange = e => {
-    setInputs(inp => {
-      const { name: inputName, value } = e.target
-      const { ...newInputs } = inp
-      newInputs[inputName] = value
-      return newInputs
-    })
+    const { name: inputName, value } = e.target
+    setInputs(inp => ({ ...inp, [inputName]: value }))
   }
 
   const executeFunction = async e => {
@@ -134,4 +126,8 @@ const Web3HelperExecution = ({
   )
 }
 
-export default memo(Web3HelperExecution)
+export default memo(
+  Web3HelperExecution,
+  (prevProps, nextProps) =>
+    prevProps.match.params.funcId === nextProps.match.params.funcId,
+)
