@@ -2,7 +2,6 @@ import React, { Component, memo } from 'react'
 import { Div, H2, Input } from 'glamorous'
 import { STATE } from 'react-progress-button'
 import glam from 'glamorous'
-import Cookies from 'js-cookie'
 
 import { SettingsLayout } from '../molecules/SettingsComponenets'
 import { readSettings } from '../../util/CookieReader'
