@@ -166,14 +166,22 @@ class ContractDeployment extends Component {
               notes: this.state.notes,
             },
           })
-          this.props.service.addDeployedContract(
-            contractObj.ipfs,
-            contractObj.name,
-            newContractInstance.address,
+          // this.props.service.addDeployedContract(
+          //   contractObj.ipfs,
+          //   contractObj.name,
+          //   newContractInstance.address,
+          //   bytecode,
+          //   contractObj.abi,
+          //   this.state.notes,
+          // )
+          this.props.service.addDeployedContract({
+            ipfs: contractObj.ipfs,
+            name: contractObj.name,
+            address: newContractInstance.address,
             bytecode,
-            contractObj.abi,
-            this.state.notes,
-          )
+            abi: contractObj.abi,
+            notes: this.state.notes,
+          })
           this.props.onDeploy({
             notes: this.state.notes,
             address: newContractInstance.address,

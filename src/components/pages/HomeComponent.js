@@ -56,8 +56,6 @@ const HomeComponent = () => {
     [currentNetwork],
   )
 
-  console.log({ deploymentSelection })
-
   return (
     <Div
       css={{
