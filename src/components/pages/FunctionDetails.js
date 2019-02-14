@@ -47,6 +47,7 @@ const FnDetails = memo(
         console.log(
           `Calling view or pure method \'${methodName}\' with params ${stringify(
             inputParams,
+            inputs,
           )}`,
         )
         const result = await contract.methods[methodName](...inputParams).call()
@@ -110,7 +111,7 @@ const FnDetails = memo(
         return setValue(value)
       }
 
-      setInputs(({ inputs }) => ({ ...inputs, [inputName]: value }))
+      setInputs(inputs => ({ ...inputs, [inputName]: value }))
     }
 
     const updateInputs = () => {
