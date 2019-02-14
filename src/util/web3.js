@@ -232,5 +232,6 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     forceAccountReRender,
     forceNetworkReRender,
     initWeb3,
+    web3js,
   }
 }

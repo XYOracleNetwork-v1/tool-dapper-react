@@ -35,9 +35,6 @@ const FnDetails = memo(
     const [txError, setTxError] = useState(null)
     const [txReceipt, setTxReceipt] = useState(null)
     const [contractAbi, setContractAbi] = useState(null)
-
-    console.log({ method })
-
     const executeContract = async (user, contract) => {
       const { stateMutability, name: methodName } = method
       console.log(`WHAT INPUTS`, inputs)
