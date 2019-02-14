@@ -26,7 +26,13 @@ const ContractAddressDropdown = ({
     [contract],
   )
 
-  console.log({ contractObjects, contract, prevContract })
+  console.log({
+    contractObjects,
+    contract,
+    prevContract,
+    selectedNotes,
+    selectedAddress,
+  })
 
   const onSelect2 = ({ value }) => {
     const objToSelect = contractObjects.find(
@@ -65,6 +71,10 @@ const ContractAddressDropdown = ({
   )
 }
 
-export default memo(ContractAddressDropdown, (prevProps, nextProps) =>
-  Object.is(prevProps.contract, nextProps.contract),
+export default memo(
+  ContractAddressDropdown,
+  (prevProps, nextProps) =>
+    Object.is(prevProps.contract, nextProps.contract) &&
+    Object.is(prevProps.selectedNotes, nextProps.selectedNotes) &&
+    Object.is(prevProps.selectedAddress, nextProps.selectedAddress),
 )

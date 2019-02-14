@@ -95,18 +95,17 @@ const web3StateReducer = (state, action) => {
 }
 
 export const useWeb3Manager = (pollTime = 1000, providerURL) => {
-  const [web3State, dispatchWeb3State] = useReducer(
-    web3StateReducer,
-    initialWeb3State,
-  )
-
+  const [web3js, setWeb3js] = useState(null)
+  const [account, setAccount] = useState(null)
+  const [network, setNetwork] = useState({})
+  const [usingProviderURL, setUsingProviderURL] = useState(false)
   // compute initialization status
-  const web3Initialized =
-    web3State.web3js && web3State.account !== undefined && web3State.networkId
+  const web3Initialized = web3js && account && network.id
 
   // web3 error ref
   const [web3Error, setWeb3Error] = useState(null)
   useEffect(() => {
+    console.log('web3Initialized!!')
     if (web3Initialized && web3Error) setWeb3Error(null)
   })
 
@@ -119,7 +118,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
         .enable()
         .then(() => {
           const web3js = new Web3(ethereum)
-          dispatchWeb3State({ type: INITIALIZE, payload: web3js })
+          setWeb3js(web3js)
         })
         .catch(deniedAccessMessage => {
           const deniedAccessError = Error(deniedAccessMessage.toString())
@@ -129,12 +128,13 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     // for legacy dapp browsers
     else if (web3 && web3.currentProvider) {
       const web3js = new Web3(web3.currentProvider)
-      dispatchWeb3State({ type: INITIALIZE, payload: web3js })
+      setWeb3js(web3js)
     }
     // use providerURL as a backup
     else if (web3 && providerURL) {
       const web3js = new Web3(providerURL)
-      dispatchWeb3State({ type: INITIALIZE_URL, payload: web3js })
+      setWeb3js(web3js)
+      setUsingProviderURL(true)
     }
     // no web3 detected, use portis
     else {
@@ -155,7 +155,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
             }
       console.log('Setting up Portis')
       const web3js = new Web3(new PortisProvider(portisArgs))
-      dispatchWeb3State({ type: INITIALIZE, payload: web3js })
+      setWeb3js(web3js)
     }
   }
 
@@ -163,67 +163,64 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
   // useEffect(initWeb3, [])
 
   const networkPoll = () => {
-    web3State.web3js.eth.net
+    web3js.eth.net
       .getId()
       .then(networkId => {
-        if (networkId !== web3State.networkId) {
-          const network = getNetworkById(networkId)
-          dispatchWeb3State({ type: UPDATE_NETWORK_ID, payload: network })
+        if (networkId !== network.id) {
+          const net = getNetworkById(networkId)
+          setNetwork(net)
         }
       })
       .catch(error => setWeb3Error(error))
   }
 
   const accountPoll = () => {
-    web3State.web3js.eth
+    web3js.eth
       .getAccounts()
-      .then(accounts => {
-        const account =
-          accounts === undefined || accounts[0] === undefined
-            ? null
-            : accounts[0]
-        if (account !== web3State.account)
-          dispatchWeb3State({ type: UPDATE_ACCOUNT, payload: account })
+      .then((accounts = []) => {
+        const [acct] = accounts
+        if (acct !== account) {
+          setAccount(acct)
+        }
       })
       .catch(error => setWeb3Error(error))
   }
 
   useEffect(
     () => {
-      if (web3State.web3js) {
+      if (web3js) {
         networkPoll()
         const networkPollInterval = setInterval(networkPoll, pollTime)
         return () => clearInterval(networkPollInterval)
       }
     },
-    [web3State.web3js, web3State.networkId],
+    [web3js, network.id],
   )
 
   useEffect(
     () => {
-      if (web3State.web3js) {
+      if (web3js) {
         accountPoll()
         const accountPollInterval = setInterval(accountPoll, pollTime)
         return () => clearInterval(accountPollInterval)
       }
     },
-    [web3State.web3js, web3State.account],
+    [web3js, account],
   )
 
   // reRenderers
   const [accountReRenderer, setAccountReRenderer] = useState(0)
 
   const forceAccountReRender = () => {
-    setAccountReRenderer(accountReRenderer + 1)
+    setAccountReRenderer(x => x + 1)
   }
 
   const [networkReRenderer, setNetworkReRenderer] = useState(0)
 
   const forceNetworkReRender = () => {
-    setNetworkReRenderer(networkReRenderer + 1)
+    setNetworkReRenderer(x => x + 1)
   }
 
-  const { usingProviderURL, account, network, ...rest } = web3State
   return {
     usingProviderURL,
     currentNetwork: network,
@@ -235,6 +232,5 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     forceAccountReRender,
     forceNetworkReRender,
     initWeb3,
-    ...rest,
   }
 }

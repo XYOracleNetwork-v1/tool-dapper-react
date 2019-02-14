@@ -1,4 +1,4 @@
-import React, { useRef, useState, memo } from 'react'
+import React, { useRef, useState, memo, useMemo } from 'react'
 import { Div } from 'glamorous'
 import { Route, Switch } from 'react-router-dom'
 import PerfectScrollbar from 'perfect-scrollbar'
@@ -51,7 +51,12 @@ const HomeComponent = memo(() => {
   const [deploymentSelection, updateDeploymentSelection] = useState({})
   const [selectedContractName, updateSelectedContractName] = useState(null)
 
-  const networkInitialized = Object.entries(currentNetwork).length !== 0
+  const networkInitialized = useMemo(
+    () => Object.entries(currentNetwork).length !== 0,
+    [currentNetwork],
+  )
+
+  console.log({ deploymentSelection })
 
   return (
     <Div

@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const IPFS = require(`ipfs-http-client`)
 
@@ -59,9 +59,9 @@ const parseFiles = (files, resolve) => {
 }
 
 export const useIPFS = () => {
-  const [ipfsConfig, updateIpfsConfig] = useState(ipfsConfigFromCookies())
+  const [ipfsConfig, updateIpfsConfig] = useState(ipfsConfigFromCookies)
   const { ipfshost: host, ipfsport: port, ipfsprotocol: protocol } = ipfsConfig
-  const [ipfs, setIPFS] = useState(new IPFS({ host, port, protocol }))
+  const ipfs = useRef(new IPFS({ host, port, protocol }))
 
   useEffect(() => {
     const {
@@ -70,13 +70,12 @@ export const useIPFS = () => {
       ipfsprotocol: protocol,
     } = ipfsConfig
     fields.forEach(field => Cookies.set(field, ipfsConfig[field]))
-    const ipfs = new IPFS({ host, port, protocol })
-    setIPFS(ipfs)
+    ipfs.current = new IPFS({ host, port, protocol })
   })
 
   const uploadFiles = async data =>
     new Promise((resolve, reject) =>
-      ipfs.add(
+      ipfs.current.add(
         data,
         { recursive: false, wrapWithDirectory: true, pin: true },
         (err, res) => {
@@ -90,9 +89,11 @@ export const useIPFS = () => {
     )
 
   const downloadFiles = async ipfsHash => {
-    const files = await ipfs.get(ipfsHash)
+    const files = await ipfs.current.get(ipfsHash)
     return parseFiles(files)
   }
+
+  console.log('ipfs!!')
 
   return {
     updateIpfsConfig,

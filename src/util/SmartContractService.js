@@ -334,6 +334,8 @@ export const useScsc = ipfsClient => {
     return new web3.eth.Contract(abi, address)
   }
 
+  console.log('SCS!!!')
+
   return {
     loadLocalStoreObjects,
     loadIPFSContracts,
