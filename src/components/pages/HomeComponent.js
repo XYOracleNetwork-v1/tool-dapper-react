@@ -22,7 +22,7 @@ import Login from './Login'
 import Web3HelperExecution from './Web3HelperExecution'
 import { useIPFS } from '../../util/IPFS'
 
-const HomeComponent = memo(() => {
+const HomeComponent = () => {
   const ipfsClient = useIPFS()
   const { updateIpfsConfig, uploadFiles, ipfsConfig } = ipfsClient
   const service = useScsc(ipfsClient)
@@ -212,6 +212,6 @@ const HomeComponent = memo(() => {
       </Div>
     </Div>
   )
-})
+}
 
 export default HomeComponent
