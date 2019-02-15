@@ -1,4 +1,4 @@
-import React, { Component, memo } from 'react'
+import React, { Component } from 'react'
 import { Div, H2, Input } from 'glamorous'
 import { STATE } from 'react-progress-button'
 import glam from 'glamorous'
@@ -122,6 +122,4 @@ class Settings extends Component {
   }
 }
 
-export default memo(Settings, (prevProps, nextProps) => {
-  return prevProps.curNetwork === nextProps.curNetwork
-})
+export default Settings

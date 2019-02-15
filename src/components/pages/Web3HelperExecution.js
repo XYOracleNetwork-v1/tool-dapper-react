@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   FunctionParamList,
   ParamInputDiv,
@@ -126,8 +126,4 @@ const Web3HelperExecution = ({
   )
 }
 
-export default memo(
-  Web3HelperExecution,
-  (prevProps, nextProps) =>
-    prevProps.match.params.funcId === nextProps.match.params.funcId,
-)
+export default Web3HelperExecution
