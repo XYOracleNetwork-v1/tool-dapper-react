@@ -96,8 +96,6 @@ const HomeComponent = () => {
       <Div
         className="content"
         css={{
-          display: `flex`,
-          flexDirection: `column`,
           width: `100%`,
           gridArea: `body`,
           position: `relative`,

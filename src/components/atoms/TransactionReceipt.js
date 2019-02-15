@@ -45,10 +45,8 @@ export const TransactionReceipt = ({ transactionReceipt }) => {
 
   return (
     <Div>
-      <Div>
-        <ResultTable header={header} rows={rows} />
-        <EventTables events={events} />
-      </Div>
+      <ResultTable header={header} rows={rows} />
+      <EventTables events={events} />
     </Div>
   )
 }
