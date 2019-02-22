@@ -39,7 +39,9 @@ const FnDetails = ({
   const executeContract = async (user, contract) => {
     const { stateMutability, name: methodName } = method
     console.log(`WHAT INPUTS`, inputs)
-    const inputParams = method.inputs.map(({ name }, _) => inputs[name])
+    const inputParams = method.inputs.map(
+      ({ name }, id) => inputs[name || `param-${id}`],
+    )
 
     if (
       value === 0 &&
@@ -143,18 +145,21 @@ const FnDetails = ({
 
   const getInputs = () => {
     if (!inputs || inputs.length === 0) return null
-    return method.inputs.map(({ name, type }, index) => (
-      <ParamInputDiv key={name || `param-${index}`}>
-        <TextInput
-          label={name}
-          name={name || `param-${index}`}
-          id={name}
-          placeholder={type}
-          onChange={handleChange}
-          value={inputs[name]}
-        />
-      </ParamInputDiv>
-    ))
+    return method.inputs.map(({ name, type }, index) => {
+      const id = name || `param-${index}`
+      return (
+        <ParamInputDiv key={name || `param-${index}`}>
+          <TextInput
+            label={name}
+            name={id}
+            id={id}
+            placeholder={type}
+            onChange={handleChange}
+            value={inputs[name]}
+          />
+        </ParamInputDiv>
+      )
+    })
   }
 
   return (
