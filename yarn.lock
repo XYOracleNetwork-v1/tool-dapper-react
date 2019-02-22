@@ -10924,10 +10924,10 @@ react-fuzzy@^0.5.2:
     fuse.js "^3.0.1"
     prop-types "^15.5.9"
 
-react-hanger@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-hanger/-/react-hanger-1.1.2.tgz#6487ae9b125b7cea9dd0db52c1b1102733957a05"
-  integrity sha512-TkVYaSsrFAE1k73zFl/gfuMa29Xmu2+I77Tw1T7ofFsxsbkZ257qVKpZBilBiR2smyM4Vk3hG0rfSaTcnTgWpw==
+react-hanger@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/react-hanger/-/react-hanger-1.1.4.tgz#4017e692d011a518299dc156d9ed9644f85ff5cb"
+  integrity sha512-qn3WhFT6b1SeK0FIEaDtVs0TTT/xyyIOXMIaqqwzxWRnrQERU3aDx9EETaOTm4MIp4zSZH6v/UKKBG1Wh3gBJg==
 
 react-html-attributes@^1.4.2:
   version "1.4.3"
