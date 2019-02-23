@@ -2732,6 +2732,11 @@ bignumber.js@^8.0.1, bignumber.js@^8.0.2:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-8.0.2.tgz#d8c4e1874359573b1ef03011a2d861214aeef137"
   integrity sha512-EiuvFrnbv0jFixEQ9f58jo7X0qI2lNGIr/MxntmVzQc5JUweDSh8y8hbTCAomFtqwUPIOWcLXP0VEOSZTG7FFw==
 
+bignumber.js@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-8.1.0.tgz#39c7588a080f1d91c6c20f481c274b767f975826"
+  integrity sha512-hRv8jfqOBRnK1oGd0zDbfZv5blY3gy4QIsZZQ35mLCEMp/YdZmnrphBhX02SRKyLlohl+Sx6Ol7RlQhVLj/TAg==
+
 binary-extensions@^1.0.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.0.tgz#9523e001306a32444b907423f1de2164222f6ab1"
