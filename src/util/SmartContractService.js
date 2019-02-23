@@ -61,7 +61,7 @@ export const useScsc = ipfsClient => {
   const deployedContractObjects = (name, netId) => {
     const currNet = (netId || currentNetwork) && currentNetwork.id
 
-    console.log({
+    console.log('DEPLOYED CONTRACT OBJECTS', {
       deployedContracts,
       currNet,
       name,
@@ -112,8 +112,7 @@ export const useScsc = ipfsClient => {
             return rest
           }
           return acc
-        }, [])
-        console.log({ newDeployed })
+        }, deployedContracts)
 
         setDeployedContracts(newDeployed)
       })
