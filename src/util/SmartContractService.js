@@ -112,7 +112,7 @@ export const useScsc = ipfsClient => {
             return rest
           }
           return acc
-        }, deployedContracts)
+        }, [])
         console.log({ newDeployed })
 
         setDeployedContracts(newDeployed)
@@ -148,8 +148,10 @@ export const useScsc = ipfsClient => {
         smartContracts.find(abi => abi.name === abiObject.name)
           ? acc
           : [...acc, abiObject],
-      smartContracts,
+      [],
     )
+    console.log({ newSmartContracts })
+
     setSmartContracts(newSmartContracts)
   }
 
@@ -231,7 +233,7 @@ export const useScsc = ipfsClient => {
         }
         return { ...acc, [address]: contract }
       },
-      deployedContracts,
+      [],
     )
     setDeployedContracts(newDeployedContracts)
   }
@@ -314,9 +316,12 @@ export const useScsc = ipfsClient => {
   }
 
   const loadIPFSContracts = async (hash = Cookies.get('ipfs')) => {
+    console.log({ hash })
     try {
       if (hash) {
+        console.log({ hash })
         let { abi } = await fetchABI(hash)
+        console.log({ abi })
         await storeABIs(abi)
         await storeABIDeployments(abi)
       } else {
