@@ -18,7 +18,7 @@
     "url": "https://github.com/XYOracleNetwork/tool-dapper-react/issues"
   },
   "dependencies": {
-    "bignumber.js": "^8.0.2",
+    "bignumber.js": "^8.1.0",
     "concurrently": "^4.0.1",
     "configparser": "^0.2.6",
     "cors": "^2.8.5",
