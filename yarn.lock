@@ -5452,10 +5452,10 @@ file-loader@2.0.0, file-loader@^2.0.0:
     loader-utils "^1.0.2"
     schema-utils "^1.0.0"
 
-file-selector@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.1.6.tgz#73305b5c77a50b8d553e10845fa9d1c997ab340f"
-  integrity sha512-jT09Y9xEfkX3S8i8+lhp3/014YmBQWb1A8hSVvooQmmRqAxay3zZBjEfxfz93ePuNxwc3VOiYo8XEUsaguzsAQ==
+file-selector@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.1.10.tgz#5e39e07fb330de63143e4be90d207358ea39e28e"
+  integrity sha512-wr0KDRkIZPDUc5zHsBEbtIa0A5apzA15aYGdDFYzUnGFVF+uXO5izWTRtA3oj+HO7+RMi76XqKdcx66gNmsBcw==
   dependencies:
     tslib "^1.9.0"
 
