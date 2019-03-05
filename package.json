@@ -51,7 +51,7 @@
   "devDependencies": {
     "@storybook/addon-actions": "^4.1.11",
     "@storybook/addon-links": "^4.1.11",
-    "@storybook/addons": "^4.1.11",
+    "@storybook/addons": "^5.0.0",
     "@storybook/react": "^4.1.11",
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0",
