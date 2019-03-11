@@ -189,6 +189,7 @@ const HomeComponent = () => {
                 createContract={createContract}
                 selectedAddress={deploymentSelection.address}
                 network={currentNetwork}
+                web3={web3}
               />
             )}
           />

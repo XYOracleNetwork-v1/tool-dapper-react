@@ -17,6 +17,7 @@ const methodObject = (methods, sig) =>
   methods.find(method => getMethodSig(method) === sig)
 
 const FnDetails = ({
+  web3,
   network,
   match: {
     params: { contract: contractName, method: methodSig },
@@ -26,7 +27,7 @@ const FnDetails = ({
   createContract,
   selectedAddress,
 }) => {
-  console.log('FnDetails')
+  console.log(`FnDetails`)
 
   const [executeBtnState, setExecuteBtnState] = useState(STATE.NOTHING)
   const [method, setMethod] = useState(null)
@@ -39,9 +40,10 @@ const FnDetails = ({
   const executeContract = async (user, contract) => {
     const { stateMutability, name: methodName } = method
     console.log(`WHAT INPUTS`, inputs)
-    const inputParams = method.inputs.map(
-      ({ name }, id) => inputs[name || `param-${id}`],
-    )
+    const inputParams = method.inputs.map(({ name, type }, id) => {
+      const inputVal = inputs[name || `param-${id}`]
+      return type === `bytes32` ? web3.utils.padLeft(inputVal, 64) : inputVal
+    })
 
     if (
       value === 0 &&
@@ -57,8 +59,8 @@ const FnDetails = ({
       setTxResult(result)
       setExecuteBtnState(STATE.SUCCESS)
     } else {
-      console.log(`Calling`, contract, methodName, 'with params', inputParams)
-      console.log('from', user, 'with', value)
+      console.log(`Calling`, contract, methodName, `with params`, inputParams)
+      console.log(`from`, user, `with`, value)
       // For debugging purposes if you need to examine the call to web3 provider:
       // contract.methods
       //   .mint(...inputParams)
