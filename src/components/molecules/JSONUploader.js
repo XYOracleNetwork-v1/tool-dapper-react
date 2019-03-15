@@ -13,7 +13,7 @@ class JSONUploader extends Component {
 
   handleSubmit = async () => {
     this.setState({ uploadBtnState: STATE.LOADING })
-    const { onSave, setError, uploadIPFS } = this.props
+    const { onSave, onError, uploadIPFS } = this.props
     try {
       const { data } = this.state
       // parse then stringify for simple validation
@@ -22,7 +22,7 @@ class JSONUploader extends Component {
       this.setState({ uploadBtnState: STATE.SUCCESS })
     } catch (err) {
       console.error(err)
-      setError(err.message)
+      onError(err.message)
       this.setState({ uploadBtnState: STATE.ERROR })
     }
   }
@@ -45,6 +45,12 @@ class JSONUploader extends Component {
             height: 240,
             width: '100%',
             padding: 20,
+            color: '#000',
+            '&::placeholder': {
+              color: '#9b9b9b',
+              // firefox adds a lower opacity to placeholder
+              opacity: 1,
+            },
           }}
           placeholder={`{\n\tjsonKeys: values\n}`}
           value={data}

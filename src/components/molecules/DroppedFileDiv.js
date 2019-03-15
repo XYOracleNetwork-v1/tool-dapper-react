@@ -32,7 +32,8 @@ class DroppedFileDiv extends Component {
       this.setState({ uploadBtnState: STATE.SUCCESS })
     } catch (err) {
       this.setState({ uploadBtnState: STATE.ERROR })
-      onError(err)
+      console.error(err)
+      onError(err.message)
     }
   }
 

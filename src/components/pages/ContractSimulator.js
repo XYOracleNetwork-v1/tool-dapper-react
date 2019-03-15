@@ -33,14 +33,7 @@ const ContractSimulator = () => (
         e.preventDefault()
         console.log(`submit!`, e.target)
       }}
-    >
-      <H2>Deploy DataVault</H2>
-      <TextInput label="Name" id="name" placeholder="string" />
-      <TextInput label="Parameters" id="params" placeholder="string" />
-      <Button css={{ marginTop: 40 }} type="submit">
-        Deploy Contract
-      </Button>
-    </Form>
+    />
   </Div>
 )
 

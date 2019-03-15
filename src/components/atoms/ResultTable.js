@@ -5,31 +5,32 @@ import Link from './Link'
 
 const TableRoot = glam.div({
   borderRadius: 2,
-  boxShadow: '0 4px 4px 0 rgba(99,99,99,0.19)',
-  backgroundColor: 'rgba(255,255,255,0.05)',
+  boxShadow: `0 4px 4px 0 rgba(99,99,99,0.19)`,
+  backgroundColor: `rgba(255,255,255,0.05)`,
   padding: 20,
   fontSize: 14,
 })
 
 const Row = glam.div(
   {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '20px 0',
-    borderBottom: 'solid 1px #fff',
+    display: `flex`,
+    justifyContent: `space-between`,
+    padding: `20px 0`,
+    borderBottom: `solid 1px #fff`,
     '&:first-child': {
-      color: '#ac6efd',
+      color: `#ac6efd`,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: `bold`,
       paddingTop: 0,
     },
     '&:last-child': {
       paddingBottom: 0,
-      border: 'none',
+      border: `none`,
     },
     // the "Value" column
     '& > *:last-child': {
-      fontWeight: 'bold',
+      fontWeight: `bold`,
+      paddingLeft: 20,
     },
   },
   ({ color }) => ({

@@ -26,7 +26,7 @@ const Btn = glam(ProgressButton)(
         color: 'currentColor',
         cursor: 'pointer',
         textDecoration: 'none',
-        padding: '0.7em 1em',
+        padding: '0 1em',
         textAlign: 'center',
         width: '100%',
         outline: 'none',

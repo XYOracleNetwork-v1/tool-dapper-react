@@ -31,9 +31,4 @@ const SmartContractSelector = ({
   )
 }
 
-export default memo(
-  SmartContractSelector,
-  (prevProps, nextProps) =>
-    Object.is(prevProps.contract, nextProps.contract) &&
-    prevProps.contracts.length === nextProps.contracts.length,
-)
+export default SmartContractSelector

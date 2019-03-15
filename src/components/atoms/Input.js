@@ -8,7 +8,12 @@ const Input = glam.input({
   border: 'none',
   padding: '10px 20px',
   fontSize: 14,
-  color: '#9b9b9b',
+  color: '#000',
+  '&::placeholder': {
+    color: '#9b9b9b',
+    // firefox adds a lower opacity to placeholder
+    opacity: 1,
+  },
 })
 
 export default Input

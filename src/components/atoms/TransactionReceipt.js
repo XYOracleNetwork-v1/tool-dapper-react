@@ -44,24 +44,9 @@ export const TransactionReceipt = ({ transactionReceipt }) => {
   ]
 
   return (
-    <Div
-      css={{
-        display: `flex`,
-        flexDirection: `row`,
-        justifyContent: `center`,
-      }}
-    >
-      <Div
-        css={{
-          display: `flex`,
-          flexDirection: `column`,
-          justifyContent: `center`,
-          width: `90%`,
-        }}
-      >
-        <ResultTable header={header} rows={rows} />
-        <EventTables events={events} />
-      </Div>
+    <Div>
+      <ResultTable header={header} rows={rows} />
+      <EventTables events={events} />
     </Div>
   )
 }

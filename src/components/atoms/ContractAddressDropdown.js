@@ -1,6 +1,5 @@
-import React, { memo, useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import glam, { Div } from 'glamorous'
-import { usePrevious } from 'react-hanger'
 
 import Dropdown from './Dropdown'
 
@@ -20,13 +19,19 @@ const ContractAddressDropdown = ({
   contract,
   getDeployedContractObjects,
 }) => {
-  const prevContract = usePrevious(contract)
+  console.log('CAD')
+
   const contractObjects = useMemo(
     () => getDeployedContractObjects(contract) || [],
     [contract],
   )
 
-  console.log({ contractObjects, contract, prevContract })
+  console.log({
+    contractObjects,
+    contract,
+    selectedNotes,
+    selectedAddress,
+  })
 
   const onSelect2 = ({ value }) => {
     const objToSelect = contractObjects.find(
@@ -37,6 +42,17 @@ const ContractAddressDropdown = ({
 
     onSelect({ notes, address })
   }
+
+  useEffect(
+    () => {
+      console.log({ contractObjects })
+      if (contractObjects.length === 1) {
+        const [contObj] = contractObjects
+        onSelect2({ value: contObj.notes || contObj.address })
+      }
+    },
+    [contractObjects],
+  )
 
   return (
     <Div
@@ -65,6 +81,4 @@ const ContractAddressDropdown = ({
   )
 }
 
-export default memo(ContractAddressDropdown, (prevProps, nextProps) =>
-  Object.is(prevProps.contract, nextProps.contract),
-)
+export default ContractAddressDropdown
