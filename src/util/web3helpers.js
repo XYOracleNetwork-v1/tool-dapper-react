@@ -1,4 +1,5 @@
 import abi from 'ethereumjs-abi'
+import base58 from 'bs58'
 
 export default [
   {
@@ -101,5 +102,41 @@ export default [
         sig,
         prefixed === `true` || prefixed === `1`,
       ),
+  },
+  {
+    id: 5,
+    name: `decodeIPFS`,
+    description: `Convert IPFS hash into bytes32`,
+    inputs: [
+      {
+        name: `IPFS hash`,
+        value: undefined,
+        type: `string`,
+        placeholder: `ie. Qm....`,
+      },
+    ],
+    method: (web3, callback) =>
+      `0x${base58
+        .decode(callback)
+        .slice(2)
+        .toString(`hex`)}`,
+  },
+  {
+    id: 6,
+    name: `encodeIPFS`,
+    description: `Convert bytes32 into IPFS hash`,
+    inputs: [
+      {
+        name: `Bytes32 Hex String`,
+        value: undefined,
+        type: `string`,
+        placeholder: `ie. 0x234...`,
+      },
+    ],
+    method: (web3, bytes32Hex) => {
+      const hashHex = `1220${bytes32Hex.slice(2).replace(/^0+/, ``)}`
+      const hashBytes = Buffer.from(hashHex, `hex`)
+      return base58.encode(hashBytes)
+    },
   },
 ]
