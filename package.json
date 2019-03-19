@@ -24,7 +24,7 @@
     "configparser": "^0.2.6",
     "cors": "^2.8.5",
     "eslint-config-standard-react": "^7.0.2",
-    "ethereumjs-abi": "^0.6.6",
+    "ethereumjs-abi": "^0.6.7",
     "file-selector": "^0.1.6",
     "glamor": "^2.20.40",
     "glamorous": "^5.0.0",
