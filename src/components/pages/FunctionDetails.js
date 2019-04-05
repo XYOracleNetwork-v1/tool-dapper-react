@@ -108,13 +108,22 @@ const FnDetails = ({
     }
   }
 
-  const handleChange = e => {
-    const { name: inputName, value } = e.target
-    if (inputName === `Value`) {
-      return setValue(value)
-    }
+  const getInputFormatter = inputName => {
+    const input = method.inputs.find(({ name }) => name === inputName)
+    if (!input) return v => v
+    if (!input.type) return v => v
+    if (input.type.slice(-2) === '[]') return v => v.split(',')
+    return v => v
+  }
 
-    setInputs(inputs => ({ ...inputs, [inputName]: value }))
+  const handleChange = e => {
+    const { name: inputName, value: rawValue } = e.target
+    if (inputName === `Value`) {
+      return setValue(rawValue)
+    }
+    const formatter = getInputFormatter(inputName)
+    const value = formatter(rawValue)
+    setInputs({ ...inputs, [inputName]: value })
   }
 
   const updateInputs = () => {
