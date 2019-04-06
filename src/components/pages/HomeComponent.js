@@ -123,15 +123,20 @@ const HomeComponent = () => {
           <Route
             exact
             path="/settings"
-            render={props => (
-              <Settings
-                {...props}
-                portisNetworkChange={changePortisNetwork}
-                ipfsConfig={ipfsConfig}
-                loadIPFSContracts={loadIPFSContracts}
-                updateIPFSConfig={updateIpfsConfig}
-              />
-            )}
+            render={props => {
+              if (document.getElementsByClassName(`sidebar`)[0]) {
+                document.getElementsByClassName(`sidebar`)[0].scrollTo(0, 0)
+              }
+              return (
+                <Settings
+                  {...props}
+                  portisNetworkChange={changePortisNetwork}
+                  ipfsConfig={ipfsConfig}
+                  loadIPFSContracts={loadIPFSContracts}
+                  updateIPFSConfig={updateIpfsConfig}
+                />
+              )
+            }}
           />
           <Route
             exact

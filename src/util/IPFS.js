@@ -10,11 +10,11 @@ const folder = `contracts`
 // ipfs.xyo.io, 5002, https
 // ipfs.xyo.network, 5002, https
 // ipfs.layerone.co, 5002, https
-const defaultIpfsHost = 'ipfs.xyo.network'
-const defaultIpfsPort = '5002'
-const defaultIpfsProtocol = 'https'
+const defaultIpfsHost = `ipfs.xyo.network`
+const defaultIpfsPort = `5002`
+const defaultIpfsProtocol = `https`
 
-const fields = ['ipfshost', 'ipfsport', 'ipfsprotocol']
+const fields = [`ipfshost`, `ipfsport`, `ipfsprotocol`]
 
 const ipfsConfigFromCookies = () => {
   const ipfshost = Cookies.get(`ipfshost`) || defaultIpfsHost
@@ -83,6 +83,7 @@ export const useIPFS = () => {
             console.log(`Got IPFS error:`, err)
             return reject(err)
           }
+          console.log(`IPFS res:`, res)
           parseResponse(res, resolve, reject)
         },
       ),
@@ -92,8 +93,6 @@ export const useIPFS = () => {
     const files = await ipfs.current.get(ipfsHash)
     return parseFiles(files)
   }
-
-  console.log('ipfs!!')
 
   return {
     updateIpfsConfig,

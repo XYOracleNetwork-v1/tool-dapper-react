@@ -14,16 +14,16 @@ import Link from '../atoms/Link'
 import { lightPurple } from '../../theme'
 import { Web3HelpersList } from '../molecules/Web3HelpersList'
 
-const SidebarRoot = glam.div('sidebar', {
+const SidebarRoot = glam.div(`sidebar`, {
   display: `flex`,
   flexDirection: `column`,
-  gridArea: 'sidebar',
-  maxHeight: '100%',
-  overflow: 'hidden',
-  position: 'relative',
-  color: '#fff',
+  gridArea: `sidebar`,
+  maxHeight: `100%`,
+  overflow: `hidden`,
+  position: `relative`,
+  color: `#fff`,
   padding: 30,
-  justifyContent: 'space-between',
+  justifyContent: `space-between`,
 })
 
 const SelectContractLayout = glam.div({
@@ -34,17 +34,17 @@ const SelectContractLayout = glam.div({
 
 const StyledLink = glam(Link)(
   {
-    textDecoration: 'none',
+    textDecoration: `none`,
     fontSize: 24,
-    fontWeight: 'bold',
-    padding: '20px 0',
-    display: 'flex',
-    alignItems: 'center',
+    fontWeight: `bold`,
+    padding: `20px 0`,
+    display: `flex`,
+    alignItems: `center`,
     '& svg': {
       marginRight: 22,
       width: 22,
-      fill: 'currentColor',
-      stroke: 'currentColor',
+      fill: `currentColor`,
+      stroke: `currentColor`,
     },
   },
   ({ active }) =>
@@ -78,7 +78,7 @@ const Sidebar = ({
   networkInitialized,
 }) => {
   return (
-    <SidebarRoot>
+    <SidebarRoot className="sidebar">
       <Div>
         {/* not using for now */}
         {/*<SidebarLink to="/search">*/}
