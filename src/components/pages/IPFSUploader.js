@@ -9,7 +9,7 @@ import IPFSConfigForm from '../molecules/IPFSConfigForm'
 
 const Heading = glam.h3({
   fontSize: 22,
-  fontWeight: 'normal',
+  fontWeight: `normal`,
 })
 
 const IPFSUploader2 = ({
@@ -47,7 +47,7 @@ const IPFSUploader2 = ({
   }
 
   return (
-    <Div css={{ display: 'flex', flexDirection: 'column', paddingBottom: 25 }}>
+    <Div css={{ display: `flex`, flexDirection: `column`, paddingBottom: 25 }}>
       <H2>IPFS Uploader</H2>
       <Div
         css={{
@@ -78,9 +78,9 @@ const IPFSUploader2 = ({
         {fileUploadError && <Div>Error: {fileUploadError}</Div>}
         {fileUploadIpfsHash && (
           <Div>
-            Hash: {fileUploadIpfsHash}{' '}
+            <Heading>Hash: {fileUploadIpfsHash}</Heading>
             <Button onClick={() => loadIPFSContracts(fileUploadIpfsHash)}>
-              Load contracts from hash
+              Load contracts
             </Button>
           </Div>
         )}
@@ -100,7 +100,8 @@ const IPFSUploader2 = ({
       {jsonUploadError && <Div>Error: {jsonUploadError}</Div>}
       {jsonUploadIpfsHash && (
         <Div>
-          Hash: {jsonUploadIpfsHash}{' '}
+          Hash: {jsonUploadIpfsHash}
+          {` `}
           <Button onClick={() => loadIPFSContracts(jsonUploadIpfsHash)}>
             Load contracts from hash
           </Button>

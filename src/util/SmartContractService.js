@@ -93,44 +93,36 @@ export const useScsc = ipfsClient => {
     setDeployedContracts(newDeployed)
   }
 
-  useEffect(
-    () => {
-      console.log('effect', 1)
+  useEffect(() => {
+    const netId = currentNetwork && currentNetwork.id
 
-      const netId = currentNetwork && currentNetwork.id
-      if (!netId) return () => {}
-      const promises = Object.entries(deployedContracts).reduce(
-        (acc, [address, dep]) =>
-          dep && dep.netId == netId ? [...acc, validContract(address)] : acc,
-        [],
-      )
+    console.log('currentNetwork Changed', netId)
 
-      Promise.all(promises).then(results => {
-        const newDeployed = results.reduce((acc, { valid, address }) => {
-          if (!valid) {
-            const { [address]: x, ...rest } = acc
-            return rest
-          }
-          return acc
-        }, deployedContracts)
+    if (!netId) return () => {}
+    const promises = Object.entries(deployedContracts).reduce(
+      (acc, [address, dep]) =>
+        dep && dep.netId == netId ? [...acc, validContract(address)] : acc,
+      [],
+    )
 
-        setDeployedContracts(newDeployed)
-      })
-    },
-    [currentNetwork],
-  )
+    Promise.all(promises).then(results => {
+      const newDeployed = results.reduce((acc, { valid, address }) => {
+        if (!valid) {
+          const { [address]: x, ...rest } = acc
+          return rest
+        }
+        return acc
+      }, deployedContracts)
 
-  useEffect(
-    () => {
-      console.log('effect', 2)
+      setDeployedContracts(newDeployed)
+    })
+  }, [currentNetwork])
 
-      localStorage.setItem(
-        'deployedContracts',
-        JSON.stringify(deployedContracts),
-      )
-    },
-    [deployedContracts],
-  )
+  useEffect(() => {
+    console.log('Deployed Contracts Changed', deployedContracts)
+
+    localStorage.setItem('deployedContracts', JSON.stringify(deployedContracts))
+  }, [deployedContracts])
 
   const addSmartContract = abiObject => {
     const existingABI = smartContracts.filter(
