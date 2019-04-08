@@ -12,10 +12,10 @@ import Cookies from 'js-cookie'
 import Web3 from 'web3'
 import { PortisProvider } from 'portis'
 
-export const localProviderUrl = 'http://localhost:8545'
+export const localProviderUrl = `http://localhost:8545`
 
 export const web3Networks = [
-  { id: 0, name: 'dummy', description: 'whatever' },
+  { id: 0, name: `dummy`, description: `whatever` },
   { id: 5777, name: `development`, description: `Development (local)` },
   { id: 42, name: `kovan`, description: `Kovan` },
   { id: 3, name: `ropsten`, description: `Ropsten` },
@@ -34,43 +34,43 @@ const Web3Context = createContext(null)
 
 export const useWeb3Context = () => useContext(Web3Context)
 
-export const useNetworkName = networkId => {
-  const context = useWeb3Context()
-  return useMemo(() => getNetworkById(networkId || context.networkId), [
-    networkId,
-    context.networkId,
-  ])
-}
-export const useAccountEffect = (effect, depends = []) => {
-  const context = useWeb3Context()
-  useEffect(effect, [
-    ...depends,
-    context.networkId,
-    context.account,
-    // context.reRenderers.accountReRenderer,
-  ])
-}
+// export const useNetworkName = networkId => {
+//   const context = useWeb3Context()
+//   return useMemo(() => getNetworkById(networkId || context.networkId), [
+//     networkId,
+//     context.networkId,
+//   ])
+// }
+// export const useAccountEffect = (effect, depends = []) => {
+//   const context = useWeb3Context()
+//   useEffect(effect, [
+//     ...depends,
+//     context.networkId,
+//     context.account,
+//     // context.reRenderers.accountReRenderer,
+//   ])
+// }
 
-export const useNetworkEffect = (effect, depends = []) => {
-  const context = useWeb3Context()
-  useEffect(effect, [
-    ...depends,
-    context.networkId,
-    context.reRenderers.networkReRenderer,
-  ])
-}
+// export const useNetworkEffect = (effect, depends = []) => {
+//   const context = useWeb3Context()
+//   useEffect(effect, [
+//     ...depends,
+//     context.networkId,
+//     context.reRenderers.networkReRenderer,
+//   ])
+// }
 
-export const useAccountAndNetworkEffect = (effect, depends = []) => {
-  const context = useWeb3Context()
-  useAccountEffect(effect, [...depends, context.reRenderers.networkReRenderer])
-}
+// export const useAccountAndNetworkEffect = (effect, depends = []) => {
+//   const context = useWeb3Context()
+//   useAccountEffect(effect, [...depends, context.reRenderers.networkReRenderer])
+// }
 
 // web3 manager
-const ETHEREUM_ACCESS_DENIED = 'ETHEREUM_ACCESS_DENIED'
-const INITIALIZE = 'INITIALIZE'
-const INITIALIZE_URL = 'INITIALIZE_URL'
-const UPDATE_NETWORK_ID = 'UPDATE_NETWORK_ID'
-const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT'
+const ETHEREUM_ACCESS_DENIED = `ETHEREUM_ACCESS_DENIED`
+const INITIALIZE = `INITIALIZE`
+const INITIALIZE_URL = `INITIALIZE_URL`
+const UPDATE_NETWORK_ID = `UPDATE_NETWORK_ID`
+const UPDATE_ACCOUNT = `UPDATE_ACCOUNT`
 
 const initialWeb3State = {
   web3js: undefined,
@@ -105,7 +105,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
   // web3 error ref
   const [web3Error, setWeb3Error] = useState(null)
   useEffect(() => {
-    console.log('web3Initialized!!')
+    console.log(`web3Initialized!!`)
     if (web3Initialized && web3Error) setWeb3Error(null)
   })
 
@@ -138,12 +138,12 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
     }
     // no web3 detected, use portis
     else {
-      console.log('Creating Portis connection')
-      const portisNetwork = Cookies.get('portisNetwork')
-      const portisAPI = '3b1ca5fed7f439bf72771e64e9442d74'
-      console.log('Creating Portis Privider', portisNetwork)
+      console.log(`Creating Portis connection`)
+      const portisNetwork = Cookies.get(`portisNetwork`)
+      const portisAPI = `3b1ca5fed7f439bf72771e64e9442d74`
+      console.log(`Creating Portis Privider`, portisNetwork)
       const portisArgs =
-        portisNetwork === 'development'
+        portisNetwork === `development`
           ? {
               apiKey: portisAPI,
               network: portisNetwork,
@@ -153,7 +153,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
               apiKey: portisAPI,
               network: portisNetwork,
             }
-      console.log('Setting up Portis')
+      console.log(`Setting up Portis`)
       const web3js = new Web3(new PortisProvider(portisArgs))
       setWeb3js(web3js)
     }
@@ -186,27 +186,21 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
       .catch(error => setWeb3Error(error))
   }
 
-  useEffect(
-    () => {
-      if (web3js) {
-        networkPoll()
-        const networkPollInterval = setInterval(networkPoll, pollTime)
-        return () => clearInterval(networkPollInterval)
-      }
-    },
-    [web3js, network.id],
-  )
+  useEffect(() => {
+    if (web3js) {
+      networkPoll()
+      const networkPollInterval = setInterval(networkPoll, pollTime)
+      return () => clearInterval(networkPollInterval)
+    }
+  }, [web3js, network.id])
 
-  useEffect(
-    () => {
-      if (web3js) {
-        accountPoll()
-        const accountPollInterval = setInterval(accountPoll, pollTime)
-        return () => clearInterval(accountPollInterval)
-      }
-    },
-    [web3js, account],
-  )
+  useEffect(() => {
+    if (web3js) {
+      accountPoll()
+      const accountPollInterval = setInterval(accountPoll, pollTime)
+      return () => clearInterval(accountPollInterval)
+    }
+  }, [web3js, account])
 
   // reRenderers
   const [accountReRenderer, setAccountReRenderer] = useState(0)
