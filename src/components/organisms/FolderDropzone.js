@@ -1,11 +1,9 @@
 import React from 'react'
-import Dropzone from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
 import { Div, Svg } from 'glamorous'
 
 import DroppedFileDiv from '../molecules/DroppedFileDiv'
 import { createBorder } from '../../theme'
-
-const { fromEvent } = require(`file-selector`)
 
 const parentStyle = {
   alignSelf: `center`,
@@ -21,37 +19,44 @@ const parentStyle = {
 
 class FolderDropzone extends React.Component {
   state = { files: [] }
-  onDrop = files => {
-    this.setState({
-      files,
-    })
-  }
 
+  FileDropzone = () => {
+    const onDrop = acceptedFiles => {
+      this.setState({
+        files: acceptedFiles,
+      })
+    }
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+    })
+
+    return (
+      <Div {...getRootProps()} style={parentStyle}>
+        <input {...getInputProps()} />
+        <h2>Drop files here</h2>
+        <Svg
+          css={{
+            width: 50,
+            height: 50,
+            fill: `none`,
+            stroke: `white`,
+            marginTop: 10,
+          }}
+          viewBox="0 0 100 100"
+        >
+          <circle cx="50px" cy="50px" r="40px" strokeWidth="6px" />
+          <path strokeWidth="10px" d="M30,50h40 M50,30v40" />
+        </Svg>
+      </Div>
+    )
+  }
   render() {
     const { onSave, onError, uploadIPFS } = this.props
     const { files } = this.state
     return (
       <Div style={{ flex: 1 }}>
-        <Dropzone
-          style={parentStyle}
-          getDataTransferItems={evt => fromEvent(evt)}
-          onDrop={this.onDrop}
-        >
-          <h2>Drop files here</h2>
-          <Svg
-            css={{
-              width: 50,
-              height: 50,
-              fill: `none`,
-              stroke: `white`,
-              marginTop: 10,
-            }}
-            viewBox="0 0 100 100"
-          >
-            <circle cx="50px" cy="50px" r="40px" strokeWidth="6px" />
-            <path strokeWidth="10px" d="M30,50h40 M50,30v40" />
-          </Svg>
-        </Dropzone>
+        <this.FileDropzone />
+
         <DroppedFileDiv
           files={files}
           onSave={onSave}
