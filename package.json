@@ -21,7 +21,7 @@
     "bignumber.js": "^8.0.2",
     "bs58": "^4.0.1",
     "concurrently": "^4.0.1",
-    "configparser": "^0.2.6",
+    "configparser": "^0.3.6",
     "cors": "^2.8.5",
     "eslint-config-standard-react": "^7.0.2",
     "ethereumjs-abi": "^0.6.6",
