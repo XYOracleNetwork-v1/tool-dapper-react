@@ -3731,7 +3731,7 @@ concat-stream@^1.5.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-"concat-stream@github:hugomrdias/concat-stream#feat/smaller":
+concat-stream@hugomrdias/concat-stream#feat/smaller:
   version "2.0.0"
   resolved "https://codeload.github.com/hugomrdias/concat-stream/tar.gz/057bc7b5d6d8df26c8cf00a3f151b6721a0a8034"
   dependencies:
@@ -3761,10 +3761,12 @@ config-chain@^1.1.12:
     ini "^1.3.4"
     proto-list "~1.2.1"
 
-configparser@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/configparser/-/configparser-0.2.6.tgz#c04e36c66f54b0d0371699249d844d278bd2289c"
-  integrity sha512-u0k0Xs6CBDUcCfHHX0rMgZ4QoRQm6V3sb9AuNYkKK+4kwTlBophxBQjuVbI61vTQSRTDx4Ds7CWDQTGusf5q0A==
+configparser@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/configparser/-/configparser-0.3.6.tgz#565f05bb7df2fe58587b1105af4e15d6cffe86b4"
+  integrity sha512-qCYjKDEK69qRtm3n+RYM55b8XiH2uKfnI6qOKg+ZLrKSG5vY59RBcZhLxxVd18+B5C5Zc7Jy8KpFsB5YOAD+hw==
+  dependencies:
+    mkdirp "^0.5.1"
 
 confusing-browser-globals@^1.0.6:
   version "1.0.6"
@@ -9221,7 +9223,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-"ndjson@github:hugomrdias/ndjson#feat/readable-stream3":
+ndjson@hugomrdias/ndjson#feat/readable-stream3:
   version "1.5.0"
   resolved "https://codeload.github.com/hugomrdias/ndjson/tar.gz/4db16da6b42e5b39bf300c3a7cde62abb3fa3a11"
   dependencies:
