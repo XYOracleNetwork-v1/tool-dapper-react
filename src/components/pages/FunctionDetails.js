@@ -68,10 +68,15 @@ const FnDetails = ({
       try {
         const transactionReceipt = await contract.methods[methodName](
           ...inputParams,
-        ).send({ from: user, value, gas: 4712388 })
-        console.log(`Got receipts`, transactionReceipt)
-        setTxReceipt(transactionReceipt)
-        setExecuteBtnState(STATE.SUCCESS)
+        )
+          .send({ from: user, value })
+          .on(`confirmation`, (confirmation, receipt) => {
+            if (confirmation == 1) {
+              console.log(`Got receipts`, receipt)
+              setTxReceipt(receipt)
+              setExecuteBtnState(STATE.SUCCESS)
+            }
+          })
       } catch (e) {
         console.error(e)
         setTxError(e)
@@ -112,7 +117,7 @@ const FnDetails = ({
     const input = method.inputs.find(({ name }) => name === inputName)
     if (!input) return v => v
     if (!input.type) return v => v
-    if (input.type.slice(-2) === '[]') return v => v.split(',')
+    if (input.type.slice(-2) === `[]`) return v => v.split(`,`)
     return v => v
   }
 
