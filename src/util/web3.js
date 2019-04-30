@@ -160,7 +160,7 @@ export const useWeb3Manager = (pollTime = 1000, providerURL) => {
   }
 
   // run one-time initialization
-  // useEffect(initWeb3, [])
+  useEffect(initWeb3, [])
 
   const networkPoll = () => {
     web3js.eth.net

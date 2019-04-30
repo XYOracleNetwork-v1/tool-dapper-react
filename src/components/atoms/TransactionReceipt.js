@@ -13,13 +13,15 @@ export const eventDatas = ({ returnValues }) =>
 const colors = [`#3071D1`, `#6025AE`, `#D19830`]
 export const EventTables = ({ events }) => (
   <Div>
-    {Object.entries(events).map(([name, event], index) => (
-      <ResultTable
-        key={name}
-        header={nvc(`Event`, name, colors[index % colors.length])}
-        rows={eventDatas(event)}
-      />
-    ))}
+    {Object.entries(events).map(([name, event], index) => {
+      return (
+        <ResultTable
+          key={name}
+          header={nvc(`Event`, name, colors[index % colors.length])}
+          rows={eventDatas(event)}
+        />
+      )
+    })}
   </Div>
 )
 

@@ -59,11 +59,13 @@ export const Table = ({ header: { name, value, color }, rows }) => (
       <div>{value}</div>
     </Row>
     {rows.map(({ name, value, linkTo, url }) => {
+      // value can be a big number if coming from web3
+      const coercedValue = value && value.toString ? value.toString() : value
       return (
-        <Row key={`${name}-${value}`}>
+        <Row key={`${name}-${coercedValue}`}>
           <div>{name}</div>
           <MaybeLink to={linkTo} href={url}>
-            {value}
+            {coercedValue}
           </MaybeLink>
         </Row>
       )
