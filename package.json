@@ -13,7 +13,7 @@
     "xyo-nodejs"
   ],
   "author": "Kevin Weiler",
-  "license": "MIT",
+  "license": "LGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/XYOracleNetwork/tool-dapper-react/issues"
   },
