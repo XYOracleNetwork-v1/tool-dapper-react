@@ -13,9 +13,9 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
 
-[![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
-
 [![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react)
+
+[![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9e6699e32345b983e0233aeb9e73d1)](https://www.codacy.com/app/pllearns/tool-dapper-react?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=XYOracleNetwork/tool-dapper-react&amp;utm_campaign=Badge_Grade)[![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
 
 <p align="left">
   <a href="https://gitter.im/XYOracleNetwork/Dev">
