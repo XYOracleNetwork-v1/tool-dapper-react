@@ -15,7 +15,6 @@
 
 [![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react) [![DepShield Badge](https://depshield.sonatype.org/badges/XYOracleNetwork/tool-dapper-react/depshield.svg)](https://depshield.github.io)
 
-
 [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) 
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=XYOracleNetwork_tool-dapper-react&metric=alert_status)](https://sonarcloud.io/dashboard?id=XYOracleNetwork_tool-dapper-react) 
 
