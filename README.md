@@ -11,11 +11,15 @@
 
 ---
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
+[![NPM](https://nodei.co/npm/@xyo-network/tool-dapper-react.png)](https://nodei.co/npm/@xyo-network/tool-dapper-react/) 
 
-[![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
+[![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react) [![DepShield Badge](https://depshield.sonatype.org/badges/XYOracleNetwork/tool-dapper-react/depshield.svg)](https://depshield.github.io)
 
-[![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react)
+
+[![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) 
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=XYOracleNetwork_tool-dapper-react&metric=alert_status)](https://sonarcloud.io/dashboard?id=XYOracleNetwork_tool-dapper-react) 
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9e6699e32345b983e0233aeb9e73d1)](https://www.codacy.com/app/pllearns/tool-dapper-react?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=XYOracleNetwork/tool-dapper-react&amp;utm_campaign=Badge_Grade)[![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
 
 <p align="left">
   <a href="https://gitter.im/XYOracleNetwork/Dev">
