@@ -11,4 +11,5 @@ addons:
 install:
 - yarn install
 script:
+- yarn build
 - sonar-scanner
