@@ -47,7 +47,7 @@
     "s3": "^4.4.0",
     "typeface-pt-sans": "^0.0.72",
     "untildify": "^4.0.0",
-    "web3": "^1.0.0-beta.46"
+    "web3": "^1.2.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.0.11",
