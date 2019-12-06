@@ -43,7 +43,7 @@
     "react-perf-devtool": "^3.1.8",
     "react-progress-button": "^5.1.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.5",
+    "react-scripts": "3.3.0",
     "s3": "^4.4.0",
     "typeface-pt-sans": "^0.0.72",
     "untildify": "^4.0.0",
