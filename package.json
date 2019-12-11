@@ -47,7 +47,8 @@
     "s3": "^4.4.0",
     "typeface-pt-sans": "^0.0.72",
     "untildify": "^4.0.0",
-    "web3": "^1.0.0-beta.46"
+    "web3": "^1.0.0-beta.46",
+    "snyk": "^1.258.2"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.0.11",
@@ -87,7 +88,9 @@
     "test": "react-scripts test --env=jsdom a",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -97,5 +100,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "snyk": true
 }
