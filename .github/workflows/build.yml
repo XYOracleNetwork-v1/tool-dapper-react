@@ -16,3 +16,4 @@ jobs:
       run: |
             yarn install
             yarn build
+            yarn test
