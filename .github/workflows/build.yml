@@ -1,0 +1,18 @@
+name: Build CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: install, build, and test
+      run: |
+            yarn
+            yarn build
+            yarn test
+      env:
+        CI: true
