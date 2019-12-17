@@ -1,3 +1,7 @@
+[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
+
+[![logo]](https://xyo.network)
+
 <h1 align="center">
   <img alt="Dapploy" src="https://ipfs.xyo.network/ipfs/QmYoV7gMcDeTEMrdGnKAs2VYL3E1ckRC3aNL5pdT7PazZL" width="300" backgroundColor="black">
 </h1>
@@ -5,27 +9,27 @@
   "Simulate your Smart Contracts"
 </h3>
 
-[logo]: https://cdn.xy.company/img/brand/XY_Logo_GitHub.png
-
-[![logo]](https://xy.company)
-
 ---
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/tool-dapper-react.svg)](https://greenkeeper.io/)
+[![NPM](https://nodei.co/npm/@xyo-network/tool-dapper-react.png)](https://nodei.co/npm/@xyo-network/tool-dapper-react/) 
 
-[![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![David Badge](https://david-dm.org/xyoraclenetwork/tool-dapper-react/dev-status.svg)](https://david-dm.org/xyoraclenetwork/tool-dapper-react) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
-
-[![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react)
-
-<p align="left">
-  <a href="https://gitter.im/XYOracleNetwork/Dev">
-    <img alt="Gitter Chat" src="https://img.shields.io/gitter/room/XYOracleNetwork/Stardust.svg">
-  </a>
-</p>
+[![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9e6699e32345b983e0233aeb9e73d1)](https://www.codacy.com/app/pllearns/tool-dapper-react?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=XYOracleNetwork/tool-dapper-react&amp;utm_campaign=Badge_Grade) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
 
 Check out Dapper, live at https://dapper.layerone.co to start playing with your smart contracts.
 
-# Pt. I. - Let's Get Dapper
+## Table of Contents
+
+-   [Part One](#part-one)
+-   [Part Two](#part-two)
+-   [Part Three](#part-three)
+-   [Part Four](#part-four)
+-   [Maintainers](#maintainers)
+-   [License](#license)
+-   [Credits](#credits)
+
+## Part One 
+
+### Let's Get Dapper
 
 1. When in doubt, `yarn` it out in the project directory:
 
@@ -39,7 +43,9 @@ yarn
 yarn start
 ```
 
-# Pt. II - Dapploy Some Contracts locally
+## Part Two 
+
+### Dapploy Some Contracts locally
 
 We need to deploy some smart contracts
 
@@ -52,7 +58,9 @@ We need to deploy some smart contracts
 
 **or** Use [Truffle](https://truffleframework.com) to deploy your smart contracts to any Ethereum blockchain, and note the folder of your ABI, usually in `<truffle_project>/build/contracts`
 
-# Pt. III - View Local Contracts
+## Part Three
+
+### View Local Contracts
 
 1. If you don't already have it, [download and install Ganache from their site](https://truffleframework.com/ganache)
 
@@ -81,7 +89,9 @@ yarn start
 
 You should see the Dapper UI with no smart contracts loaded.
 
-# Pt. III. - Play with your Smart Contracts
+## Part Four
+
+### Play with your Smart Contracts
 
 1. In Dapper UI, go to the settings cog and select `Local Path` and enter `<truffle_project>/build/contracts` (Priject dir from Pt. II)
 
@@ -90,3 +100,15 @@ You should see the Dapper UI with no smart contracts loaded.
 3. Select `name()` function and you should see the name, "Fun Token" displayed.
 
 <img src="https://ipfs.xyo.network/ipfs/QmcyJh9suzmMjiaumeTFRMRV4rzhffNPSkcRharvg6eYPn" />
+
+## Maintainers
+
+- Kevin Weiler 
+
+## License
+
+See the [LICENSE](LICENSE) file for license details.
+
+## Credits
+
+Made with 🔥and ❄️ by [XYO](https://www.xyo.network)
