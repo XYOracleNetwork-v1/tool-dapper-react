@@ -11,23 +11,24 @@
 
 ---
 
-[![NPM](https://nodei.co/npm/@xyo-network/tool-dapper-react.png)](https://nodei.co/npm/@xyo-network/tool-dapper-react/) 
+[![NPM](https://nodei.co/npm/@xyo-network/tool-dapper-react.png)](https://nodei.co/npm/@xyo-network/tool-dapper-react/)
 
-[![Build Status](https://travis-ci.com/XYOracleNetwork/tool-dapper-react.svg?branch=develop)](https://travis-ci.com/XYOracleNetwork/tool-dapper-react) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9e6699e32345b983e0233aeb9e73d1)](https://www.codacy.com/app/pllearns/tool-dapper-react?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=XYOracleNetwork/tool-dapper-react&amp;utm_campaign=Badge_Grade) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
+![](https://github.com/XYOracleNetwork/tool-dapper-react/workflows/Build/badge.svg?branch=develop)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9e6699e32345b983e0233aeb9e73d1)](https://www.codacy.com/app/pllearns/tool-dapper-react?utm_source=github.com&utm_medium=referral&utm_content=XYOracleNetwork/tool-dapper-react&utm_campaign=Badge_Grade) [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/tool-dapper-react?branch=master)](https://bettercodehub.com/results/XYOracleNetwork/tool-dapper-react)
 
 Check out Dapper, live at https://dapper.layerone.co to start playing with your smart contracts.
 
 ## Table of Contents
 
--   [Part One](#part-one)
--   [Part Two](#part-two)
--   [Part Three](#part-three)
--   [Part Four](#part-four)
--   [Maintainers](#maintainers)
--   [License](#license)
--   [Credits](#credits)
+- [Part One](#part-one)
+- [Part Two](#part-two)
+- [Part Three](#part-three)
+- [Part Four](#part-four)
+- [Maintainers](#maintainers)
+- [License](#license)
+- [Credits](#credits)
 
-## Part One 
+## Part One
 
 ### Let's Get Dapper
 
@@ -43,7 +44,7 @@ yarn
 yarn start
 ```
 
-## Part Two 
+## Part Two
 
 ### Dapploy Some Contracts locally
 
@@ -103,7 +104,7 @@ You should see the Dapper UI with no smart contracts loaded.
 
 ## Maintainers
 
-- Kevin Weiler 
+- Kevin Weiler
 
 ## License
 
