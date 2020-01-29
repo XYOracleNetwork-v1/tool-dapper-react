@@ -2,7 +2,7 @@
 
 [![logo]](https://xyo.network)
 
-# Dapploy
+# Dapper
 
 <h3 align="center">
   "Simulate your Smart Contracts"
