@@ -2,9 +2,8 @@
 
 [![logo]](https://xyo.network)
 
-<h1 align="center">
-  <img alt="Dapploy" src="https://ipfs.xyo.network/ipfs/QmYoV7gMcDeTEMrdGnKAs2VYL3E1ckRC3aNL5pdT7PazZL" width="300" backgroundColor="black">
-</h1>
+# Dapploy
+
 <h3 align="center">
   "Simulate your Smart Contracts"
 </h3>
